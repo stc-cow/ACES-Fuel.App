@@ -72,11 +72,14 @@ function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className="px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-1.5 rounded-full bg-primary" />
-          <span className="text-lg font-extrabold tracking-wide">
-            ACES Fuel
-          </span>
+        <div className="flex items-center">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fc70031ceb54e448ab66bd6627db55078?format=webp&width=800"
+            alt="ACES"
+            className="h-6 w-auto"
+            loading="eager"
+            decoding="async"
+          />
         </div>
       </SidebarHeader>
       <SidebarSeparator />
