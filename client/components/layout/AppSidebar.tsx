@@ -94,7 +94,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/")}>
                   <Link to="/" className="flex items-center gap-2">
                     <Gauge />
-                    <span>Dashboard</span>
+                    <span>{t("dashboard")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -102,7 +102,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/users")}>
                   <Link to="/users" className="flex items-center gap-2">
                     <Users />
-                    <span>Users & Auth</span>
+                    <span>{t("usersAuth")}</span>
                   </Link>
                 </SidebarMenuButton>
                 <SidebarMenuAction
@@ -125,7 +125,7 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/users/admins")}
                     >
-                      <Link to="/users/admins">Admin Users</Link>
+                      <Link to="/users/admins">{t("adminUsers")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
@@ -133,7 +133,7 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/users/authorizations")}
                     >
-                      <Link to="/users/authorizations">Authorizations</Link>
+                      <Link to="/users/authorizations">{t("authorizations")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -142,7 +142,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/missions")}>
                   <Link to="/missions" className="flex items-center gap-2">
                     <RouteIcon />
-                    <span>Missions</span>
+                    <span>{t("missions")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -150,7 +150,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/employees")}>
                   <Link to="/employees" className="flex items-center gap-2">
                     <UserCog />
-                    <span>Employees</span>
+                    <span>{t("employees")}</span>
                   </Link>
                 </SidebarMenuButton>
                 <SidebarMenuAction
@@ -173,7 +173,7 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/employees/drivers")}
                     >
-                      <Link to="/employees/drivers">Drivers</Link>
+                      <Link to="/employees/drivers">{t("drivers")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
@@ -181,7 +181,7 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/employees/technicians")}
                     >
-                      <Link to="/employees/technicians">Technicians</Link>
+                      <Link to="/employees/technicians">{t("technicians")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -190,7 +190,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/sites")}>
                   <Link to="/sites" className="flex items-center gap-2">
                     <Building2 />
-                    <span>Sites</span>
+                    <span>{t("sites")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -198,7 +198,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/generators")}>
                   <Link to="/generators" className="flex items-center gap-2">
                     <Factory />
-                    <span>Generators</span>
+                    <span>{t("generators")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -206,7 +206,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/reports")}>
                   <Link to="/reports" className="flex items-center gap-2">
                     <FileBarChart2 />
-                    <span>Reports</span>
+                    <span>{t("reports")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -217,7 +217,7 @@ function AppSidebar() {
                 >
                   <Link to="/notifications" className="flex items-center gap-2">
                     <Bell />
-                    <span>Notifications</span>
+                    <span>{t("notifications")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -225,7 +225,7 @@ function AppSidebar() {
                 <SidebarMenuButton asChild isActive={isActive("/settings")}>
                   <Link to="/settings" className="flex items-center gap-2">
                     <Settings />
-                    <span>Settings</span>
+                    <span>{t("settings")}</span>
                   </Link>
                 </SidebarMenuButton>
                 <SidebarMenuAction aria-label="Toggle Settings submenu" onClick={(e)=>{e.preventDefault(); setOpenSettings(v=>!v);}}>
@@ -234,22 +234,22 @@ function AppSidebar() {
                 <SidebarMenuSub className={cn(!openSettings && "hidden")}>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/settings/general")}>
-                      <Link to="/settings/general">General Settings</Link>
+                      <Link to="/settings/general">{t("settingsGeneral")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/settings/cities")}>
-                      <Link to="/settings/cities">Cities</Link>
+                      <Link to="/settings/cities">{t("settingsCities")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/settings/zones")}>
-                      <Link to="/settings/zones">Zones</Link>
+                      <Link to="/settings/zones">{t("settingsZones")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/settings/admin-log")}>
-                      <Link to="/settings/admin-log">Admin Log</Link>
+                      <Link to="/settings/admin-log">{t("settingsAdminLog")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
