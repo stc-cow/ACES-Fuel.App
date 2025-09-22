@@ -36,10 +36,11 @@ export default function Header() {
     <header className="sticky top-0 z-20 w-full border-b bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/50">
       <div className="flex h-14 items-center gap-3 px-4">
         <SidebarTrigger />
-        <div className="ml-1 flex items-center gap-3">
+        <div className="ml-1 text-lg font-semibold">Dashboard</div>
+        <div className="ml-auto flex items-center gap-3">
           {loggedIn ? (
             <>
-              <div className="text-sm text-gray-700">
+              <div className="hidden sm:block text-sm text-gray-700">
                 Signed in as <span className="font-semibold">{username ?? "User"}</span>
               </div>
               <Button variant="outline" size="sm" onClick={onLogout}>Logout</Button>
@@ -47,8 +48,6 @@ export default function Header() {
           ) : (
             <Button size="sm" onClick={() => navigate("/login")}>Login</Button>
           )}
-        </div>
-        <div className="ml-auto flex items-center gap-3">
           <div className="hidden md:block">
             <Input placeholder="Search…" className="h-9 w-64" />
           </div>
