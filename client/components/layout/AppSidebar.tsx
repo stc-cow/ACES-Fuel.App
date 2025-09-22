@@ -67,6 +67,8 @@ function AppSidebar() {
     if (pathname.startsWith("/settings")) setOpenSettings(true);
   }, [pathname]);
 
+  const { t } = useI18n();
+
   return (
     <Sidebar
       className="bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))]"
