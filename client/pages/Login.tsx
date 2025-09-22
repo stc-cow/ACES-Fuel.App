@@ -57,6 +57,7 @@ export default function Login() {
       localStorage.removeItem("remember.username");
     }
     localStorage.setItem("auth.loggedIn", "true");
+    localStorage.setItem("auth.username", values.username);
     navigate("/");
   };
 
