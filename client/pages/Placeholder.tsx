@@ -16,6 +16,9 @@ const TITLES: Record<string, string> = {
   "/reports": "Reports",
   "/notifications": "Notifications",
   "/settings": "Settings",
+  "/settings/cities": "Cities",
+  "/settings/zones": "Zones",
+  "/settings/admin-log": "Admin Log",
 };
 
 export default function Placeholder() {
