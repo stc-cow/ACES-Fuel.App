@@ -15,6 +15,7 @@ import MissionsPage from "./pages/missions/Missions";
 import DriversPage from "./pages/employees/Drivers";
 import TechniciansPage from "./pages/employees/Technicians";
 import SitesPage from "./pages/sites/Sites";
+import GeneratorsPage from "./pages/generators/Generators";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
