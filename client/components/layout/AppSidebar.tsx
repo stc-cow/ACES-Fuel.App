@@ -17,6 +17,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import { useI18n } from "@/i18n";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
