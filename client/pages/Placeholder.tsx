@@ -1,7 +1,7 @@
 import Header from "@/components/layout/Header";
 import { AppShell } from "@/components/layout/AppSidebar";
 import PlaceholderPage from "@/components/layout/PlaceholderPage";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const TITLES: Record<string, string> = {
   "/users": "Users & authorization",
