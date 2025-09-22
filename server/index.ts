@@ -19,5 +19,12 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  app.post("/api/password-reset", async (req, res) => {
+    const { email } = req.body as { email?: string };
+    // Stub: integrate with email service (e.g., Zapier, SendGrid) here
+    console.log("Password reset requested for:", email);
+    res.json({ ok: true });
+  });
+
   return app;
 }
