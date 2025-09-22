@@ -19,7 +19,14 @@ const TITLES: Record<string, string> = {
 };
 
 export default function Placeholder() {
-  const { pathname } = useLocation();
+  const [pathname, setPathname] = useState(() => (typeof window !== "undefined" ? window.location.pathname : "/"));
+
+  useEffect(() => {
+    const onPop = () => setPathname(window.location.pathname);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   const title = TITLES[pathname] || pathname.replace("/", "");
   return (
     <AppShell>
