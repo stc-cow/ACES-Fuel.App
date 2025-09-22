@@ -147,7 +147,7 @@ export default function ReportsPage() {
                     <SelectValue placeholder="Select Some Options" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All</SelectItem>
+                    <SelectItem value="All">All</SelectItem>
                     <SelectItem value="Irfan">Irfan</SelectItem>
                     <SelectItem value="Zafar">Zafar</SelectItem>
                   </SelectContent>
