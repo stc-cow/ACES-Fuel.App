@@ -222,6 +222,31 @@ function AppSidebar() {
                     <span>Settings</span>
                   </Link>
                 </SidebarMenuButton>
+                <SidebarMenuAction aria-label="Toggle Settings submenu" onClick={(e)=>{e.preventDefault(); setOpenSettings(v=>!v);}}>
+                  <ChevronDown className={cn("transition-transform", openSettings ? "rotate-180" : "rotate-0")} />
+                </SidebarMenuAction>
+                <SidebarMenuSub className={cn(!openSettings && "hidden")}>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/settings/general")}>
+                      <Link to="/settings/general">General Settings</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/settings/cities")}>
+                      <Link to="/settings/cities">Cities</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/settings/zones")}>
+                      <Link to="/settings/zones">Zones</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/settings/admin-log")}>
+                      <Link to="/settings/admin-log">Admin Log</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
