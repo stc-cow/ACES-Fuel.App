@@ -46,7 +46,11 @@ const App = () => (
           <Route path="/generators" element={<GeneratorsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/settings" element={<Placeholder />} />
+          <Route path="/settings" element={<GeneralSettingsPage />} />
+          <Route path="/settings/general" element={<GeneralSettingsPage />} />
+          <Route path="/settings/cities" element={<Placeholder />} />
+          <Route path="/settings/zones" element={<Placeholder />} />
+          <Route path="/settings/admin-log" element={<Placeholder />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
