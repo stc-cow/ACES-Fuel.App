@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useI18n } from "@/i18n";
 
 const schema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -61,6 +62,7 @@ export default function Login() {
     navigate("/");
   };
 
+  const { t } = useI18n();
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2ff] via-[#f8fafc] to-[#ffffff]">
       <Decor />
@@ -77,21 +79,15 @@ export default function Login() {
                   decoding="async"
                 />
               </div>
-              <h1 className="text-lg font-semibold text-white">
-                Sign in to Super Admin
-              </h1>
-              <p className="mt-1 text-xs text-white/60">
-                Enter your details to sign in to your account
-              </p>
+              <h1 className="text-lg font-semibold text-white">{t("signInTitle")}</h1>
+              <p className="mt-1 text-xs text-white/60">{t("signInSubtitle")}</p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <Label htmlFor="username" className="text-white/80">
-                  Username
-                </Label>
+                <Label htmlFor="username" className="text-white/80">{t("username")}</Label>
                 <Input
                   id="username"
-                  placeholder="Username"
+                  placeholder={t("username")}
                   autoComplete="username"
                   className="mt-2 h-11 rounded-lg bg-[#111827] border border-[#2D3748] text-white placeholder:text-gray-400 shadow-inner focus-visible:ring-2 focus-visible:ring-[#7A00FF]"
                   {...register("username")}
@@ -103,13 +99,11 @@ export default function Login() {
                 )}
               </div>
               <div>
-                <Label htmlFor="password" className="text-white/80">
-                  Password
-                </Label>
+                <Label htmlFor="password" className="text-white/80">{t("password")}</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("password")}
                   autoComplete="current-password"
                   className="mt-2 h-11 rounded-lg bg-[#111827] border border-[#2D3748] text-white placeholder:text-gray-400 shadow-inner focus-visible:ring-2 focus-visible:ring-[#FF0057]"
                   {...register("password")}
@@ -126,11 +120,9 @@ export default function Login() {
                     className="border-white/30 data-[state=checked]:bg-primary"
                     {...register("remember")}
                   />
-                  <span className="text-sm">Remember me</span>
+                  <span className="text-sm">{t("rememberMe")}</span>
                 </label>
-                <a className="text-sm text-[#00D9FF] hover:underline" href="#">
-                  Forgot password?
-                </a>
+                <a className="text-sm text-[#00D9FF] hover:underline" href="#">{t("forgotPassword")}</a>
               </div>
               {authError && (
                 <p className="-mt-1 text-sm text-rose-400">{authError}</p>
@@ -140,7 +132,7 @@ export default function Login() {
                 className="w-full py-3 rounded-lg font-bold text-lg bg-gradient-to-r from-[#FF0057] via-[#7A00FF] to-[#00D9FF] text-white shadow-lg shadow-[#7A00FF]/40 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Signing in…" : "Login"}
+                {isSubmitting ? t("signingIn") : t("login")}
               </Button>
             </form>
           </CardContent>
