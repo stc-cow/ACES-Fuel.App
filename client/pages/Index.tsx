@@ -35,6 +35,7 @@ const metricCards = [
 
 export default function Index() {
   const { t } = useI18n();
+  const { t } = useI18n();
   return (
     <AppShell>
       <Header />
