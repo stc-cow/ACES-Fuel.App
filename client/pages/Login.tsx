@@ -70,13 +70,6 @@ export default function Login() {
         <Card className="w-full max-w-md bg-[#0D0F1A] border border-[#1F2937] rounded-2xl shadow-2xl transition-transform duration-300 ease-in-out hover:scale-[1.01]">
           <CardContent className="p-10">
             <div className="mb-8">
-              <div className="mb-2 flex items-center justify-end gap-2">
-                {(["en","ar","ur"] as const).map((l)=> (
-                  <Button key={l} size="sm" variant={l===lang?"secondary":"ghost"} onClick={()=> setLang(l)}>
-                    {l === "en" ? "EN" : l === "ar" ? "AR" : "UR"}
-                  </Button>
-                ))}
-              </div>
               <div className="mx-auto mb-3 flex items-center justify-center">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fc70031ceb54e448ab66bd6627db55078?format=webp&width=1200"
@@ -141,6 +134,13 @@ export default function Login() {
               >
                 {isSubmitting ? t("signingIn") : t("login")}
               </Button>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                {(["en","ar","ur"] as const).map((l)=> (
+                  <Button key={l} size="sm" variant={l===lang?"secondary":"outline"} onClick={()=> setLang(l)}>
+                    {l === "en" ? "EN" : l === "ar" ? "AR" : "UR"}
+                  </Button>
+                ))}
+              </div>
             </form>
           </CardContent>
         </Card>
