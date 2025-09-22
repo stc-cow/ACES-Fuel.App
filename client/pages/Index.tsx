@@ -67,17 +67,15 @@ export default function Index() {
             <CardContent className="p-6">
               <div className="mb-3 text-base font-medium">Total tasks status count</div>
               <ChartContainer config={{}} className="aspect-[4/3]">
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Pie data={statusData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={100} paddingAngle={2}>
-                      {statusData.map((entry, index) => (
-                        <Cell key={`s-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+                <PieChart>
+                  <Pie data={statusData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={100} paddingAngle={2}>
+                    {statusData.map((entry, index) => (
+                      <Cell key={`s-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
               </ChartContainer>
             </CardContent>
           </Card>
