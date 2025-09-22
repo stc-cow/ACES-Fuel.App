@@ -35,29 +35,26 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/users" element={<Placeholder />} />
-          <Route path="/users/admins" element={<AdminUsersPage />} />
-          <Route
-            path="/users/authorizations"
-            element={<AuthorizationsPage />}
-          />
-          <Route path="/missions" element={<MissionsPage />} />
-          <Route path="/employees" element={<Placeholder />} />
-          <Route path="/employees/drivers" element={<DriversPage />} />
-          <Route path="/employees/technicians" element={<TechniciansPage />} />
-          <Route path="/sites" element={<SitesPage />} />
-          <Route path="/generators" element={<GeneratorsPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/settings" element={<GeneralSettingsPage />} />
-          <Route path="/settings/general" element={<GeneralSettingsPage />} />
-          <Route path="/settings/cities" element={<Placeholder />} />
-          <Route path="/settings/zones" element={<Placeholder />} />
-          <Route path="/settings/admin-log" element={<Placeholder />} />
+          <Route path="/" element={<RequireAuth><Index /></RequireAuth>} />
+          <Route path="/users" element={<RequireAuth><Placeholder /></RequireAuth>} />
+          <Route path="/users/admins" element={<RequireAuth><AdminUsersPage /></RequireAuth>} />
+          <Route path="/users/authorizations" element={<RequireAuth><AuthorizationsPage /></RequireAuth>} />
+          <Route path="/missions" element={<RequireAuth><MissionsPage /></RequireAuth>} />
+          <Route path="/employees" element={<RequireAuth><Placeholder /></RequireAuth>} />
+          <Route path="/employees/drivers" element={<RequireAuth><DriversPage /></RequireAuth>} />
+          <Route path="/employees/technicians" element={<RequireAuth><TechniciansPage /></RequireAuth>} />
+          <Route path="/sites" element={<RequireAuth><SitesPage /></RequireAuth>} />
+          <Route path="/generators" element={<RequireAuth><GeneratorsPage /></RequireAuth>} />
+          <Route path="/reports" element={<RequireAuth><ReportsPage /></RequireAuth>} />
+          <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
+          <Route path="/settings" element={<RequireAuth><GeneralSettingsPage /></RequireAuth>} />
+          <Route path="/settings/general" element={<RequireAuth><GeneralSettingsPage /></RequireAuth>} />
+          <Route path="/settings/cities" element={<RequireAuth><Placeholder /></RequireAuth>} />
+          <Route path="/settings/zones" element={<RequireAuth><Placeholder /></RequireAuth>} />
+          <Route path="/settings/admin-log" element={<RequireAuth><Placeholder /></RequireAuth>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<RequireAuth><NotFound /></RequireAuth>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
