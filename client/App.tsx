@@ -11,6 +11,7 @@ import Placeholder from "./pages/Placeholder";
 import Login from "./pages/Login";
 import AdminUsersPage from "./pages/users/Admins";
 import AuthorizationsPage from "./pages/users/Authorizations";
+import MissionsPage from "./pages/missions/Missions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
