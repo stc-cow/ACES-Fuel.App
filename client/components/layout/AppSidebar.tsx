@@ -11,11 +11,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarMenuAction,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import {
   Gauge,
   Users,
@@ -26,6 +29,7 @@ import {
   FileBarChart2,
   Bell,
   Settings,
+  ChevronDown,
 } from "lucide-react";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -42,6 +46,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 function AppSidebar() {
   const { pathname } = useLocation();
   const isActive = (p: string) => pathname === p;
+  const [openUsers, setOpenUsers] = useState(pathname.startsWith("/users"));
+  const [openEmployees, setOpenEmployees] = useState(pathname.startsWith("/employees"));
+  useEffect(() => {
+    if (pathname.startsWith("/users")) setOpenUsers(true);
+    if (pathname.startsWith("/employees")) setOpenEmployees(true);
+  }, [pathname]);
 
   return (
     <Sidebar className="bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))]" collapsible="icon">
@@ -71,7 +81,10 @@ function AppSidebar() {
                     <span>Users & Auth</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuSub>
+                <SidebarMenuAction aria-label="Toggle Users submenu" onClick={(e)=>{e.preventDefault(); setOpenUsers(v=>!v);}}>
+                  <ChevronDown className={cn("transition-transform", openUsers ? "rotate-180" : "rotate-0")} />
+                </SidebarMenuAction>
+                <SidebarMenuSub className={cn(!openUsers && "hidden")}>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/users/admins")}>
                       <Link to="/users/admins">Admin Users</Link>
@@ -99,7 +112,10 @@ function AppSidebar() {
                     <span>Employees</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuSub>
+                <SidebarMenuAction aria-label="Toggle Employees submenu" onClick={(e)=>{e.preventDefault(); setOpenEmployees(v=>!v);}}>
+                  <ChevronDown className={cn("transition-transform", openEmployees ? "rotate-180" : "rotate-0")} />
+                </SidebarMenuAction>
+                <SidebarMenuSub className={cn(!openEmployees && "hidden")}>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild isActive={isActive("/employees/drivers")}>
                       <Link to="/employees/drivers">Drivers</Link>
