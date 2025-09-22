@@ -65,10 +65,19 @@ export default function Index() {
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">Total tasks status count</div>
+              <div className="mb-3 text-base font-medium">
+                Total tasks status count
+              </div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
-                  <Pie data={statusData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={100} paddingAngle={2}>
+                  <Pie
+                    data={statusData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                  >
                     {statusData.map((entry, index) => (
                       <Cell key={`s-${index}`} fill={entry.color} />
                     ))}
@@ -82,10 +91,19 @@ export default function Index() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">Total tasks zones count</div>
+              <div className="mb-3 text-base font-medium">
+                Total tasks zones count
+              </div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
-                  <Pie data={zoneData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={100} paddingAngle={2}>
+                  <Pie
+                    data={zoneData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                  >
                     {zoneData.map((entry, index) => (
                       <Cell key={`z-${index}`} fill={entry.color} />
                     ))}
@@ -101,14 +119,22 @@ export default function Index() {
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <Card>
             <CardContent className="p-6">
-              <div className="text-base font-medium">Total Status Count in Last 7 Days</div>
-              <div className="mt-3 text-sm text-muted-foreground">No data yet</div>
+              <div className="text-base font-medium">
+                Total Status Count in Last 7 Days
+              </div>
+              <div className="mt-3 text-sm text-muted-foreground">
+                No data yet
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-6">
-              <div className="text-base font-medium">Total Liters in Last 7 Days</div>
-              <div className="mt-3 text-sm text-muted-foreground">No data yet</div>
+              <div className="text-base font-medium">
+                Total Liters in Last 7 Days
+              </div>
+              <div className="mt-3 text-sm text-muted-foreground">
+                No data yet
+              </div>
             </CardContent>
           </Card>
         </div>

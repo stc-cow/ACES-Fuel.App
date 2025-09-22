@@ -24,7 +24,10 @@ export default function Login() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { username: "", password: "", remember: false } });
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { username: "", password: "", remember: false },
+  });
 
   useEffect(() => {
     const remembered = localStorage.getItem("remember.username");
@@ -53,34 +56,70 @@ export default function Login() {
               <div className="mx-auto mb-3 flex items-center justify-center gap-2">
                 <span className="inline-block h-5 w-1.5 rounded-full bg-rose-500" />
                 <span className="inline-block h-5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="text-2xl font-extrabold tracking-wider text-white">ACES</span>
+                <span className="text-2xl font-extrabold tracking-wider text-white">
+                  ACES
+                </span>
               </div>
-              <h1 className="text-lg font-semibold text-white">Sign in to Super Admin</h1>
-              <p className="mt-1 text-xs text-white/60">Enter your details to sign in to your account</p>
+              <h1 className="text-lg font-semibold text-white">
+                Sign in to Super Admin
+              </h1>
+              <p className="mt-1 text-xs text-white/60">
+                Enter your details to sign in to your account
+              </p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <Label htmlFor="username" className="text-white/80">Username</Label>
-                <Input id="username" placeholder="username" autoComplete="username" className="mt-2 bg-white/10 text-white placeholder:text-white/40" {...register("username")} />
+                <Label htmlFor="username" className="text-white/80">
+                  Username
+                </Label>
+                <Input
+                  id="username"
+                  placeholder="username"
+                  autoComplete="username"
+                  className="mt-2 bg-white/10 text-white placeholder:text-white/40"
+                  {...register("username")}
+                />
                 {errors.username && (
-                  <p className="mt-1 text-xs text-rose-400">{errors.username.message}</p>
+                  <p className="mt-1 text-xs text-rose-400">
+                    {errors.username.message}
+                  </p>
                 )}
               </div>
               <div>
-                <Label htmlFor="password" className="text-white/80">Password</Label>
-                <Input id="password" type="password" placeholder="••••••••" autoComplete="current-password" className="mt-2 bg-white/10 text-white placeholder:text-white/40" {...register("password")} />
+                <Label htmlFor="password" className="text-white/80">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="mt-2 bg-white/10 text-white placeholder:text-white/40"
+                  {...register("password")}
+                />
                 {errors.password && (
-                  <p className="mt-1 text-xs text-rose-400">{errors.password.message}</p>
+                  <p className="mt-1 text-xs text-rose-400">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-white/70">
-                  <Checkbox className="border-white/30 data-[state=checked]:bg-primary" {...register("remember")} />
+                  <Checkbox
+                    className="border-white/30 data-[state=checked]:bg-primary"
+                    {...register("remember")}
+                  />
                   <span className="text-sm">Remember me</span>
                 </label>
-                <a className="text-sm text-sky-400 hover:underline" href="#">Forgot password?</a>
+                <a className="text-sm text-sky-400 hover:underline" href="#">
+                  Forgot password?
+                </a>
               </div>
-              <Button type="submit" className="w-full bg-sky-600 text-white hover:bg-sky-500" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full bg-sky-600 text-white hover:bg-sky-500"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Signing in…" : "Login"}
               </Button>
             </form>
@@ -93,7 +132,12 @@ export default function Login() {
 
 function Decor() {
   return (
-    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full opacity-20" viewBox="0 0 1200 800" preserveAspectRatio="none">
+    <svg
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
+      viewBox="0 0 1200 800"
+      preserveAspectRatio="none"
+    >
       <defs>
         <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#22c55e" />

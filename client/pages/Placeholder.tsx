@@ -19,7 +19,9 @@ const TITLES: Record<string, string> = {
 };
 
 export default function Placeholder() {
-  const [pathname, setPathname] = useState(() => (typeof window !== "undefined" ? window.location.pathname : "/"));
+  const [pathname, setPathname] = useState(() =>
+    typeof window !== "undefined" ? window.location.pathname : "/",
+  );
 
   useEffect(() => {
     const onPop = () => setPathname(window.location.pathname);
