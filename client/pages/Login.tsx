@@ -62,11 +62,11 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#0b1220] via-[#0b1220] to-[#121a2b]">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#0A0F1E] via-[#111827] to-[#1E293B]">
       <Decor />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4">
-        <Card className="w-full max-w-md border-transparent bg-white/5 shadow-2xl backdrop-blur">
-          <CardContent className="p-8">
+        <Card className="w-full max-w-md bg-[#0D0F1A] border border-[#1F2937] rounded-2xl shadow-2xl transition-transform duration-300 ease-in-out hover:scale-[1.01]">
+          <CardContent className="p-10">
             <div className="mb-8 text-center">
               <div className="mx-auto mb-3 flex items-center justify-center">
                 <img
@@ -91,9 +91,9 @@ export default function Login() {
                 </Label>
                 <Input
                   id="username"
-                  placeholder="username"
+                  placeholder="Username"
                   autoComplete="username"
-                  className="mt-2 bg-white/10 text-white placeholder:text-white/40"
+                  className="mt-2 h-11 rounded-lg bg-[#111827] border border-[#2D3748] text-white placeholder:text-gray-400 shadow-inner focus-visible:ring-2 focus-visible:ring-[#7A00FF]"
                   {...register("username")}
                 />
                 {errors.username && (
@@ -109,9 +109,9 @@ export default function Login() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Password"
                   autoComplete="current-password"
-                  className="mt-2 bg-white/10 text-white placeholder:text-white/40"
+                  className="mt-2 h-11 rounded-lg bg-[#111827] border border-[#2D3748] text-white placeholder:text-gray-400 shadow-inner focus-visible:ring-2 focus-visible:ring-[#FF0057]"
                   {...register("password")}
                 />
                 {errors.password && (
@@ -128,7 +128,7 @@ export default function Login() {
                   />
                   <span className="text-sm">Remember me</span>
                 </label>
-                <a className="text-sm text-sky-400 hover:underline" href="#">
+                <a className="text-sm text-[#00D9FF] hover:underline" href="#">
                   Forgot password?
                 </a>
               </div>
@@ -137,7 +137,7 @@ export default function Login() {
               )}
               <Button
                 type="submit"
-                className="w-full bg-sky-600 text-white hover:bg-sky-500"
+                className="w-full py-3 rounded-lg font-bold text-lg bg-gradient-to-r from-[#FF0057] via-[#7A00FF] to-[#00D9FF] text-white shadow-lg shadow-[#7A00FF]/40 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Signing in…" : "Login"}
