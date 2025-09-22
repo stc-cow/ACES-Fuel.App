@@ -44,16 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 function AppSidebar() {
-  const [pathname, setPathname] = useState(() => {
-    try {
-      // prefer react-router location if available
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const loc = require("react-router-dom").useLocation?.();
-      return loc?.pathname || (typeof window !== "undefined" ? window.location.pathname : "/");
-    } catch {
-      return typeof window !== "undefined" ? window.location.pathname : "/";
-    }
-  });
+  const [pathname, setPathname] = useState(() => (typeof window !== "undefined" ? window.location.pathname : "/"));
 
   useEffect(() => {
     const onPop = () => setPathname(window.location.pathname);
