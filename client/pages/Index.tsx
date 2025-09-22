@@ -39,7 +39,9 @@ export default function Index() {
     <AppShell>
       <Header />
       <div className="px-4 pb-10 pt-4">
-        <div className="mb-4 text-sm text-muted-foreground">{t("dashboard")}</div>
+        <div className="mb-4 text-sm text-muted-foreground">
+          {t("dashboard")}
+        </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           {metricCards.map((m) => (
@@ -55,7 +57,9 @@ export default function Index() {
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">{t("totalTasksStatusCount")}</div>
+              <div className="mb-3 text-base font-medium">
+                {t("totalTasksStatusCount")}
+              </div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
                   <Pie
@@ -79,7 +83,9 @@ export default function Index() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">{t("totalTasksZonesCount")}</div>
+              <div className="mb-3 text-base font-medium">
+                {t("totalTasksZonesCount")}
+              </div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
                   <Pie
@@ -108,7 +114,9 @@ export default function Index() {
               <div className="text-base font-medium">
                 Total Status Count in Last 7 Days
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">{t("noDataYet")}</div>
+              <div className="mt-3 text-sm text-muted-foreground">
+                {t("noDataYet")}
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -116,7 +124,9 @@ export default function Index() {
               <div className="text-base font-medium">
                 Total Liters in Last 7 Days
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">{t("noDataYet")}</div>
+              <div className="mt-3 text-sm text-muted-foreground">
+                {t("noDataYet")}
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -4,7 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
@@ -17,7 +23,10 @@ export default function NotificationsPage() {
 
   const onSubmit = async () => {
     if (!title.trim() || !message.trim()) {
-      toast({ title: "Missing fields", description: "Title and Message are required." });
+      toast({
+        title: "Missing fields",
+        description: "Title and Message are required.",
+      });
       return;
     }
     setSubmitting(true);
@@ -32,7 +41,9 @@ export default function NotificationsPage() {
     <AppShell>
       <Header />
       <div className="px-4 pb-10 pt-4">
-        <div className="mb-4 text-sm text-muted-foreground">Send a notification to drivers</div>
+        <div className="mb-4 text-sm text-muted-foreground">
+          Send a notification to drivers
+        </div>
         <Card>
           <CardContent className="p-6">
             <div className="grid max-w-2xl gap-4">
@@ -52,15 +63,30 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Title</div>
-                <Input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Title" className="mt-1 max-w-sm" />
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Title"
+                  className="mt-1 max-w-sm"
+                />
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Message</div>
-                <Textarea value={message} onChange={(e)=>setMessage(e.target.value)} placeholder="Message" className="mt-1 h-32" />
+                <Textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Message"
+                  className="mt-1 h-32"
+                />
               </div>
               <div>
-                <Button onClick={onSubmit} disabled={submitting} className="bg-sky-600 hover:bg-sky-500">
-                  <Send className="mr-2 h-4 w-4" /> {submitting ? "Sending..." : "Send"}
+                <Button
+                  onClick={onSubmit}
+                  disabled={submitting}
+                  className="bg-sky-600 hover:bg-sky-500"
+                >
+                  <Send className="mr-2 h-4 w-4" />{" "}
+                  {submitting ? "Sending..." : "Send"}
                 </Button>
               </div>
             </div>

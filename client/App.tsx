@@ -25,7 +25,9 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const RequireAuth = ({ children }: { children: React.ReactElement }) => {
-  const isAuth = typeof window !== "undefined" && localStorage.getItem("auth.loggedIn") === "true";
+  const isAuth =
+    typeof window !== "undefined" &&
+    localStorage.getItem("auth.loggedIn") === "true";
   return isAuth ? children : <Navigate to="/login" replace />;
 };
 
@@ -36,28 +38,154 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<RequireAuth><Index /></RequireAuth>} />
-          <Route path="/users" element={<RequireAuth><Placeholder /></RequireAuth>} />
-          <Route path="/users/admins" element={<RequireAuth><AdminUsersPage /></RequireAuth>} />
-          <Route path="/users/authorizations" element={<RequireAuth><AuthorizationsPage /></RequireAuth>} />
-          <Route path="/missions" element={<RequireAuth><MissionsPage /></RequireAuth>} />
-          <Route path="/employees" element={<RequireAuth><Placeholder /></RequireAuth>} />
-          <Route path="/employees/drivers" element={<RequireAuth><DriversPage /></RequireAuth>} />
-          <Route path="/employees/technicians" element={<RequireAuth><TechniciansPage /></RequireAuth>} />
-          <Route path="/sites" element={<RequireAuth><SitesPage /></RequireAuth>} />
-          <Route path="/generators" element={<RequireAuth><GeneratorsPage /></RequireAuth>} />
-          <Route path="/reports" element={<RequireAuth><ReportsPage /></RequireAuth>} />
-          <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
-          <Route path="/settings" element={<RequireAuth><GeneralSettingsPage /></RequireAuth>} />
-          <Route path="/settings/general" element={<RequireAuth><GeneralSettingsPage /></RequireAuth>} />
-          <Route path="/settings/cities" element={<RequireAuth><Placeholder /></RequireAuth>} />
-          <Route path="/settings/zones" element={<RequireAuth><Placeholder /></RequireAuth>} />
-          <Route path="/settings/admin-log" element={<RequireAuth><Placeholder /></RequireAuth>} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<RequireAuth><NotFound /></RequireAuth>} />
-        </Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Index />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <RequireAuth>
+                  <Placeholder />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/users/admins"
+              element={
+                <RequireAuth>
+                  <AdminUsersPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/users/authorizations"
+              element={
+                <RequireAuth>
+                  <AuthorizationsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/missions"
+              element={
+                <RequireAuth>
+                  <MissionsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/employees"
+              element={
+                <RequireAuth>
+                  <Placeholder />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/employees/drivers"
+              element={
+                <RequireAuth>
+                  <DriversPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/employees/technicians"
+              element={
+                <RequireAuth>
+                  <TechniciansPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/sites"
+              element={
+                <RequireAuth>
+                  <SitesPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/generators"
+              element={
+                <RequireAuth>
+                  <GeneratorsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <RequireAuth>
+                  <ReportsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <RequireAuth>
+                  <NotificationsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <RequireAuth>
+                  <GeneralSettingsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings/general"
+              element={
+                <RequireAuth>
+                  <GeneralSettingsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings/cities"
+              element={
+                <RequireAuth>
+                  <Placeholder />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings/zones"
+              element={
+                <RequireAuth>
+                  <Placeholder />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings/admin-log"
+              element={
+                <RequireAuth>
+                  <Placeholder />
+                </RequireAuth>
+              }
+            />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route
+              path="*"
+              element={
+                <RequireAuth>
+                  <NotFound />
+                </RequireAuth>
+              }
+            />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

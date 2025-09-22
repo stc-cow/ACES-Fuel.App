@@ -58,9 +58,14 @@ export default function Header() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" aria-label="User menu">
+              <button
+                className="rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                aria-label="User menu"
+              >
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>{(username?.[0]?.toUpperCase() || "A")}</AvatarFallback>
+                  <AvatarFallback>
+                    {username?.[0]?.toUpperCase() || "A"}
+                  </AvatarFallback>
                 </Avatar>
               </button>
             </DropdownMenuTrigger>
@@ -69,12 +74,16 @@ export default function Header() {
                 <>
                   <DropdownMenuLabel>
                     <div className="flex flex-col">
-                      <span className="text-xs text-muted-foreground">{t("signedInAs")}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {t("signedInAs")}
+                      </span>
                       <span className="font-medium">{username ?? "User"}</span>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={onLogout}>{t("logout")}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={onLogout}>
+                    {t("logout")}
+                  </DropdownMenuItem>
                 </>
               ) : (
                 <DropdownMenuItem onClick={() => navigate("/login")}>
@@ -83,9 +92,16 @@ export default function Header() {
               )}
               <DropdownMenuSeparator />
               <DropdownMenuLabel>{t("language")}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={lang} onValueChange={(v)=> setLang(v as any)}>
-                <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="ar">العربية</DropdownMenuRadioItem>
+              <DropdownMenuRadioGroup
+                value={lang}
+                onValueChange={(v) => setLang(v as any)}
+              >
+                <DropdownMenuRadioItem value="en">
+                  English
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="ar">
+                  العربية
+                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="ur">اردو</DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>

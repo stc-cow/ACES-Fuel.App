@@ -8,7 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useI18n } from "@/i18n";
 import { toast } from "@/hooks/use-toast";
 
@@ -50,7 +57,10 @@ export default function Login() {
 
   const onSubmit = async (values: FormValues) => {
     setAuthError(null);
-    if (values.username.trim() !== VALID_USERNAME || values.password !== VALID_PASSWORD) {
+    if (
+      values.username.trim() !== VALID_USERNAME ||
+      values.password !== VALID_PASSWORD
+    ) {
       setAuthError("Invalid username or password.");
       return;
     }
@@ -105,12 +115,18 @@ export default function Login() {
                   decoding="async"
                 />
               </div>
-              <h1 className="text-lg font-semibold text-white">{t("signInTitle")}</h1>
-              <p className="mt-1 text-xs text-white/60">{t("signInSubtitle")}</p>
+              <h1 className="text-lg font-semibold text-white">
+                {t("signInTitle")}
+              </h1>
+              <p className="mt-1 text-xs text-white/60">
+                {t("signInSubtitle")}
+              </p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <Label htmlFor="username" className="text-white/80">{t("username")}</Label>
+                <Label htmlFor="username" className="text-white/80">
+                  {t("username")}
+                </Label>
                 <Input
                   id="username"
                   placeholder={t("username")}
@@ -125,7 +141,9 @@ export default function Login() {
                 )}
               </div>
               <div>
-                <Label htmlFor="password" className="text-white/80">{t("password")}</Label>
+                <Label htmlFor="password" className="text-white/80">
+                  {t("password")}
+                </Label>
                 <Input
                   id="password"
                   type="password"
@@ -148,7 +166,13 @@ export default function Login() {
                   />
                   <span className="text-sm">{t("rememberMe")}</span>
                 </label>
-                <button className="text-sm text-[#00D9FF] hover:underline" type="button" onClick={()=> setResetOpen(true)}>{t("forgotPassword")}</button>
+                <button
+                  className="text-sm text-[#00D9FF] hover:underline"
+                  type="button"
+                  onClick={() => setResetOpen(true)}
+                >
+                  {t("forgotPassword")}
+                </button>
               </div>
               {authError && (
                 <p className="-mt-1 text-sm text-rose-400">{authError}</p>
@@ -161,8 +185,13 @@ export default function Login() {
                 {isSubmitting ? t("signingIn") : t("login")}
               </Button>
               <div className="mt-4 flex items-center justify-center gap-2">
-                {(["en","ar","ur"] as const).map((l)=> (
-                  <Button key={l} size="sm" variant={l===lang?"secondary":"outline"} onClick={()=> setLang(l)}>
+                {(["en", "ar", "ur"] as const).map((l) => (
+                  <Button
+                    key={l}
+                    size="sm"
+                    variant={l === lang ? "secondary" : "outline"}
+                    onClick={() => setLang(l)}
+                  >
                     {l === "en" ? "EN" : l === "ar" ? "AR" : "UR"}
                   </Button>
                 ))}
@@ -179,11 +208,25 @@ export default function Login() {
           </DialogHeader>
           <div className="space-y-2">
             <Label htmlFor="resetEmail">{t("enterEmailToReset")}</Label>
-            <Input id="resetEmail" type="email" value={resetEmail} onChange={(e)=> setResetEmail(e.target.value)} placeholder="name@example.com" />
+            <Input
+              id="resetEmail"
+              type="email"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              placeholder="name@example.com"
+            />
           </div>
           <DialogFooter className="gap-2 sm:gap-2">
-            <Button variant="outline" type="button" onClick={()=> setResetOpen(false)}>{t("cancel")}</Button>
-            <Button type="button" onClick={sendReset}>{t("sendResetLink")}</Button>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => setResetOpen(false)}
+            >
+              {t("cancel")}
+            </Button>
+            <Button type="button" onClick={sendReset}>
+              {t("sendResetLink")}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -205,11 +248,25 @@ function Decor() {
           <stop offset="50%" stopColor="#a78bfa" />
           <stop offset="100%" stopColor="#f472b6" />
         </linearGradient>
-        <radialGradient id="r1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(200,150) rotate(45) scale(400)">
+        <radialGradient
+          id="r1"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(200,150) rotate(45) scale(400)"
+        >
           <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.6" />
           <stop offset="100%" stopColor="#93c5fd" stopOpacity="0" />
         </radialGradient>
-        <radialGradient id="r2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1000,650) rotate(-30) scale(500)">
+        <radialGradient
+          id="r2"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(1000,650) rotate(-30) scale(500)"
+        >
           <stop offset="0%" stopColor="#fda4af" stopOpacity="0.5" />
           <stop offset="100%" stopColor="#fda4af" stopOpacity="0" />
         </radialGradient>
@@ -219,7 +276,13 @@ function Decor() {
       </defs>
       <g opacity="0.5">
         <circle cx="200" cy="150" r="300" fill="url(#r1)" filter="url(#blur)" />
-        <circle cx="1000" cy="650" r="350" fill="url(#r2)" filter="url(#blur)" />
+        <circle
+          cx="1000"
+          cy="650"
+          r="350"
+          fill="url(#r2)"
+          filter="url(#blur)"
+        />
       </g>
       <g fill="none" stroke="url(#g)" strokeOpacity="0.25">
         <path d="M0 700 L300 500 600 650 900 450 1200 600" />

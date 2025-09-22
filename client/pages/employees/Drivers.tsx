@@ -39,16 +39,58 @@ type Driver = {
 };
 
 const initialRows: Driver[] = [
-  { id: 1, name: "Gul Muhammad", phone: "500861573", zone: "Mobily East Region", active: true },
-  { id: 2, name: "Irfan", phone: "566041714", zone: "COW East Region", active: true },
-  { id: 3, name: "Pradeep Singh", phone: "", zone: "Mobily East Region", active: false },
+  {
+    id: 1,
+    name: "Gul Muhammad",
+    phone: "500861573",
+    zone: "Mobily East Region",
+    active: true,
+  },
+  {
+    id: 2,
+    name: "Irfan",
+    phone: "566041714",
+    zone: "COW East Region",
+    active: true,
+  },
+  {
+    id: 3,
+    name: "Pradeep Singh",
+    phone: "",
+    zone: "Mobily East Region",
+    active: false,
+  },
   { id: 4, name: "MURALI.MUSAFMY", phone: "570235067", zone: "", active: true },
-  { id: 5, name: "ZAFAR ABDUL SATTAR", phone: "500832560", zone: "COW East Region", active: true },
+  {
+    id: 5,
+    name: "ZAFAR ABDUL SATTAR",
+    phone: "500832560",
+    zone: "COW East Region",
+    active: true,
+  },
   { id: 6, name: "Reaza", phone: "547621843", zone: "", active: true },
-  { id: 7, name: "AWAHE", phone: "530408743", zone: "COW East Region", active: false },
+  {
+    id: 7,
+    name: "AWAHE",
+    phone: "530408743",
+    zone: "COW East Region",
+    active: false,
+  },
   { id: 8, name: "Tayyab", phone: "507687421", zone: "", active: true },
-  { id: 9, name: "Anwar", phone: "591445707", zone: "COW Central Region", active: true },
-  { id: 10, name: "Kamran A Noor Akbar Khan", phone: "582115996", zone: "COW Central Region", active: true },
+  {
+    id: 9,
+    name: "Anwar",
+    phone: "591445707",
+    zone: "COW Central Region",
+    active: true,
+  },
+  {
+    id: 10,
+    name: "Kamran A Noor Akbar Khan",
+    phone: "582115996",
+    zone: "COW Central Region",
+    active: true,
+  },
 ];
 
 const allColumns = [
@@ -59,22 +101,37 @@ const allColumns = [
   { key: "settings", label: "Settings" },
 ] as const;
 
-type ColumnKey = typeof allColumns[number]["key"];
+type ColumnKey = (typeof allColumns)[number]["key"];
 
 export default function DriversPage() {
   const [query, setQuery] = useState("");
   const [rows, setRows] = useState<Driver[]>(initialRows);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [cols, setCols] = useState<Record<ColumnKey, boolean>>({ name: true, phone: true, zone: true, active: true, settings: true });
-  const [filterActive, setFilterActive] = useState<"all" | "active" | "inactive">("all");
+  const [cols, setCols] = useState<Record<ColumnKey, boolean>>({
+    name: true,
+    phone: true,
+    zone: true,
+    active: true,
+    settings: true,
+  });
+  const [filterActive, setFilterActive] = useState<
+    "all" | "active" | "inactive"
+  >("all");
 
   const filteredBase = useMemo(() => {
     let arr = rows;
-    if (filterActive !== "all") arr = arr.filter((r) => (filterActive === "active" ? r.active : !r.active));
+    if (filterActive !== "all")
+      arr = arr.filter((r) =>
+        filterActive === "active" ? r.active : !r.active,
+      );
     if (!query) return arr;
     const q = query.toLowerCase();
-    return arr.filter((r) => [r.name, r.phone, r.zone].some((v) => String(v).toLowerCase().includes(q)));
+    return arr.filter((r) =>
+      [r.name, r.phone, r.zone].some((v) =>
+        String(v).toLowerCase().includes(q),
+      ),
+    );
   }, [rows, query, filterActive]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBase.length / pageSize));
@@ -84,12 +141,22 @@ export default function DriversPage() {
   }, [filteredBase, page, pageSize]);
 
   const exportCsv = () => {
-    const visible = allColumns.filter((c) => cols[c.key] && c.key !== "settings");
+    const visible = allColumns.filter(
+      (c) => cols[c.key] && c.key !== "settings",
+    );
     const head = visible.map((c) => c.label).join(",");
     const body = filteredBase
-      .map((r) => visible.map((c) => (c.key === "active" ? (r.active ? "Yes" : "No") : (r as any)[c.key])).join(","))
+      .map((r) =>
+        visible
+          .map((c) =>
+            c.key === "active" ? (r.active ? "Yes" : "No") : (r as any)[c.key],
+          )
+          .join(","),
+      )
       .join("\n");
-    const blob = new Blob([head + "\n" + body], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([head + "\n" + body], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -105,10 +172,18 @@ export default function DriversPage() {
       <Header />
       <div className="px-4 pb-10 pt-4">
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">Manage the drivers and their users</div>
+          <div className="text-sm text-muted-foreground">
+            Manage the drivers and their users
+          </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive" className="hidden sm:inline-flex">Archive</Button>
-            <Button variant="secondary" className="hidden sm:inline-flex" onClick={exportCsv}>
+            <Button variant="destructive" className="hidden sm:inline-flex">
+              Archive
+            </Button>
+            <Button
+              variant="secondary"
+              className="hidden sm:inline-flex"
+              onClick={exportCsv}
+            >
               <Download className="mr-2 h-4 w-4" /> Export
             </Button>
             <DropdownMenu>
@@ -122,7 +197,9 @@ export default function DriversPage() {
                   <DropdownMenuCheckboxItem
                     key={c.key}
                     checked={cols[c.key]}
-                    onCheckedChange={(v) => setCols((s) => ({ ...s, [c.key]: !!v }))}
+                    onCheckedChange={(v) =>
+                      setCols((s) => ({ ...s, [c.key]: !!v }))
+                    }
                   >
                     {c.label}
                   </DropdownMenuCheckboxItem>
@@ -139,13 +216,41 @@ export default function DriversPage() {
           <CardContent className="p-0">
             <div className="flex flex-wrap items-center gap-2 p-4">
               <div className="flex gap-2">
-                <Badge variant={filterActive === "all" ? "default" : "secondary"} className="cursor-pointer" onClick={() => setFilterActive("all")}>All</Badge>
-                <Badge variant={filterActive === "active" ? "default" : "secondary"} className="cursor-pointer" onClick={() => setFilterActive("active")}>Active</Badge>
-                <Badge variant={filterActive === "inactive" ? "default" : "secondary"} className="cursor-pointer" onClick={() => setFilterActive("inactive")}>Inactive</Badge>
+                <Badge
+                  variant={filterActive === "all" ? "default" : "secondary"}
+                  className="cursor-pointer"
+                  onClick={() => setFilterActive("all")}
+                >
+                  All
+                </Badge>
+                <Badge
+                  variant={filterActive === "active" ? "default" : "secondary"}
+                  className="cursor-pointer"
+                  onClick={() => setFilterActive("active")}
+                >
+                  Active
+                </Badge>
+                <Badge
+                  variant={
+                    filterActive === "inactive" ? "default" : "secondary"
+                  }
+                  className="cursor-pointer"
+                  onClick={() => setFilterActive("inactive")}
+                >
+                  Inactive
+                </Badge>
               </div>
               <div className="ml-auto flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Search</span>
-                <Input value={query} onChange={(e) => { setPage(1); setQuery(e.target.value); }} placeholder="" className="h-9 w-56" />
+                <Input
+                  value={query}
+                  onChange={(e) => {
+                    setPage(1);
+                    setQuery(e.target.value);
+                  }}
+                  placeholder=""
+                  className="h-9 w-56"
+                />
               </div>
             </div>
 
@@ -153,17 +258,29 @@ export default function DriversPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
-                    {cols.name && <TableHead className="text-white">Name</TableHead>}
-                    {cols.phone && <TableHead className="text-white">Phone</TableHead>}
-                    {cols.zone && <TableHead className="text-white">Zone</TableHead>}
-                    {cols.active && <TableHead className="text-white">Active</TableHead>}
-                    {cols.settings && <TableHead className="text-white">Settings</TableHead>}
+                    {cols.name && (
+                      <TableHead className="text-white">Name</TableHead>
+                    )}
+                    {cols.phone && (
+                      <TableHead className="text-white">Phone</TableHead>
+                    )}
+                    {cols.zone && (
+                      <TableHead className="text-white">Zone</TableHead>
+                    )}
+                    {cols.active && (
+                      <TableHead className="text-white">Active</TableHead>
+                    )}
+                    {cols.settings && (
+                      <TableHead className="text-white">Settings</TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {current.map((r) => (
                     <TableRow key={r.id}>
-                      {cols.name && <TableCell className="font-medium">{r.name}</TableCell>}
+                      {cols.name && (
+                        <TableCell className="font-medium">{r.name}</TableCell>
+                      )}
                       {cols.phone && <TableCell>{r.phone}</TableCell>}
                       {cols.zone && <TableCell>{r.zone}</TableCell>}
                       {cols.active && (
@@ -177,16 +294,30 @@ export default function DriversPage() {
                       )}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
-                          <Button size="icon" variant="ghost" aria-label="View"><Eye className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" aria-label="Edit"><Pencil className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" aria-label="Delete" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4" /></Button>
+                          <Button size="icon" variant="ghost" aria-label="View">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" aria-label="Edit">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Delete"
+                            onClick={() => remove(r.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       )}
                     </TableRow>
                   ))}
                   {current.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={allColumns.length} className="text-center text-sm text-muted-foreground">
+                      <TableCell
+                        colSpan={allColumns.length}
+                        className="text-center text-sm text-muted-foreground"
+                      >
                         No results
                       </TableCell>
                     </TableRow>
@@ -196,11 +327,29 @@ export default function DriversPage() {
             </div>
 
             <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
-              <div>Showing {current.length} of {filteredBase.length} entries</div>
+              <div>
+                Showing {current.length} of {filteredBase.length} entries
+              </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</Button>
-                <span className="tabular-nums">{page} / {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>Next</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Prev
+                </Button>
+                <span className="tabular-nums">
+                  {page} / {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page === totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Next
+                </Button>
               </div>
             </div>
           </CardContent>

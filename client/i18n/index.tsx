@@ -1,4 +1,11 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export type Lang = "en" | "ar" | "ur";
 
@@ -57,7 +64,8 @@ const en: Dict = {
   totalTasksStatusCount: "Total tasks status count",
   totalTasksZonesCount: "Total tasks zones count",
   noDataYet: "No data yet",
-  manageAdminsIntro: "Manage who can log in to Administrative and Authorizations",
+  manageAdminsIntro:
+    "Manage who can log in to Administrative and Authorizations",
   export: "Export",
   columns: "Columns",
   add: "Add",
@@ -209,11 +217,17 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 function getInitialLang(): Lang {
   try {
     const fromKey = (localStorage.getItem("i18n.lang") as Lang | null) || null;
-    if (fromKey === "en" || fromKey === "ar" || fromKey === "ur") return fromKey;
+    if (fromKey === "en" || fromKey === "ar" || fromKey === "ur")
+      return fromKey;
     const raw = localStorage.getItem("settings.general");
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && (parsed.language === "en" || parsed.language === "ar" || parsed.language === "ur")) {
+      if (
+        parsed &&
+        (parsed.language === "en" ||
+          parsed.language === "ar" ||
+          parsed.language === "ur")
+      ) {
         return parsed.language;
       }
     }
@@ -225,18 +239,24 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>(getInitialLang());
 
   useEffect(() => {
-    document.documentElement.dir = lang === "ar" || lang === "ur" ? "rtl" : "ltr";
+    document.documentElement.dir =
+      lang === "ar" || lang === "ur" ? "rtl" : "ltr";
   }, [lang]);
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
-    try { localStorage.setItem("i18n.lang", l); } catch {}
+    try {
+      localStorage.setItem("i18n.lang", l);
+    } catch {}
     window.dispatchEvent(new CustomEvent("i18n:language", { detail: l }));
   }, []);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      if (e.key === "i18n.lang" && (e.newValue === "en" || e.newValue === "ar" || e.newValue === "ur")) {
+      if (
+        e.key === "i18n.lang" &&
+        (e.newValue === "en" || e.newValue === "ar" || e.newValue === "ur")
+      ) {
         setLangState(e.newValue);
       }
       if (e.key === "settings.general" && e.newValue) {
@@ -259,10 +279,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const t = useCallback((key: string) => {
-    const d = dictionaries[lang] || en;
-    return d[key] ?? key;
-  }, [lang]);
+  const t = useCallback(
+    (key: string) => {
+      const d = dictionaries[lang] || en;
+      return d[key] ?? key;
+    },
+    [lang],
+  );
 
   const value = useMemo(() => ({ lang, t, setLang }), [lang, t, setLang]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

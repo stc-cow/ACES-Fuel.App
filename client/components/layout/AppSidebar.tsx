@@ -133,7 +133,9 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/users/authorizations")}
                     >
-                      <Link to="/users/authorizations">{t("authorizations")}</Link>
+                      <Link to="/users/authorizations">
+                        {t("authorizations")}
+                      </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -181,7 +183,9 @@ function AppSidebar() {
                       asChild
                       isActive={isActive("/employees/technicians")}
                     >
-                      <Link to="/employees/technicians">{t("technicians")}</Link>
+                      <Link to="/employees/technicians">
+                        {t("technicians")}
+                      </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>
@@ -228,28 +232,53 @@ function AppSidebar() {
                     <span>{t("settings")}</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuAction aria-label="Toggle Settings submenu" onClick={(e)=>{e.preventDefault(); setOpenSettings(v=>!v);}}>
-                  <ChevronDown className={cn("transition-transform", openSettings ? "rotate-180" : "rotate-0")} />
+                <SidebarMenuAction
+                  aria-label="Toggle Settings submenu"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenSettings((v) => !v);
+                  }}
+                >
+                  <ChevronDown
+                    className={cn(
+                      "transition-transform",
+                      openSettings ? "rotate-180" : "rotate-0",
+                    )}
+                  />
                 </SidebarMenuAction>
                 <SidebarMenuSub className={cn(!openSettings && "hidden")}>
                   <SidebarMenuSubItem>
-                    <SidebarMenuSubButton asChild isActive={isActive("/settings/general")}>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={isActive("/settings/general")}
+                    >
                       <Link to="/settings/general">{t("settingsGeneral")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
-                    <SidebarMenuSubButton asChild isActive={isActive("/settings/cities")}>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={isActive("/settings/cities")}
+                    >
                       <Link to="/settings/cities">{t("settingsCities")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
-                    <SidebarMenuSubButton asChild isActive={isActive("/settings/zones")}>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={isActive("/settings/zones")}
+                    >
                       <Link to="/settings/zones">{t("settingsZones")}</Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                   <SidebarMenuSubItem>
-                    <SidebarMenuSubButton asChild isActive={isActive("/settings/admin-log")}>
-                      <Link to="/settings/admin-log">{t("settingsAdminLog")}</Link>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={isActive("/settings/admin-log")}
+                    >
+                      <Link to="/settings/admin-log">
+                        {t("settingsAdminLog")}
+                      </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 </SidebarMenuSub>

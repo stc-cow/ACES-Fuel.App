@@ -106,7 +106,9 @@ export default function AdminUsersPage() {
       <Header />
       <div className="px-4 pb-10 pt-4">
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">{t("manageAdminsIntro")}</div>
+          <div className="text-sm text-muted-foreground">
+            {t("manageAdminsIntro")}
+          </div>
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -145,9 +147,13 @@ export default function AdminUsersPage() {
         <Card>
           <CardContent className="p-0">
             <div className="flex items-center justify-between gap-4 p-4">
-              <div className="text-sm text-muted-foreground">{t("excelPrintColumnVisibility")}</div>
+              <div className="text-sm text-muted-foreground">
+                {t("excelPrintColumnVisibility")}
+              </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{t("search")}</span>
+                <span className="text-sm text-muted-foreground">
+                  {t("search")}
+                </span>
                 <Input
                   value={query}
                   onChange={(e) => {
@@ -165,16 +171,22 @@ export default function AdminUsersPage() {
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
                     {cols.username && (
-                      <TableHead className="text-white">{t("username")}</TableHead>
+                      <TableHead className="text-white">
+                        {t("username")}
+                      </TableHead>
                     )}
                     {cols.email && (
                       <TableHead className="text-white">{t("email")}</TableHead>
                     )}
                     {cols.webAuth && (
-                      <TableHead className="text-white">{t("webAuthorization")}</TableHead>
+                      <TableHead className="text-white">
+                        {t("webAuthorization")}
+                      </TableHead>
                     )}
                     {cols.settings && (
-                      <TableHead className="text-white">{t("settingsCol")}</TableHead>
+                      <TableHead className="text-white">
+                        {t("settingsCol")}
+                      </TableHead>
                     )}
                   </TableRow>
                 </TableHeader>
@@ -224,7 +236,8 @@ export default function AdminUsersPage() {
 
             <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
               <div>
-                {t("showing")} {current.length} {t("of")} {filtered.length} {t("entries")}
+                {t("showing")} {current.length} {t("of")} {filtered.length}{" "}
+                {t("entries")}
               </div>
               <div className="flex items-center gap-2">
                 <Button
