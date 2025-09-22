@@ -1,0 +1,69 @@
+import { AppShell } from "@/components/layout/AppSidebar";
+import Header from "@/components/layout/Header";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+
+const STORAGE_KEY = "settings.general";
+
+type GeneralSettings = {
+  literPrice: number;
+  maxDistance: number;
+};
+
+export default function GeneralSettingsPage() {
+  const [form, setForm] = useState<GeneralSettings>({ literPrice: 0.63, maxDistance: 500 });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as GeneralSettings;
+        if (typeof parsed.literPrice === "number" && typeof parsed.maxDistance === "number") {
+          setForm(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  const save = async () => {
+    setSaving(true);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    await new Promise((r) => setTimeout(r, 300));
+    setSaving(false);
+    toast({ title: "Saved", description: "General settings updated." });
+  };
+
+  return (
+    <AppShell>
+      <Header />
+      <div className="px-4 pb-10 pt-4">
+        <div className="mb-4 text-sm text-muted-foreground">General Settings</div>
+        <div className="mb-3 flex justify-end">
+          <Button onClick={save} disabled={saving} className="bg-sky-600 hover:bg-sky-500">{saving ? "Saving..." : "Save"}</Button>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid gap-6 md:grid-cols-2 max-w-3xl">
+              <div>
+                <div className="text-xs text-muted-foreground">Liter price</div>
+                <Input type="number" step="0.01" value={form.literPrice}
+                  onChange={(e)=> setForm((f)=> ({...f, literPrice: Number(e.target.value)}))}
+                  placeholder="0.63" className="mt-1" />
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Maximum distance from station to confirm task</div>
+                <Input type="number" value={form.maxDistance}
+                  onChange={(e)=> setForm((f)=> ({...f, maxDistance: Number(e.target.value)}))}
+                  placeholder="500" className="mt-1" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </AppShell>
+  );
+}
