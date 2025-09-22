@@ -112,9 +112,7 @@ export default function Index() {
               <div className="text-base font-medium">
                 Total Status Count in Last 7 Days
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">
-                No data yet
-              </div>
+              <div className="mt-3 text-sm text-muted-foreground">{t("noDataYet")}</div>
             </CardContent>
           </Card>
           <Card>
