@@ -35,7 +35,10 @@ export default function Login() {
       setValue("username", remembered);
       setValue("remember", true);
     }
-  }, [setValue]);
+    if (localStorage.getItem("auth.loggedIn") === "true") {
+      navigate("/");
+    }
+  }, [setValue, navigate]);
 
   const onSubmit = async (values: FormValues) => {
     if (values.remember) {
