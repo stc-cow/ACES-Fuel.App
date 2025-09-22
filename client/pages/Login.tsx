@@ -43,6 +43,7 @@ export default function Login() {
     } else {
       localStorage.removeItem("remember.username");
     }
+    localStorage.setItem("auth.loggedIn", "true");
     navigate("/");
   };
 
