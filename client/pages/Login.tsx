@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,9 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+const VALID_USERNAME = "Bannaga";
+const VALID_PASSWORD = "Aces@6343";
+
 export default function Login() {
   const navigate = useNavigate();
   const {
@@ -26,7 +29,7 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { username: "", password: "", remember: false },
+    defaultValues: { username: "Bannaga", password: "", remember: false },
   });
 
   useEffect(() => {
@@ -40,7 +43,14 @@ export default function Login() {
     }
   }, [setValue, navigate]);
 
+  const [authError, setAuthError] = useState<string | null>(null);
+
   const onSubmit = async (values: FormValues) => {
+    setAuthError(null);
+    if (values.username.trim() !== VALID_USERNAME || values.password !== VALID_PASSWORD) {
+      setAuthError("Invalid username or password.");
+      return;
+    }
     if (values.remember) {
       localStorage.setItem("remember.username", values.username);
     } else {
@@ -121,6 +131,9 @@ export default function Login() {
                   Forgot password?
                 </a>
               </div>
+              {authError && (
+                <p className="-mt-1 text-sm text-rose-400">{authError}</p>
+              )}
               <Button
                 type="submit"
                 className="w-full bg-sky-600 text-white hover:bg-sky-500"
