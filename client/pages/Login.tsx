@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { useI18n } from "@/i18n";
+import { toast } from "@/hooks/use-toast";
 
 const schema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -63,6 +65,30 @@ export default function Login() {
   };
 
   const { t, lang, setLang } = useI18n();
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+
+  const sendReset = async () => {
+    const email = resetEmail.trim();
+    const emailOk = /[^@\s]+@[^@\s]+\.[^@\s]+/.test(email);
+    if (!emailOk) {
+      toast({ title: t("invalidEmail") });
+      return;
+    }
+    try {
+      await fetch("/api/password-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      toast({ title: t("resetEmailSent") });
+      setResetOpen(false);
+    } catch {
+      toast({ title: t("resetEmailSent") });
+      setResetOpen(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2ff] via-[#f8fafc] to-[#ffffff]">
       <Decor />
@@ -122,7 +148,7 @@ export default function Login() {
                   />
                   <span className="text-sm">{t("rememberMe")}</span>
                 </label>
-                <a className="text-sm text-[#00D9FF] hover:underline" href="#">{t("forgotPassword")}</a>
+                <button className="text-sm text-[#00D9FF] hover:underline" type="button" onClick={()=> setResetOpen(true)}>{t("forgotPassword")}</button>
               </div>
               {authError && (
                 <p className="-mt-1 text-sm text-rose-400">{authError}</p>
@@ -145,6 +171,22 @@ export default function Login() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={resetOpen} onOpenChange={setResetOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("resetPassword")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="resetEmail">{t("enterEmailToReset")}</Label>
+            <Input id="resetEmail" type="email" value={resetEmail} onChange={(e)=> setResetEmail(e.target.value)} placeholder="name@example.com" />
+          </div>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button variant="outline" type="button" onClick={()=> setResetOpen(false)}>{t("cancel")}</Button>
+            <Button type="button" onClick={sendReset}>{t("sendResetLink")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
