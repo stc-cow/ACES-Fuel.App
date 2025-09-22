@@ -57,9 +57,13 @@ function AppSidebar() {
   const [openEmployees, setOpenEmployees] = useState(
     pathname.startsWith("/employees"),
   );
+  const [openSettings, setOpenSettings] = useState(
+    pathname.startsWith("/settings"),
+  );
   useEffect(() => {
     if (pathname.startsWith("/users")) setOpenUsers(true);
     if (pathname.startsWith("/employees")) setOpenEmployees(true);
+    if (pathname.startsWith("/settings")) setOpenSettings(true);
   }, [pathname]);
 
   return (
