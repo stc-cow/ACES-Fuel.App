@@ -93,12 +93,24 @@ function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/employees")}> 
+                <SidebarMenuButton asChild isActive={isActive("/employees")}>
                   <Link to="/employees" className="flex items-center gap-2">
                     <UserCog />
                     <span>Employees</span>
                   </Link>
                 </SidebarMenuButton>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/employees/drivers")}>
+                      <Link to="/employees/drivers">Drivers</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/employees/technicians")}>
+                      <Link to="/employees/technicians">Technicians</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/sites")}> 
