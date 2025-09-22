@@ -57,12 +57,14 @@ export default function Login() {
         <Card className="w-full max-w-md border-transparent bg-white/5 shadow-2xl backdrop-blur">
           <CardContent className="p-8">
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-3 flex items-center justify-center gap-2">
-                <span className="inline-block h-5 w-1.5 rounded-full bg-rose-500" />
-                <span className="inline-block h-5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="text-2xl font-extrabold tracking-wider text-white">
-                  ACES
-                </span>
+              <div className="mx-auto mb-3 flex items-center justify-center">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fc70031ceb54e448ab66bd6627db55078?format=webp&width=800"
+                  alt="ACES"
+                  className="h-8 w-auto"
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
               <h1 className="text-lg font-semibold text-white">
                 Sign in to Super Admin
