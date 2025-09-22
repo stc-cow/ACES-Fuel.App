@@ -80,9 +80,7 @@ export default function Index() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">
-                Total tasks zones count
-              </div>
+              <div className="mb-3 text-base font-medium">{t("totalTasksZonesCount")}</div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
                   <Pie
