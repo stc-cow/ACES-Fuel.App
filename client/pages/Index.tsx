@@ -44,9 +44,9 @@ export default function Index() {
 
         <div className="grid gap-4 md:grid-cols-3">
           {metricCards.map((m) => (
-            <Card key={m.title} className="overflow-hidden">
+            <Card key={m.key} className="overflow-hidden">
               <CardContent className={`${m.bg} p-4 text-white`}>
-                <div className="text-sm/6 opacity-90">{m.title}</div>
+                <div className="text-sm/6 opacity-90">{t(m.key as any)}</div>
                 <div className="mt-2 text-2xl font-semibold">{m.value}</div>
               </CardContent>
             </Card>
