@@ -23,6 +23,11 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const RequireAuth = ({ children }: { children: React.ReactElement }) => {
+  const isAuth = typeof window !== "undefined" && localStorage.getItem("auth.loggedIn") === "true";
+  return isAuth ? children : <Navigate to="/login" replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
