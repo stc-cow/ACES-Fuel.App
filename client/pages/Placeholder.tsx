@@ -5,6 +5,8 @@ import { useLocation } from "react-router-dom";
 
 const TITLES: Record<string, string> = {
   "/users": "Users & authorization",
+  "/users/admins": "Admin Users",
+  "/users/authorizations": "Authorizations",
   "/missions": "Missions",
   "/employees": "Employees",
   "/sites": "Sites",
