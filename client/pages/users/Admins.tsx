@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/layout/AppSidebar";
 import Header from "@/components/layout/Header";
+import { useI18n } from "@/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,26 +100,25 @@ export default function AdminUsersPage() {
 
   const remove = (id: number) => setRows((r) => r.filter((x) => x.id !== id));
 
+  const { t } = useI18n();
   return (
     <AppShell>
       <Header />
       <div className="px-4 pb-10 pt-4">
         <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Manage who can log in to Administrative and Authorizations
-          </div>
+          <div className="text-sm text-muted-foreground">{t("manageAdminsIntro")}</div>
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
               className="hidden sm:inline-flex"
               onClick={exportCsv}
             >
-              <Download className="mr-2 h-4 w-4" /> Export
+              <Download className="mr-2 h-4 w-4" /> {t("export")}
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="hidden sm:inline-flex">
-                  <Columns2 className="mr-2 h-4 w-4" /> Columns
+                  <Columns2 className="mr-2 h-4 w-4" /> {t("columns")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -137,7 +137,7 @@ export default function AdminUsersPage() {
               </DropdownMenuContent>
             </DropdownMenu>
             <Button className="bg-sky-600 hover:bg-sky-500">
-              <Plus className="mr-2 h-4 w-4" /> Add
+              <Plus className="mr-2 h-4 w-4" /> {t("add")}
             </Button>
           </div>
         </div>
@@ -145,11 +145,9 @@ export default function AdminUsersPage() {
         <Card>
           <CardContent className="p-0">
             <div className="flex items-center justify-between gap-4 p-4">
-              <div className="text-sm text-muted-foreground">
-                Excel | Print | Column visibility
-              </div>
+              <div className="text-sm text-muted-foreground">{t("excelPrintColumnVisibility")}</div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Search</span>
+                <span className="text-sm text-muted-foreground">{t("search")}</span>
                 <Input
                   value={query}
                   onChange={(e) => {
@@ -167,18 +165,16 @@ export default function AdminUsersPage() {
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
                     {cols.username && (
-                      <TableHead className="text-white">Username</TableHead>
+                      <TableHead className="text-white">{t("username")}</TableHead>
                     )}
                     {cols.email && (
-                      <TableHead className="text-white">Email</TableHead>
+                      <TableHead className="text-white">{t("email")}</TableHead>
                     )}
                     {cols.webAuth && (
-                      <TableHead className="text-white">
-                        Web Authorization
-                      </TableHead>
+                      <TableHead className="text-white">{t("webAuthorization")}</TableHead>
                     )}
                     {cols.settings && (
-                      <TableHead className="text-white">Settings</TableHead>
+                      <TableHead className="text-white">{t("settingsCol")}</TableHead>
                     )}
                   </TableRow>
                 </TableHeader>
@@ -218,7 +214,7 @@ export default function AdminUsersPage() {
                         colSpan={4}
                         className="text-center text-sm text-muted-foreground"
                       >
-                        No results
+                        {t("noResults")}
                       </TableCell>
                     </TableRow>
                   )}
@@ -228,7 +224,7 @@ export default function AdminUsersPage() {
 
             <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
               <div>
-                Showing {current.length} of {filtered.length} entries
+                {t("showing")} {current.length} {t("of")} {filtered.length} {t("entries")}
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -237,7 +233,7 @@ export default function AdminUsersPage() {
                   disabled={page === 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
-                  Prev
+                  {t("prev")}
                 </Button>
                 <span className="tabular-nums">
                   {page} / {totalPages}
@@ -248,7 +244,7 @@ export default function AdminUsersPage() {
                   disabled={page === totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >
-                  Next
+                  {t("next")}
                 </Button>
               </div>
             </div>
