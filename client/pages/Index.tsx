@@ -28,21 +28,9 @@ const zoneData = [
 ];
 
 const metricCards = [
-  {
-    title: "Total Liters Added Today",
-    value: "0.00 liters",
-    bg: "bg-rose-500",
-  },
-  {
-    title: "Total Liters Added in Last 30 Days",
-    value: "0.00 liters",
-    bg: "bg-sky-500",
-  },
-  {
-    title: "Stc-cow – Last 30 Days",
-    value: "0.00 liters",
-    bg: "bg-green-500",
-  },
+  { key: "totalLitersToday", value: "0.00 liters", bg: "bg-rose-500" },
+  { key: "totalLiters30", value: "0.00 liters", bg: "bg-sky-500" },
+  { key: "stcCow30", value: "0.00 liters", bg: "bg-green-500" },
 ];
 
 export default function Index() {
