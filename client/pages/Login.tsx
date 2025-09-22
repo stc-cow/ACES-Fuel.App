@@ -62,7 +62,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#0A0F1E] via-[#111827] to-[#1E293B]">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2ff] via-[#f8fafc] to-[#ffffff]">
       <Decor />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4">
         <Card className="w-full max-w-md bg-[#0D0F1A] border border-[#1F2937] rounded-2xl shadow-2xl transition-transform duration-300 ease-in-out hover:scale-[1.01]">
@@ -154,18 +154,33 @@ function Decor() {
   return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
+      className="pointer-events-none absolute inset-0 h-full w-full"
       viewBox="0 0 1200 800"
       preserveAspectRatio="none"
     >
       <defs>
         <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#22c55e" />
-          <stop offset="50%" stopColor="#0ea5e9" />
-          <stop offset="100%" stopColor="#f43f5e" />
+          <stop offset="0%" stopColor="#60a5fa" />
+          <stop offset="50%" stopColor="#a78bfa" />
+          <stop offset="100%" stopColor="#f472b6" />
         </linearGradient>
+        <radialGradient id="r1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(200,150) rotate(45) scale(400)">
+          <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#93c5fd" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="r2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1000,650) rotate(-30) scale(500)">
+          <stop offset="0%" stopColor="#fda4af" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#fda4af" stopOpacity="0" />
+        </radialGradient>
+        <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="60" />
+        </filter>
       </defs>
-      <g fill="none" stroke="url(#g)" strokeOpacity=".3">
+      <g opacity="0.5">
+        <circle cx="200" cy="150" r="300" fill="url(#r1)" filter="url(#blur)" />
+        <circle cx="1000" cy="650" r="350" fill="url(#r2)" filter="url(#blur)" />
+      </g>
+      <g fill="none" stroke="url(#g)" strokeOpacity="0.25">
         <path d="M0 700 L300 500 600 650 900 450 1200 600" />
         <path d="M0 500 L250 350 500 500 750 350 1000 500 1200 400" />
         <path d="M0 300 L300 200 600 300 900 200 1200 250" />
