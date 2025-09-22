@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Placeholder from "./pages/Placeholder";
 import Login from "./pages/Login";
+import AdminUsersPage from "./pages/users/Admins";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
