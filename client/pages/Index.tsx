@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/layout/Header";
+import { useI18n } from "@/i18n";
 import { AppShell } from "@/components/layout/AppSidebar";
 import {
   PieChart,
