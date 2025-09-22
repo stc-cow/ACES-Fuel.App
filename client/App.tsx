@@ -14,6 +14,7 @@ import AuthorizationsPage from "./pages/users/Authorizations";
 import MissionsPage from "./pages/missions/Missions";
 import DriversPage from "./pages/employees/Drivers";
 import TechniciansPage from "./pages/employees/Technicians";
+import SitesPage from "./pages/sites/Sites";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
