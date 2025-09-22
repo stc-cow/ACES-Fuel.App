@@ -8,6 +8,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
@@ -62,12 +65,24 @@ function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/users")}> 
+                <SidebarMenuButton asChild isActive={isActive("/users")}>
                   <Link to="/users" className="flex items-center gap-2">
                     <Users />
                     <span>Users & Auth</span>
                   </Link>
                 </SidebarMenuButton>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/users/admins")}>
+                      <Link to="/users/admins">Admin Users</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={isActive("/users/authorizations")}>
+                      <Link to="/users/authorizations">Authorizations</Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/missions")}> 
