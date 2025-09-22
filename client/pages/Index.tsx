@@ -56,9 +56,7 @@ export default function Index() {
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <Card>
             <CardContent className="p-6">
-              <div className="mb-3 text-base font-medium">
-                Total tasks status count
-              </div>
+              <div className="mb-3 text-base font-medium">{t("totalTasksStatusCount")}</div>
               <ChartContainer config={{}} className="aspect-[4/3]">
                 <PieChart>
                   <Pie
