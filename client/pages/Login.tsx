@@ -62,7 +62,7 @@ export default function Login() {
     navigate("/");
   };
 
-  const { t } = useI18n();
+  const { t, lang, setLang } = useI18n();
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#eef2ff] via-[#f8fafc] to-[#ffffff]">
       <Decor />
