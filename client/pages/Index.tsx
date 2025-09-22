@@ -39,7 +39,7 @@ export default function Index() {
     <AppShell>
       <Header />
       <div className="px-4 pb-10 pt-4">
-        <div className="mb-4 text-sm text-muted-foreground">Dashboard</div>
+        <div className="mb-4 text-sm text-muted-foreground">{t("dashboard")}</div>
 
         <div className="grid gap-4 md:grid-cols-3">
           {metricCards.map((m) => (
