@@ -80,6 +80,15 @@ const en: Dict = {
   entries: "entries",
   prev: "Prev",
   next: "Next",
+  addUser: "Add User",
+  editUser: "Edit User",
+  required: "This field is required.",
+  edit: "Edit",
+  delete: "Delete",
+  hide: "Hide",
+  show: "Show",
+  settingName: "Setting name",
+  editSetting: "Edit Setting",
 };
 
 const ar: Dict = {
@@ -135,7 +144,7 @@ const ar: Dict = {
   add: "إضافة",
   excelPrintColumnVisibility: "إكسل | طباعة | إظهار/إخفاء الأعمدة",
   search: "بحث",
-  email: "البريد الإلكتروني",
+  email: "البريد الإلكترو��ي",
   webAuthorization: "صلاحية الويب",
   settingsCol: "الإعدادات",
   noResults: "لا توجد نتائج",
@@ -144,6 +153,15 @@ const ar: Dict = {
   entries: "مدخلات",
   prev: "السابق",
   next: "التالي",
+  addUser: "إضافة مستخدم",
+  editUser: "تعديل مستخدم",
+  required: "هذا الحقل مطلوب.",
+  edit: "تعديل",
+  delete: "حذف",
+  hide: "إخفاء",
+  show: "إظهار",
+  settingName: "اسم الإعداد",
+  editSetting: "تعديل الإعداد",
 };
 
 const ur: Dict = {
@@ -166,7 +184,7 @@ const ur: Dict = {
   authorizations: "اجازت نامے",
   generalSettings: "عمومی سیٹنگز",
   literPrice: "فی لیٹر قیمت",
-  maxDistance: "اسٹیشن سے تصدیق کے لیے زیادہ سے زیادہ فاصلہ",
+  maxDistance: "��سٹیشن سے تصدیق کے لیے زیادہ سے زیادہ فاصلہ",
   language: "زبان",
   save: "محفوظ کریں",
   saving: "محفوظ کیا جا رہا ہے...",
@@ -205,9 +223,18 @@ const ur: Dict = {
   noResults: "کوئی نتیجہ نہیں",
   showing: "دکھا رہا ہے",
   of: "میں سے",
-  entries: "اندرا��ات",
+  entries: "اندراجات",
   prev: "پچھلا",
   next: "اگلا",
+  addUser: "نیا صارف شامل کریں",
+  editUser: "صارف میں ترمیم",
+  required: "یہ فیلڈ لازمی ہے۔",
+  edit: "ترمیم",
+  delete: "حذف",
+  hide: "چھپائیں",
+  show: "دکھائیں",
+  settingName: "سیٹنگ کا نام",
+  editSetting: "سیٹنگ میں ترمیم",
 };
 
 const dictionaries: Record<Lang, Dict> = { en, ar, ur };
