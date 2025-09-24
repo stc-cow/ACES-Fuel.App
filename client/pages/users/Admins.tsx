@@ -175,7 +175,10 @@ export default function AdminUsersPage() {
       .single();
     if (!error && data) {
       try {
-        await supabase.auth.signUp({ email: addForm.email, password: addForm.password });
+        await supabase.auth.signUp({
+          email: addForm.email,
+          password: addForm.password,
+        });
       } catch {}
       setRows((r) => [
         {

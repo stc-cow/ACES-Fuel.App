@@ -87,7 +87,9 @@ export default function Login() {
     localStorage.setItem("auth.username", values.username);
     // Log to admin_log table
     try {
-      await supabase.from("admin_log").insert({ username: values.username, event: "login" });
+      await supabase
+        .from("admin_log")
+        .insert({ username: values.username, event: "login" });
     } catch {}
     navigate("/");
   };
