@@ -58,16 +58,23 @@ export default function Login() {
   const onSubmit = async (values: FormValues) => {
     setAuthError(null);
     // Validate against saved Admins list in localStorage
-    let validUser = false;
+    let ok = false;
     try {
       const raw = localStorage.getItem(ADMINS_STORAGE_KEY);
       if (raw) {
-        const arr = JSON.parse(raw) as { username?: string }[];
-        validUser = Array.isArray(arr) && arr.some((u) => (u.username || "").trim().toLowerCase() === values.username.trim().toLowerCase());
+        const arr = JSON.parse(raw) as { username?: string; password?: string }[];
+        ok = Array.isArray(arr) && arr.some(
+          (u) => (u.username || "").trim().toLowerCase() === values.username.trim().toLowerCase() && (u.password || "") === values.password,
+        );
       }
     } catch {}
 
-    if (!validUser || values.password !== VALID_PASSWORD) {
+    // fallback to legacy hardcoded admin if no records found
+    if (!ok) {
+      ok = values.username.trim() === "Bannaga" && values.password === "Aces@6343";
+    }
+
+    if (!ok) {
       setAuthError("Invalid username or password.");
       return;
     }
