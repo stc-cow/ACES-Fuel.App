@@ -89,6 +89,8 @@ const en: Dict = {
   show: "Show",
   settingName: "Setting name",
   editSetting: "Edit Setting",
+  details: "Details",
+  setting: "Setting",
 };
 
 const ar: Dict = {
@@ -144,7 +146,7 @@ const ar: Dict = {
   add: "إضافة",
   excelPrintColumnVisibility: "إكسل | طباعة | إظهار/إخفاء الأعمدة",
   search: "بحث",
-  email: "البريد الإلكترو��ي",
+  email: "البريد الإلكتروني",
   webAuthorization: "صلاحية الويب",
   settingsCol: "الإعدادات",
   noResults: "لا توجد نتائج",
@@ -162,6 +164,8 @@ const ar: Dict = {
   show: "إظهار",
   settingName: "اسم الإعداد",
   editSetting: "تعديل الإعداد",
+  details: "التفاصيل",
+  setting: "الإعداد",
 };
 
 const ur: Dict = {
@@ -184,7 +188,7 @@ const ur: Dict = {
   authorizations: "اجازت نامے",
   generalSettings: "عمومی سیٹنگز",
   literPrice: "فی لیٹر قیمت",
-  maxDistance: "��سٹیشن سے تصدیق کے لیے زیادہ سے زیادہ فاصلہ",
+  maxDistance: "اسٹیشن سے تصدیق کے لیے زیادہ سے زیادہ فاصلہ",
   language: "زبان",
   save: "محفوظ کریں",
   saving: "محفوظ کیا جا رہا ہے...",
@@ -235,6 +239,8 @@ const ur: Dict = {
   show: "دکھائیں",
   settingName: "سیٹنگ کا نام",
   editSetting: "سیٹنگ میں ترمیم",
+  details: "تفصیلات",
+  setting: "سیٹنگ",
 };
 
 const dictionaries: Record<Lang, Dict> = { en, ar, ur };
