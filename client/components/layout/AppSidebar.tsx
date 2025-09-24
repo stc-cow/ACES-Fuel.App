@@ -76,13 +76,9 @@ function AppSidebar() {
     >
       <SidebarHeader className="px-4 py-3">
         <div className="flex items-center">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fc70031ceb54e448ab66bd6627db55078?format=webp&width=800"
-            alt="ACES"
-            className="h-10 w-auto"
-            loading="eager"
-            decoding="async"
-          />
+          <Link to="/" className="select-none">
+            <span className="block text-2xl font-extrabold leading-none tracking-widest text-white">ACES</span>
+          </Link>
         </div>
       </SidebarHeader>
       <SidebarSeparator />
