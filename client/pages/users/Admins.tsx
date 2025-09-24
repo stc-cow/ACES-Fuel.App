@@ -174,6 +174,9 @@ export default function AdminUsersPage() {
       .select("id, name, username, email, password, position")
       .single();
     if (!error && data) {
+      try {
+        await supabase.auth.signUp({ email: addForm.email, password: addForm.password });
+      } catch {}
       setRows((r) => [
         {
           id: data.id as number,
