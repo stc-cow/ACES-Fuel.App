@@ -1,15 +1,35 @@
 import { createClient } from "@supabase/supabase-js";
 
-const runtimeUrl = (import.meta.env.VITE_SUPABASE_URL as string) || (typeof window !== "undefined" && (window as any).__env?.VITE_SUPABASE_URL) || "";
-const runtimeAnon = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || (typeof window !== "undefined" && (window as any).__env?.VITE_SUPABASE_ANON_KEY) || "";
+const runtimeUrl =
+  (import.meta.env.VITE_SUPABASE_URL as string) ||
+  (typeof window !== "undefined" && (window as any).__env?.VITE_SUPABASE_URL) ||
+  "";
+const runtimeAnon =
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string) ||
+  (typeof window !== "undefined" &&
+    (window as any).__env?.VITE_SUPABASE_ANON_KEY) ||
+  "";
 
 function failingResponse() {
-  return Promise.resolve({ data: null, error: new Error("Supabase not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY") });
+  return Promise.resolve({
+    data: null,
+    error: new Error(
+      "Supabase not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
+    ),
+  });
 }
 
 function mockFrom() {
   return {
-    select: () => ({ order: () => failingResponse(), maybeSingle: () => failingResponse(), single: () => failingResponse(), eq: () => ({ maybeSingle: () => failingResponse(), single: () => failingResponse() }) }),
+    select: () => ({
+      order: () => failingResponse(),
+      maybeSingle: () => failingResponse(),
+      single: () => failingResponse(),
+      eq: () => ({
+        maybeSingle: () => failingResponse(),
+        single: () => failingResponse(),
+      }),
+    }),
     insert: () => ({ select: () => ({ single: () => failingResponse() }) }),
     update: () => ({ eq: () => failingResponse() }),
     delete: () => ({ eq: () => failingResponse() }),

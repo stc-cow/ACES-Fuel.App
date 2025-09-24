@@ -27,7 +27,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Plus, Download, Columns2, Pencil, Trash2, Eye } from "lucide-react";
@@ -71,7 +77,13 @@ type AdminForm = {
   position: "Admin" | "User";
 };
 
-const emptyForm: AdminForm = { name: "", username: "", email: "", password: "", position: "User" };
+const emptyForm: AdminForm = {
+  name: "",
+  username: "",
+  email: "",
+  password: "",
+  position: "User",
+};
 
 export default function AdminUsersPage() {
   const STORAGE_KEY = "app.admins";
@@ -90,16 +102,22 @@ export default function AdminUsersPage() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<AdminForm>(emptyForm);
-  const [addErrors, setAddErrors] = useState<Partial<Record<keyof AdminForm, string>>>({});
+  const [addErrors, setAddErrors] = useState<
+    Partial<Record<keyof AdminForm, string>>
+  >({});
 
   const [editOpen, setEditOpen] = useState(false);
-  const [editForm, setEditForm] = useState<Admin & { index: number } | null>(null);
+  const [editForm, setEditForm] = useState<(Admin & { index: number }) | null>(
+    null,
+  );
 
   const filtered = useMemo(() => {
     if (!query) return rows;
     const q = query.toLowerCase();
     return rows.filter((r) =>
-      [r.name, r.username, r.email, r.position].some((v) => v.toLowerCase().includes(q)),
+      [r.name, r.username, r.email, r.position].some((v) =>
+        v.toLowerCase().includes(q),
+      ),
     );
   }, [rows, query]);
 
@@ -110,12 +128,16 @@ export default function AdminUsersPage() {
   }, [filtered, page, pageSize]);
 
   const exportCsv = () => {
-    const visible = allColumns.filter((c) => cols[c.key] && !["settings", "password"].includes(c.key));
+    const visible = allColumns.filter(
+      (c) => cols[c.key] && !["settings", "password"].includes(c.key),
+    );
     const head = visible.map((c) => c.label).join(",");
     const body = filtered
       .map((r) => visible.map((c) => (r as any)[c.key]).join(","))
       .join("\n");
-    const blob = new Blob([head + "\n" + body], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([head + "\n" + body], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -129,7 +151,8 @@ export default function AdminUsersPage() {
     if (!form.name.trim()) errs.name = "required";
     if (!form.username.trim()) errs.username = "required";
     if (!form.email.trim()) errs.email = "required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = "invalidEmail";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      errs.email = "invalidEmail";
     if (!form.password.trim()) errs.password = "required";
     if (!form.position) errs.position = "required";
     return errs;
@@ -141,18 +164,27 @@ export default function AdminUsersPage() {
     if (Object.keys(errs).length > 0) return;
     const { data, error } = await supabase
       .from("admins")
-      .insert({ name: addForm.name, username: addForm.username, email: addForm.email, password: addForm.password, position: addForm.position })
+      .insert({
+        name: addForm.name,
+        username: addForm.username,
+        email: addForm.email,
+        password: addForm.password,
+        position: addForm.position,
+      })
       .select("id, name, username, email, password, position")
       .single();
     if (!error && data) {
-      setRows((r) => [{
-        id: data.id as number,
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        position: data.position as any,
-      }, ...r]);
+      setRows((r) => [
+        {
+          id: data.id as number,
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          position: data.position as any,
+        },
+        ...r,
+      ]);
       setAddForm(emptyForm);
       setAddOpen(false);
     }
@@ -175,7 +207,13 @@ export default function AdminUsersPage() {
     if (Object.keys(errs).length > 0) return;
     const { error } = await supabase
       .from("admins")
-      .update({ name: editForm.name, username: editForm.username, email: editForm.email, password: editForm.password, position: editForm.position })
+      .update({
+        name: editForm.name,
+        username: editForm.username,
+        email: editForm.email,
+        password: editForm.password,
+        position: editForm.position,
+      })
       .eq("id", editForm.id);
     if (!error) {
       setRows((r) => {
@@ -231,7 +269,11 @@ export default function AdminUsersPage() {
             {t("manageAdminsIntro")}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="secondary" className="hidden sm:inline-flex" onClick={exportCsv}>
+            <Button
+              variant="secondary"
+              className="hidden sm:inline-flex"
+              onClick={exportCsv}
+            >
               <Download className="mr-2 h-4 w-4" /> {t("export")}
             </Button>
             <DropdownMenu>
@@ -245,7 +287,9 @@ export default function AdminUsersPage() {
                   <DropdownMenuCheckboxItem
                     key={c.key}
                     checked={cols[c.key]}
-                    onCheckedChange={(v) => setCols((s) => ({ ...s, [c.key]: !!v }))}
+                    onCheckedChange={(v) =>
+                      setCols((s) => ({ ...s, [c.key]: !!v }))
+                    }
                     disabled={c.key === "settings"}
                   >
                     {c.label}
@@ -266,34 +310,87 @@ export default function AdminUsersPage() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="name">{t("name")}</Label>
-                    <Input id="name" value={addForm.name} onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))} />
-                    {addErrors.name && <p className="mt-1 text-xs text-destructive">{t(addErrors.name)}</p>}
+                    <Input
+                      id="name"
+                      value={addForm.name}
+                      onChange={(e) =>
+                        setAddForm((f) => ({ ...f, name: e.target.value }))
+                      }
+                    />
+                    {addErrors.name && (
+                      <p className="mt-1 text-xs text-destructive">
+                        {t(addErrors.name)}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="username">{t("username")}</Label>
-                    <Input id="username" value={addForm.username} onChange={(e) => setAddForm((f) => ({ ...f, username: e.target.value }))} />
-                    {addErrors.username && <p className="mt-1 text-xs text-destructive">{t(addErrors.username)}</p>}
+                    <Input
+                      id="username"
+                      value={addForm.username}
+                      onChange={(e) =>
+                        setAddForm((f) => ({ ...f, username: e.target.value }))
+                      }
+                    />
+                    {addErrors.username && (
+                      <p className="mt-1 text-xs text-destructive">
+                        {t(addErrors.username)}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="email">{t("email")}</Label>
-                    <Input id="email" type="email" value={addForm.email} onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))} />
-                    {addErrors.email && <p className="mt-1 text-xs text-destructive">{t(addErrors.email)}</p>}
+                    <Input
+                      id="email"
+                      type="email"
+                      value={addForm.email}
+                      onChange={(e) =>
+                        setAddForm((f) => ({ ...f, email: e.target.value }))
+                      }
+                    />
+                    {addErrors.email && (
+                      <p className="mt-1 text-xs text-destructive">
+                        {t(addErrors.email)}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="password">{t("password")}</Label>
-                    <Input id="password" type="password" value={addForm.password} onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))} />
-                    {addErrors.password && <p className="mt-1 text-xs text-destructive">{t(addErrors.password)}</p>}
+                    <Input
+                      id="password"
+                      type="password"
+                      value={addForm.password}
+                      onChange={(e) =>
+                        setAddForm((f) => ({ ...f, password: e.target.value }))
+                      }
+                    />
+                    {addErrors.password && (
+                      <p className="mt-1 text-xs text-destructive">
+                        {t(addErrors.password)}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label>{t("position")}</Label>
-                    <Select value={addForm.position} onValueChange={(v) => setAddForm((f) => ({ ...f, position: v as any }))}>
-                      <SelectTrigger className="w-full"><SelectValue placeholder={t("position")} /></SelectTrigger>
+                    <Select
+                      value={addForm.position}
+                      onValueChange={(v) =>
+                        setAddForm((f) => ({ ...f, position: v as any }))
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={t("position")} />
+                      </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Admin">{t("admin")}</SelectItem>
                         <SelectItem value="User">{t("user")}</SelectItem>
                       </SelectContent>
                     </Select>
-                    {addErrors.position && <p className="mt-1 text-xs text-destructive">{t(addErrors.position)}</p>}
+                    {addErrors.position && (
+                      <p className="mt-1 text-xs text-destructive">
+                        {t(addErrors.position)}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <DialogFooter className="mt-6 gap-2 sm:gap-2">
@@ -310,9 +407,13 @@ export default function AdminUsersPage() {
         <Card>
           <CardContent className="p-0">
             <div className="flex items-center justify-between gap-4 p-4">
-              <div className="text-sm text-muted-foreground">{t("excelPrintColumnVisibility")}</div>
+              <div className="text-sm text-muted-foreground">
+                {t("excelPrintColumnVisibility")}
+              </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{t("search")}</span>
+                <span className="text-sm text-muted-foreground">
+                  {t("search")}
+                </span>
                 <Input
                   value={query}
                   onChange={(e) => {
@@ -329,18 +430,40 @@ export default function AdminUsersPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
-                    {cols.name && <TableHead className="text-white">{t("name")}</TableHead>}
-                    {cols.username && <TableHead className="text-white">{t("username")}</TableHead>}
-                    {cols.email && <TableHead className="text-white">{t("email")}</TableHead>}
-                    {cols.password && <TableHead className="text-white">{t("password")}</TableHead>}
-                    {cols.position && <TableHead className="text-white">{t("position")}</TableHead>}
-                    {cols.settings && <TableHead className="text-white">{t("settingsCol")}</TableHead>}
+                    {cols.name && (
+                      <TableHead className="text-white">{t("name")}</TableHead>
+                    )}
+                    {cols.username && (
+                      <TableHead className="text-white">
+                        {t("username")}
+                      </TableHead>
+                    )}
+                    {cols.email && (
+                      <TableHead className="text-white">{t("email")}</TableHead>
+                    )}
+                    {cols.password && (
+                      <TableHead className="text-white">
+                        {t("password")}
+                      </TableHead>
+                    )}
+                    {cols.position && (
+                      <TableHead className="text-white">
+                        {t("position")}
+                      </TableHead>
+                    )}
+                    {cols.settings && (
+                      <TableHead className="text-white">
+                        {t("settingsCol")}
+                      </TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {current.map((r) => (
                     <TableRow key={r.id}>
-                      {cols.name && <TableCell className="font-medium">{r.name}</TableCell>}
+                      {cols.name && (
+                        <TableCell className="font-medium">{r.name}</TableCell>
+                      )}
                       {cols.username && <TableCell>{r.username}</TableCell>}
                       {cols.email && <TableCell>{r.email}</TableCell>}
                       {cols.password && <TableCell>{"*******"}</TableCell>}
@@ -350,10 +473,25 @@ export default function AdminUsersPage() {
                           <Button size="icon" variant="ghost" aria-label="View">
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => openEdit(r, rows.findIndex((x) => x.id === r.id))}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Edit"
+                            onClick={() =>
+                              openEdit(
+                                r,
+                                rows.findIndex((x) => x.id === r.id),
+                              )
+                            }
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" aria-label="Delete" onClick={() => remove(r.id)}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Delete"
+                            onClick={() => remove(r.id)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TableCell>
@@ -362,7 +500,10 @@ export default function AdminUsersPage() {
                   ))}
                   {current.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-sm text-muted-foreground">
+                      <TableCell
+                        colSpan={6}
+                        className="text-center text-sm text-muted-foreground"
+                      >
                         {t("noResults")}
                       </TableCell>
                     </TableRow>
@@ -373,14 +514,27 @@ export default function AdminUsersPage() {
 
             <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
               <div>
-                {t("showing")} {current.length} {t("of")} {filtered.length} {t("entries")}
+                {t("showing")} {current.length} {t("of")} {filtered.length}{" "}
+                {t("entries")}
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
                   {t("prev")}
                 </Button>
-                <span className="tabular-nums">{page} / {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+                <span className="tabular-nums">
+                  {page} / {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page === totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
                   {t("next")}
                 </Button>
               </div>
@@ -398,24 +552,63 @@ export default function AdminUsersPage() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="edit-name">{t("name")}</Label>
-                <Input id="edit-name" value={editForm.name} onChange={(e) => setEditForm((f) => (f ? { ...f, name: e.target.value } : f))} />
+                <Input
+                  id="edit-name"
+                  value={editForm.name}
+                  onChange={(e) =>
+                    setEditForm((f) => (f ? { ...f, name: e.target.value } : f))
+                  }
+                />
               </div>
               <div>
                 <Label htmlFor="edit-username">{t("username")}</Label>
-                <Input id="edit-username" value={editForm.username} onChange={(e) => setEditForm((f) => (f ? { ...f, username: e.target.value } : f))} />
+                <Input
+                  id="edit-username"
+                  value={editForm.username}
+                  onChange={(e) =>
+                    setEditForm((f) =>
+                      f ? { ...f, username: e.target.value } : f,
+                    )
+                  }
+                />
               </div>
               <div>
                 <Label htmlFor="edit-email">{t("email")}</Label>
-                <Input id="edit-email" type="email" value={editForm.email} onChange={(e) => setEditForm((f) => (f ? { ...f, email: e.target.value } : f))} />
+                <Input
+                  id="edit-email"
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) =>
+                    setEditForm((f) =>
+                      f ? { ...f, email: e.target.value } : f,
+                    )
+                  }
+                />
               </div>
               <div>
                 <Label htmlFor="edit-password">{t("password")}</Label>
-                <Input id="edit-password" type="password" value={editForm.password} onChange={(e) => setEditForm((f) => (f ? { ...f, password: e.target.value } : f))} />
+                <Input
+                  id="edit-password"
+                  type="password"
+                  value={editForm.password}
+                  onChange={(e) =>
+                    setEditForm((f) =>
+                      f ? { ...f, password: e.target.value } : f,
+                    )
+                  }
+                />
               </div>
               <div>
                 <Label>{t("position")}</Label>
-                <Select value={editForm.position} onValueChange={(v) => setEditForm((f) => (f ? { ...f, position: v as any } : f))}>
-                  <SelectTrigger className="w-full"><SelectValue placeholder={t("position")} /></SelectTrigger>
+                <Select
+                  value={editForm.position}
+                  onValueChange={(v) =>
+                    setEditForm((f) => (f ? { ...f, position: v as any } : f))
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t("position")} />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Admin">{t("admin")}</SelectItem>
                     <SelectItem value="User">{t("user")}</SelectItem>

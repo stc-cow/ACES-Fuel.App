@@ -70,7 +70,8 @@ export default function Login() {
     }
     // fallback to legacy hardcoded admin if table not yet populated
     if (!ok && (!data || error)) {
-      ok = values.username.trim() === "Bannaga" && values.password === "Aces@6343";
+      ok =
+        values.username.trim() === "Bannaga" && values.password === "Aces@6343";
     }
 
     if (!ok) {
