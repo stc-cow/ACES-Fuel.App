@@ -53,7 +53,7 @@ const App = () => (
               path="/users"
               element={
                 <RequireAuth>
-                  <Placeholder />
+                  <UsersIndexPage />
                 </RequireAuth>
               }
             />
