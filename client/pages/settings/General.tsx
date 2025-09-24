@@ -67,15 +67,6 @@ export default function GeneralSettingsPage() {
         <div className="mb-4 text-sm text-muted-foreground">
           {t("generalSettings")}
         </div>
-        <div className="mb-3 flex justify-end">
-          <Button
-            onClick={save}
-            disabled={saving}
-            className="bg-sky-600 hover:bg-sky-500"
-          >
-            {saving ? t("saving") : t("save")}
-          </Button>
-        </div>
         <Card>
           <CardContent className="p-6">
             <div className="grid max-w-3xl gap-6 md:grid-cols-2">
@@ -136,6 +127,11 @@ export default function GeneralSettingsPage() {
                     <SelectItem value="ur">اردو</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="md:col-span-2 flex justify-end pt-2">
+                <Button onClick={save} disabled={saving} className="bg-sky-600 hover:bg-sky-500">
+                  {saving ? t("saving") : t("save")}
+                </Button>
               </div>
             </div>
           </CardContent>
