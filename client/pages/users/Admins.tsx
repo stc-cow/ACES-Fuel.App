@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { Plus, Download, Columns2, Pencil, Trash2, Eye } from "lucide-react";
 
 type Admin = {
@@ -85,16 +86,7 @@ export default function AdminUsersPage() {
   });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [rows, setRows] = useState<Admin[]>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Admin[];
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch {}
-    return initialAdmins;
-  });
+  const [rows, setRows] = useState<Admin[]>(initialAdmins);
 
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<AdminForm>(emptyForm);
@@ -143,15 +135,27 @@ export default function AdminUsersPage() {
     return errs;
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const errs = validateForm(addForm);
     setAddErrors(errs);
     if (Object.keys(errs).length > 0) return;
-    const nextId = rows.reduce((m, r) => Math.max(m, r.id), 0) + 1;
-    const newRow: Admin = { id: nextId, ...addForm };
-    setRows((r) => [newRow, ...r]);
-    setAddForm(emptyForm);
-    setAddOpen(false);
+    const { data, error } = await supabase
+      .from("admins")
+      .insert({ name: addForm.name, username: addForm.username, email: addForm.email, password: addForm.password, position: addForm.position })
+      .select("id, name, username, email, password, position")
+      .single();
+    if (!error && data) {
+      setRows((r) => [{
+        id: data.id as number,
+        name: data.name,
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        position: data.position as any,
+      }, ...r]);
+      setAddForm(emptyForm);
+      setAddOpen(false);
+    }
   };
 
   const openEdit = (row: Admin, index: number) => {
@@ -159,7 +163,7 @@ export default function AdminUsersPage() {
     setEditOpen(true);
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     if (!editForm) return;
     const errs = validateForm({
       name: editForm.name,
@@ -169,30 +173,53 @@ export default function AdminUsersPage() {
       position: editForm.position,
     });
     if (Object.keys(errs).length > 0) return;
-    setRows((r) => {
-      const copy = r.slice();
-      copy[editForm.index] = {
-        id: editForm.id,
-        name: editForm.name,
-        username: editForm.username,
-        email: editForm.email,
-        password: editForm.password,
-        position: editForm.position,
-      };
-      return copy;
-    });
-    setEditOpen(false);
-    setEditForm(null);
+    const { error } = await supabase
+      .from("admins")
+      .update({ name: editForm.name, username: editForm.username, email: editForm.email, password: editForm.password, position: editForm.position })
+      .eq("id", editForm.id);
+    if (!error) {
+      setRows((r) => {
+        const copy = r.slice();
+        copy[editForm.index] = {
+          id: editForm.id,
+          name: editForm.name,
+          username: editForm.username,
+          email: editForm.email,
+          password: editForm.password,
+          position: editForm.position,
+        };
+        return copy;
+      });
+      setEditOpen(false);
+      setEditForm(null);
+    }
   };
 
-  const remove = (id: number) => setRows((r) => r.filter((x) => x.id !== id));
+  const remove = async (id: number) => {
+    const { error } = await supabase.from("admins").delete().eq("id", id);
+    if (!error) setRows((r) => r.filter((x) => x.id !== id));
+  };
 
-  // persist rows
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
-    } catch {}
-  }, [rows]);
+    (async () => {
+      const { data, error } = await supabase
+        .from("admins")
+        .select("id, name, username, email, password, position")
+        .order("id", { ascending: false });
+      if (!error && data) {
+        setRows(
+          data.map((d) => ({
+            id: d.id as number,
+            name: d.name as string,
+            username: d.username as string,
+            email: d.email as string,
+            password: d.password as string,
+            position: d.position as any,
+          })),
+        );
+      }
+    })();
+  }, []);
 
   const { t } = useI18n();
   return (
