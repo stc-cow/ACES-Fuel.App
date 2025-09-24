@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,20 +58,18 @@ export default function Login() {
 
   const onSubmit = async (values: FormValues) => {
     setAuthError(null);
-    // Validate against saved Admins list in localStorage
+    // Validate against Supabase admins table
     let ok = false;
-    try {
-      const raw = localStorage.getItem(ADMINS_STORAGE_KEY);
-      if (raw) {
-        const arr = JSON.parse(raw) as { username?: string; password?: string }[];
-        ok = Array.isArray(arr) && arr.some(
-          (u) => (u.username || "").trim().toLowerCase() === values.username.trim().toLowerCase() && (u.password || "") === values.password,
-        );
-      }
-    } catch {}
-
-    // fallback to legacy hardcoded admin if no records found
-    if (!ok) {
+    const { data, error } = await supabase
+      .from("admins")
+      .select("id, username, password")
+      .eq("username", values.username.trim())
+      .maybeSingle();
+    if (!error && data) {
+      ok = data.password === values.password;
+    }
+    // fallback to legacy hardcoded admin if table not yet populated
+    if (!ok && (!data || error)) {
       ok = values.username.trim() === "Bannaga" && values.password === "Aces@6343";
     }
 
