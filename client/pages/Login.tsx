@@ -57,10 +57,17 @@ export default function Login() {
 
   const onSubmit = async (values: FormValues) => {
     setAuthError(null);
-    if (
-      values.username.trim() !== VALID_USERNAME ||
-      values.password !== VALID_PASSWORD
-    ) {
+    // Validate against saved Admins list in localStorage
+    let validUser = false;
+    try {
+      const raw = localStorage.getItem(ADMINS_STORAGE_KEY);
+      if (raw) {
+        const arr = JSON.parse(raw) as { username?: string }[];
+        validUser = Array.isArray(arr) && arr.some((u) => (u.username || "").trim().toLowerCase() === values.username.trim().toLowerCase());
+      }
+    } catch {}
+
+    if (!validUser || values.password !== VALID_PASSWORD) {
       setAuthError("Invalid username or password.");
       return;
     }
