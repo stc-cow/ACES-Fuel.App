@@ -12,6 +12,7 @@ import Placeholder from "./pages/Placeholder";
 import Login from "./pages/Login";
 import AdminUsersPage from "./pages/users/Admins";
 import AuthorizationsPage from "./pages/users/Authorizations";
+import UsersIndexPage from "./pages/users/Index";
 import MissionsPage from "./pages/missions/Missions";
 import DriversPage from "./pages/employees/Drivers";
 import TechniciansPage from "./pages/employees/Technicians";
