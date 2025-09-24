@@ -105,40 +105,6 @@ function AppSidebar() {
                     <span>{t("usersAuth")}</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuAction
-                  aria-label="Toggle Users submenu"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpenUsers((v) => !v);
-                  }}
-                >
-                  <ChevronDown
-                    className={cn(
-                      "transition-transform",
-                      openUsers ? "rotate-180" : "rotate-0",
-                    )}
-                  />
-                </SidebarMenuAction>
-                <SidebarMenuSub className={cn(!openUsers && "hidden")}>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/users/admins")}
-                    >
-                      <Link to="/users/admins">{t("adminUsers")}</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/users/authorizations")}
-                    >
-                      <Link to="/users/authorizations">
-                        {t("authorizations")}
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                </SidebarMenuSub>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/missions")}>
