@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -35,6 +36,8 @@ type Admin = {
   username: string;
   email: string;
   webAuth: string;
+  details?: string;
+  setting?: string;
 };
 
 const initialAdmins: Admin[] = [
@@ -43,20 +46,33 @@ const initialAdmins: Admin[] = [
     username: "EastCoordinator",
     email: "a.hassan@aces-sa.com",
     webAuth: "East coordinator",
+    details: "Responsible for eastern region ops.",
+    setting: "Default",
   },
   {
     id: 2,
     username: "CentralCoordinator",
     email: "anna.hessa@aces-sa.com",
     webAuth: "Central Coordinator",
+    details: "Covers central region.",
+    setting: "Default",
   },
-  { id: 3, username: "admin", email: "admin@admin.com", webAuth: "Admin" },
+  {
+    id: 3,
+    username: "admin",
+    email: "admin@admin.com",
+    webAuth: "Admin",
+    details: "Super admin",
+    setting: "Global",
+  },
 ];
 
 const allColumns = [
   { key: "username", label: "Username" },
   { key: "email", label: "Email" },
   { key: "webAuth", label: "Web Authorization" },
+  { key: "details", label: "Details" },
+  { key: "setting", label: "Setting" },
   { key: "settings", label: "Settings", sticky: true },
 ] as const;
 
@@ -66,9 +82,11 @@ type AdminForm = {
   username: string;
   email: string;
   webAuth: string;
+  details: string;
+  setting: string;
 };
 
-const emptyForm: AdminForm = { username: "", email: "", webAuth: "" };
+const emptyForm: AdminForm = { username: "", email: "", webAuth: "", details: "", setting: "" };
 
 export default function AdminUsersPage() {
   const [query, setQuery] = useState("");
@@ -76,6 +94,8 @@ export default function AdminUsersPage() {
     username: true,
     email: true,
     webAuth: true,
+    details: true,
+    setting: true,
     settings: true,
   });
   const [page, setPage] = useState(1);
@@ -93,7 +113,9 @@ export default function AdminUsersPage() {
     if (!query) return rows;
     const q = query.toLowerCase();
     return rows.filter((r) =>
-      [r.username, r.email, r.webAuth].some((v) => v.toLowerCase().includes(q)),
+      [r.username, r.email, r.webAuth, r.details ?? "", r.setting ?? ""].some((v) =>
+        v.toLowerCase().includes(q),
+      ),
     );
   }, [rows, query]);
 
@@ -109,7 +131,7 @@ export default function AdminUsersPage() {
     );
     const head = visible.map((c) => c.label).join(",");
     const body = filtered
-      .map((r) => visible.map((c) => (r as any)[c.key]).join(","))
+      .map((r) => visible.map((c) => (r as any)[c.key] ?? "").join(","))
       .join("\n");
     const blob = new Blob([head + "\n" + body], {
       type: "text/csv;charset=utf-8;",
@@ -143,17 +165,30 @@ export default function AdminUsersPage() {
   };
 
   const openEdit = (row: Admin, index: number) => {
-    setEditForm({ ...row, index });
+    setEditForm({ ...row, index, details: row.details ?? "", setting: row.setting ?? "" });
     setEditOpen(true);
   };
 
   const handleEditSave = () => {
     if (!editForm) return;
-    const errs = validateForm(editForm);
+    const errs = validateForm({
+      username: editForm.username,
+      email: editForm.email,
+      webAuth: editForm.webAuth,
+      details: editForm.details ?? "",
+      setting: editForm.setting ?? "",
+    });
     if (Object.keys(errs).length > 0) return;
     setRows((r) => {
       const copy = r.slice();
-      copy[editForm.index] = { id: editForm.id, username: editForm.username, email: editForm.email, webAuth: editForm.webAuth };
+      copy[editForm.index] = {
+        id: editForm.id,
+        username: editForm.username,
+        email: editForm.email,
+        webAuth: editForm.webAuth,
+        details: editForm.details ?? "",
+        setting: editForm.setting ?? "",
+      };
       return copy;
     });
     setEditOpen(false);
@@ -245,6 +280,22 @@ export default function AdminUsersPage() {
                       <p className="mt-1 text-xs text-destructive">{t(addErrors.webAuth)}</p>
                     )}
                   </div>
+                  <div>
+                    <Label htmlFor="details">{t("details")}</Label>
+                    <Textarea
+                      id="details"
+                      value={addForm.details}
+                      onChange={(e) => setAddForm((f) => ({ ...f, details: e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="setting">{t("setting")}</Label>
+                    <Input
+                      id="setting"
+                      value={addForm.setting}
+                      onChange={(e) => setAddForm((f) => ({ ...f, setting: e.target.value }))}
+                    />
+                  </div>
                 </div>
                 <DialogFooter className="mt-6 gap-2 sm:gap-2">
                   <Button variant="outline" onClick={() => setAddOpen(false)}>
@@ -296,6 +347,12 @@ export default function AdminUsersPage() {
                         {t("webAuthorization")}
                       </TableHead>
                     )}
+                    {cols.details && (
+                      <TableHead className="text-white">{t("details")}</TableHead>
+                    )}
+                    {cols.setting && (
+                      <TableHead className="text-white">{t("setting")}</TableHead>
+                    )}
                     {cols.settings && (
                       <TableHead className="text-white">
                         {t("settingsCol")}
@@ -313,6 +370,8 @@ export default function AdminUsersPage() {
                       )}
                       {cols.email && <TableCell>{r.email}</TableCell>}
                       {cols.webAuth && <TableCell>{r.webAuth}</TableCell>}
+                      {cols.details && <TableCell className="max-w-sm truncate" title={r.details}>{r.details}</TableCell>}
+                      {cols.setting && <TableCell>{r.setting}</TableCell>}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
                           <Button size="icon" variant="ghost" aria-label="View">
@@ -336,7 +395,7 @@ export default function AdminUsersPage() {
                   {current.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={4}
+                        colSpan={6}
                         className="text-center text-sm text-muted-foreground"
                       >
                         {t("noResults")}
@@ -378,7 +437,6 @@ export default function AdminUsersPage() {
         </Card>
       </div>
 
-      {/* Edit dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <DialogHeader>
@@ -409,6 +467,22 @@ export default function AdminUsersPage() {
                   id="edit-webAuth"
                   value={editForm.webAuth}
                   onChange={(e) => setEditForm((f) => (f ? { ...f, webAuth: e.target.value } : f))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-details">{t("details")}</Label>
+                <Textarea
+                  id="edit-details"
+                  value={editForm.details ?? ""}
+                  onChange={(e) => setEditForm((f) => (f ? { ...f, details: e.target.value } : f))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-setting">{t("setting")}</Label>
+                <Input
+                  id="edit-setting"
+                  value={editForm.setting ?? ""}
+                  onChange={(e) => setEditForm((f) => (f ? { ...f, setting: e.target.value } : f))}
                 />
               </div>
             </div>
