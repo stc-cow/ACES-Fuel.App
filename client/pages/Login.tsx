@@ -115,7 +115,9 @@ export default function Login() {
                   decoding="async"
                 />
               </div>
-              <h1 className="text-lg font-semibold text-white">Sign in to ACES MSD Fuel Portal</h1>
+              <h1 className="text-lg font-semibold text-white">
+                Sign in to ACES MSD Fuel Portal
+              </h1>
               <p className="mt-1 text-xs text-white/60">
                 {t("signInSubtitle")}
               </p>
