@@ -30,7 +30,7 @@ function mockFrom() {
         single: () => failingResponse(),
       }),
     }),
-    insert: () => ({ select: () => ({ single: () => failingResponse() }) }),
+    insert: () => failingResponse(),
     update: () => ({ eq: () => failingResponse() }),
     delete: () => ({ eq: () => failingResponse() }),
   } as any;
