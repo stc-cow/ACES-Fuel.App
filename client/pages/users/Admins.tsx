@@ -251,6 +251,41 @@ export default function AdminUsersPage() {
         .select("id, name, username, email, password, position")
         .order("id", { ascending: false });
       if (!error && data) {
+        // If Supabase is empty, migrate any locally stored admins once
+        if (data.length === 0) {
+          try {
+            const raw = localStorage.getItem("app.admins");
+            if (raw) {
+              const arr = JSON.parse(raw) as Admin[];
+              if (Array.isArray(arr) && arr.length > 0) {
+                const payload = arr.map((a) => ({
+                  name: a.name,
+                  username: a.username,
+                  email: a.email,
+                  password: a.password,
+                  position: a.position,
+                }));
+                const { data: inserted, error: insErr } = await supabase
+                  .from("admins")
+                  .insert(payload)
+                  .select("id, name, username, email, password, position");
+                if (!insErr && inserted) {
+                  setRows(
+                    inserted.map((d) => ({
+                      id: d.id as number,
+                      name: d.name as string,
+                      username: d.username as string,
+                      email: d.email as string,
+                      password: d.password as string,
+                      position: d.position as any,
+                    })),
+                  );
+                  return;
+                }
+              }
+            }
+          } catch {}
+        }
         setRows(
           data.map((d) => ({
             id: d.id as number,
