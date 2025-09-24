@@ -115,9 +115,7 @@ export default function Login() {
                   decoding="async"
                 />
               </div>
-              <h1 className="text-lg font-semibold text-white">
-                {t("signInTitle")}
-              </h1>
+              <h1 className="text-lg font-semibold text-white">Sign in to ACES MSD Fuel Portal</h1>
               <p className="mt-1 text-xs text-white/60">
                 {t("signInSubtitle")}
               </p>
@@ -166,13 +164,6 @@ export default function Login() {
                   />
                   <span className="text-sm">{t("rememberMe")}</span>
                 </label>
-                <button
-                  className="text-sm text-[#00D9FF] hover:underline"
-                  type="button"
-                  onClick={() => setResetOpen(true)}
-                >
-                  {t("forgotPassword")}
-                </button>
               </div>
               {authError && (
                 <p className="-mt-1 text-sm text-rose-400">{authError}</p>
