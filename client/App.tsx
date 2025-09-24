@@ -14,12 +14,14 @@ import AdminUsersPage from "./pages/users/Admins";
 import AuthorizationsPage from "./pages/users/Authorizations";
 import UsersIndexPage from "./pages/users/Index";
 import MissionsPage from "./pages/missions/Missions";
+import EmployeesIndexPage from "./pages/employees/Index";
 import DriversPage from "./pages/employees/Drivers";
 import TechniciansPage from "./pages/employees/Technicians";
 import SitesPage from "./pages/sites/Sites";
 import GeneratorsPage from "./pages/generators/Generators";
 import ReportsPage from "./pages/reports/Reports";
 import NotificationsPage from "./pages/notifications/Notifications";
+import SettingsIndexPage from "./pages/settings/Index";
 import GeneralSettingsPage from "./pages/settings/General";
 import NotFound from "./pages/NotFound";
 
@@ -85,7 +87,7 @@ const App = () => (
               path="/employees"
               element={
                 <RequireAuth>
-                  <Placeholder />
+                  <EmployeesIndexPage />
                 </RequireAuth>
               }
             />
@@ -141,7 +143,7 @@ const App = () => (
               path="/settings"
               element={
                 <RequireAuth>
-                  <GeneralSettingsPage />
+                  <SettingsIndexPage />
                 </RequireAuth>
               }
             />
