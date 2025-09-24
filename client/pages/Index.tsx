@@ -11,6 +11,7 @@ import {
   Legend,
 } from "recharts";
 import { ChartContainer } from "@/components/ui/chart";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const statusData = [
   { name: "Creation", value: 71.5, color: "#f43f5e" },
@@ -127,6 +128,36 @@ export default function Index() {
               <div className="mt-3 text-sm text-muted-foreground">
                 {t("noDataYet")}
               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-6">
+          <Card>
+            <CardContent className="p-0">
+              <div className="px-6 pt-6 text-base font-medium">{t("sitesOverview")}</div>
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
+                    <TableHead className="text-white">{t("siteName")}</TableHead>
+                    <TableHead className="text-white">{t("vendor")}</TableHead>
+                    <TableHead className="text-white">{t("region")}</TableHead>
+                    <TableHead className="text-white">{t("district")}</TableHead>
+                    <TableHead className="text-white">{t("city")}</TableHead>
+                    <TableHead className="text-white">{t("cowStatus")}</TableHead>
+                    <TableHead className="text-white">{t("latitude")}</TableHead>
+                    <TableHead className="text-white">{t("longitude")}</TableHead>
+                    <TableHead className="text-white">{t("powerSource")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center text-sm text-muted-foreground">
+                      {t("noDataYet")}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </div>
