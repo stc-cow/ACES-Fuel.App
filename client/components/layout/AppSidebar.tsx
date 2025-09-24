@@ -121,40 +121,6 @@ function AppSidebar() {
                     <span>{t("employees")}</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuAction
-                  aria-label="Toggle Employees submenu"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpenEmployees((v) => !v);
-                  }}
-                >
-                  <ChevronDown
-                    className={cn(
-                      "transition-transform",
-                      openEmployees ? "rotate-180" : "rotate-0",
-                    )}
-                  />
-                </SidebarMenuAction>
-                <SidebarMenuSub className={cn(!openEmployees && "hidden")}>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/employees/drivers")}
-                    >
-                      <Link to="/employees/drivers">{t("drivers")}</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/employees/technicians")}
-                    >
-                      <Link to="/employees/technicians">
-                        {t("technicians")}
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                </SidebarMenuSub>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/sites")}>
@@ -198,56 +164,6 @@ function AppSidebar() {
                     <span>{t("settings")}</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuAction
-                  aria-label="Toggle Settings submenu"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpenSettings((v) => !v);
-                  }}
-                >
-                  <ChevronDown
-                    className={cn(
-                      "transition-transform",
-                      openSettings ? "rotate-180" : "rotate-0",
-                    )}
-                  />
-                </SidebarMenuAction>
-                <SidebarMenuSub className={cn(!openSettings && "hidden")}>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/settings/general")}
-                    >
-                      <Link to="/settings/general">{t("settingsGeneral")}</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/settings/cities")}
-                    >
-                      <Link to="/settings/cities">{t("settingsCities")}</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/settings/zones")}
-                    >
-                      <Link to="/settings/zones">{t("settingsZones")}</Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton
-                      asChild
-                      isActive={isActive("/settings/admin-log")}
-                    >
-                      <Link to="/settings/admin-log">
-                        {t("settingsAdminLog")}
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                </SidebarMenuSub>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
