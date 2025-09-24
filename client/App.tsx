@@ -23,6 +23,7 @@ import ReportsPage from "./pages/reports/Reports";
 import NotificationsPage from "./pages/notifications/Notifications";
 import SettingsIndexPage from "./pages/settings/Index";
 import GeneralSettingsPage from "./pages/settings/General";
+import AdminLogPage from "./pages/settings/AdminLog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -175,7 +176,7 @@ const App = () => (
               path="/settings/admin-log"
               element={
                 <RequireAuth>
-                  <Placeholder />
+                  <AdminLogPage />
                 </RequireAuth>
               }
             />
