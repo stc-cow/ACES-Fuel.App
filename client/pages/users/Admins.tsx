@@ -100,7 +100,17 @@ export default function AdminUsersPage() {
   });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [rows, setRows] = useState<Admin[]>(initialAdmins);
+  const STORAGE_KEY = "app.admins";
+  const [rows, setRows] = useState<Admin[]>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Admin[];
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialAdmins;
+  });
 
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<AdminForm>(emptyForm);
