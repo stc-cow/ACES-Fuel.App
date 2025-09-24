@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "@/hooks/use-toast";
 import { Plus, Download, Columns2, Pencil, Trash2, Eye } from "lucide-react";
 
 type Admin = {
@@ -175,10 +176,7 @@ export default function AdminUsersPage() {
       .single();
     if (!error && data) {
       try {
-        await supabase.auth.signUp({
-          email: addForm.email,
-          password: addForm.password,
-        });
+        await supabase.auth.signUp({ email: addForm.email, password: addForm.password });
       } catch {}
       setRows((r) => [
         {
@@ -191,9 +189,24 @@ export default function AdminUsersPage() {
         },
         ...r,
       ]);
+      toast({ title: "Admin created" });
       setAddForm(emptyForm);
       setAddOpen(false);
+      return;
     }
+    // Fallback: save locally if Supabase unavailable
+    const nextId = rows.reduce((m, r) => Math.max(m, r.id), 0) + 1;
+    const localRow: Admin = { id: nextId, ...addForm };
+    setRows((r) => [localRow, ...r]);
+    try {
+      const raw = localStorage.getItem("app.admins");
+      const arr = raw ? (JSON.parse(raw) as Admin[]) : [];
+      arr.unshift(localRow);
+      localStorage.setItem("app.admins", JSON.stringify(arr));
+    } catch {}
+    toast({ title: "Saved locally (Supabase unavailable)" });
+    setAddForm(emptyForm);
+    setAddOpen(false);
   };
 
   const openEdit = (row: Admin, index: number) => {
