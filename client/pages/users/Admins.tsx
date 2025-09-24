@@ -207,6 +207,13 @@ export default function AdminUsersPage() {
 
   const remove = (id: number) => setRows((r) => r.filter((x) => x.id !== id));
 
+  // persist rows
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
+    } catch {}
+  }, [rows]);
+
   const { t } = useI18n();
   return (
     <AppShell>
