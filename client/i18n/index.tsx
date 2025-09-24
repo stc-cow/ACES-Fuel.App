@@ -91,6 +91,16 @@ const en: Dict = {
   editSetting: "Edit Setting",
   details: "Details",
   setting: "Setting",
+  sitesOverview: "Sites Overview",
+  siteName: "Site name",
+  vendor: "Vendor",
+  region: "Region",
+  district: "District",
+  city: "City",
+  cowStatus: "COW Status",
+  latitude: "Latitude",
+  longitude: "Longitude",
+  powerSource: "Power source",
 };
 
 const ar: Dict = {
@@ -166,6 +176,16 @@ const ar: Dict = {
   editSetting: "تعديل الإعداد",
   details: "التفاصيل",
   setting: "الإعداد",
+  sitesOverview: "نظرة عامة على المواقع",
+  siteName: "اسم الموقع",
+  vendor: "المزود",
+  region: "المنطقة",
+  district: "الحي",
+  city: "المدينة",
+  cowStatus: "حالة COW",
+  latitude: "خط العرض",
+  longitude: "خط الطول",
+  powerSource: "مصدر الطاقة",
 };
 
 const ur: Dict = {
@@ -207,7 +227,7 @@ const ur: Dict = {
   enterEmailToReset: "ری سیٹ لنک کے لیے اپنا ای میل درج کریں",
   sendResetLink: "ری سیٹ لنک بھیجیں",
   cancel: "منسوخ",
-  resetEmailSent: "اگر اکاؤنٹ موجود ہے تو ری سیٹ ای میل بھیج دی گئی ہے۔",
+  resetEmailSent: "اگر اکاؤنٹ موجود ہے تو ری سیٹ ای ��یل بھیج دی گئی ہے۔",
   invalidEmail: "براہ کرم درست ای میل درج کریں۔",
   totalLitersToday: "آج شامل کل لیٹر",
   totalLiters30: "گزشتہ 30 دنوں میں شامل کل لیٹر",
@@ -241,6 +261,16 @@ const ur: Dict = {
   editSetting: "سیٹنگ میں ترمیم",
   details: "تفصیلات",
   setting: "سیٹنگ",
+  sitesOverview: "سائٹس کا جائزہ",
+  siteName: "سائٹ کا نام",
+  vendor: "وینڈر",
+  region: "ریجن",
+  district: "ضلعی",
+  city: "شہر",
+  cowStatus: "COW اسٹیٹس",
+  latitude: "لاٹیٹیوڈ",
+  longitude: "لانگیٹیوڈ",
+  powerSource: "پاور سورس",
 };
 
 const dictionaries: Record<Lang, Dict> = { en, ar, ur };
