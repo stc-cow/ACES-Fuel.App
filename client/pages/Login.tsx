@@ -27,8 +27,8 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const VALID_USERNAME = "Bannaga";
 const VALID_PASSWORD = "Aces@6343";
+const ADMINS_STORAGE_KEY = "app.admins";
 
 export default function Login() {
   const navigate = useNavigate();
