@@ -37,7 +37,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Download, Columns2, Pencil, Trash2, Eye } from "lucide-react";
+import { Plus, Download, Columns2, Pencil, Trash2, Eye, UploadCloud } from "lucide-react";
 
 type Admin = {
   id: number;
@@ -111,6 +111,48 @@ export default function AdminUsersPage() {
   const [editForm, setEditForm] = useState<(Admin & { index: number }) | null>(
     null,
   );
+
+  async function syncAdmins() {
+    try {
+      if (rows.length === 0) {
+        toast({ title: "No results" });
+        return;
+      }
+      const payload = rows.map((r) => ({
+        name: r.name,
+        username: r.username,
+        email: r.email,
+        password: r.password,
+        position: r.position,
+      }));
+      const { error } = await supabase
+        .from("admins")
+        .upsert(payload, { onConflict: "username" });
+      if (error) {
+        toast({ title: "Sync failed", description: error.message });
+        return;
+      }
+      const { data } = await supabase
+        .from("admins")
+        .select("id, name, username, email, password, position")
+        .order("id", { ascending: false });
+      if (data) {
+        setRows(
+          data.map((d: any) => ({
+            id: d.id,
+            name: d.name,
+            username: d.username,
+            email: d.email,
+            password: d.password,
+            position: d.position,
+          })),
+        );
+      }
+      toast({ title: "Synced to Supabase" });
+    } catch (e: any) {
+      toast({ title: "Sync failed", description: String(e?.message || e) });
+    }
+  }
 
   const filtered = useMemo(() => {
     if (!query) return rows;
@@ -351,6 +393,9 @@ export default function AdminUsersPage() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button variant="outline" onClick={syncAdmins}>
+              <UploadCloud className="mr-2 h-4 w-4" /> {t("sync")}
+            </Button>
             <Dialog open={addOpen} onOpenChange={setAddOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-sky-600 hover:bg-sky-500">
