@@ -44,6 +44,7 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
       const { data, error } = await supabase
         .from("sites")
         .select("site_name, vendor, region, district, city, cow_status, latitude, longitude, power_source")
+        .not("region", "ilike", "%west%")
         .order("created_at", { ascending: false });
       if (!cancelled && !error && data && data.length > 0) {
         const mapped: SiteRow[] = data.map((d: any) => ({
@@ -82,7 +83,8 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           if (!siteName && !vendor && !region && !district && !city) continue;
           mapped.push({ siteName, vendor, region, district, city, cowStatus, latitude, longitude, powerSource });
         }
-        setRows(limit ? mapped.slice(0, limit) : mapped);
+        const filtered = mapped.filter((m) => !(m.region || "").toLowerCase().includes("west"));
+        setRows(limit ? filtered.slice(0, limit) : filtered);
         // Push to Supabase (best-effort)
         const payload = mapped.map((m) => ({
           site_name: m.siteName,
