@@ -58,7 +58,8 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           longitude: d.longitude != null ? String(d.longitude) : "",
           powerSource: d.power_source ?? "",
         }));
-        setRows(limit ? mapped.slice(0, limit) : mapped);
+        const filteredDb = mapped.filter((m) => !(m.region || "").toLowerCase().includes("west"));
+        setRows(limit ? filteredDb.slice(0, limit) : filteredDb);
         setLoading(false);
         return;
       }
