@@ -39,12 +39,34 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchPublishedSheetRows(sourceUrl)
-      .then((data) => {
-        if (cancelled) return;
+    (async () => {
+      // Try Supabase first
+      const { data, error } = await supabase
+        .from("sites")
+        .select("site_name, vendor, region, district, city, cow_status, latitude, longitude, power_source")
+        .order("created_at", { ascending: false });
+      if (!cancelled && !error && data && data.length > 0) {
+        const mapped: SiteRow[] = data.map((d: any) => ({
+          siteName: d.site_name ?? "",
+          vendor: d.vendor ?? "",
+          region: d.region ?? "",
+          district: d.district ?? "",
+          city: d.city ?? "",
+          cowStatus: d.cow_status ?? "",
+          latitude: d.latitude != null ? String(d.latitude) : "",
+          longitude: d.longitude != null ? String(d.longitude) : "",
+          powerSource: d.power_source ?? "",
+        }));
+        setRows(limit ? mapped.slice(0, limit) : mapped);
+        setLoading(false);
+        return;
+      }
+      // Fallback: fetch from Google Sheet, then push to Supabase
+      try {
+        const csv = await fetchPublishedSheetRows(sourceUrl);
         const mapped: SiteRow[] = [];
-        for (let i = 1; i < data.length; i++) { // skip header row
-          const r = data[i];
+        for (let i = 1; i < csv.length; i++) {
+          const r = csv[i];
           if (!r || r.length === 0) continue;
           const siteName = (r[COLS.siteName] || "").trim();
           const vendor = (r[COLS.vendor] || "").trim();
@@ -52,16 +74,34 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           const district = (r[COLS.district] || "").trim();
           const city = (r[COLS.city] || "").trim();
           const cowStatus = (r[COLS.cowStatus] || "").trim();
-          const latitude = (r[COLS.latitude] || "").trim();
-          const longitude = (r[COLS.longitude] || "").trim();
+          const latStr = (r[COLS.latitude] || "").trim();
+          const lonStr = (r[COLS.longitude] || "").trim();
+          const latitude = latStr;
+          const longitude = lonStr;
           const powerSource = (r[COLS.powerSource] || "").trim();
           if (!siteName && !vendor && !region && !district && !city) continue;
           mapped.push({ siteName, vendor, region, district, city, cowStatus, latitude, longitude, powerSource });
         }
         setRows(limit ? mapped.slice(0, limit) : mapped);
-      })
-      .catch((e) => setError(e.message || String(e)))
-      .finally(() => setLoading(false));
+        // Push to Supabase (best-effort)
+        const payload = mapped.map((m) => ({
+          site_name: m.siteName,
+          vendor: m.vendor,
+          region: m.region,
+          district: m.district,
+          city: m.city,
+          cow_status: m.cowStatus,
+          latitude: m.latitude ? parseFloat(m.latitude) : null,
+          longitude: m.longitude ? parseFloat(m.longitude) : null,
+          power_source: m.powerSource,
+        }));
+        await supabase.from("sites").insert(payload);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.message || String(e));
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
     return () => {
       cancelled = true;
     };
