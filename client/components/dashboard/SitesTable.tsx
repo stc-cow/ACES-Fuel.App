@@ -3,6 +3,7 @@ import { useI18n } from "@/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fetchPublishedSheetRows } from "@/lib/sheets";
+import { supabase } from "@/lib/supabase";
 
 export type SiteRow = {
   siteName: string;
