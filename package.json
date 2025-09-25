@@ -24,6 +24,8 @@
     "ios": "pnpm build && pnpm exec cap copy ios && pnpm exec cap open ios"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
     "@supabase/supabase-js": "^2.57.4",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
