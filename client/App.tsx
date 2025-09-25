@@ -25,6 +25,7 @@ import SettingsIndexPage from "./pages/settings/Index";
 import GeneralSettingsPage from "./pages/settings/General";
 import AdminLogPage from "./pages/settings/AdminLog";
 import NotFound from "./pages/NotFound";
+import DriverApp from "./pages/mobile/DriverApp";
 
 const queryClient = new QueryClient();
 
@@ -180,6 +181,7 @@ const App = () => (
                 </RequireAuth>
               }
             />
+            <Route path="/driver" element={<DriverApp />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route
               path="*"
