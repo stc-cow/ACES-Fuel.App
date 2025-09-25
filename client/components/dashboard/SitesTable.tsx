@@ -87,7 +87,7 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
         const filtered = mapped.filter((m) => !(m.region || "").toLowerCase().includes("west"));
         setRows(limit ? filtered.slice(0, limit) : filtered);
         // Push to Supabase (best-effort)
-        const payload = mapped.map((m) => ({
+        const payload = filtered.map((m) => ({
           site_name: m.siteName,
           vendor: m.vendor,
           region: m.region,
