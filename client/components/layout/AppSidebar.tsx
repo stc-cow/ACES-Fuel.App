@@ -127,14 +127,6 @@ function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/generators")}>
-                  <Link to="/generators" className="flex items-center gap-2">
-                    <Factory />
-                    <span>{t("generators")}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/reports")}>
                   <Link to="/reports" className="flex items-center gap-2">
                     <FileBarChart2 />
