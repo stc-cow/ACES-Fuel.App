@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/i18n";
 import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { fetchPublishedSheetRows } from "@/lib/sheets";
 import { supabase } from "@/lib/supabase";
 
@@ -29,7 +36,13 @@ const COLS = {
   longitude: 12, // M
 } as const;
 
-export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: number }) {
+export function SitesTable({
+  sourceUrl,
+  limit,
+}: {
+  sourceUrl: string;
+  limit?: number;
+}) {
   const { t } = useI18n();
   const [rows, setRows] = useState<SiteRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +56,9 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
       // Try Supabase first
       const { data, error } = await supabase
         .from("sites")
-        .select("site_name, vendor, region, district, city, cow_status, latitude, longitude, power_source")
+        .select(
+          "site_name, vendor, region, district, city, cow_status, latitude, longitude, power_source",
+        )
         .not("region", "ilike", "%west%")
         .order("created_at", { ascending: false });
       if (!cancelled && !error && data && data.length > 0) {
@@ -58,7 +73,9 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           longitude: d.longitude != null ? String(d.longitude) : "",
           powerSource: d.power_source ?? "",
         }));
-        const filteredDb = mapped.filter((m) => !(m.region || "").toLowerCase().includes("west"));
+        const filteredDb = mapped.filter(
+          (m) => !(m.region || "").toLowerCase().includes("west"),
+        );
         setRows(limit ? filteredDb.slice(0, limit) : filteredDb);
         setLoading(false);
         return;
@@ -82,9 +99,21 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           const longitude = lonStr;
           const powerSource = (r[COLS.powerSource] || "").trim();
           if (!siteName && !vendor && !region && !district && !city) continue;
-          mapped.push({ siteName, vendor, region, district, city, cowStatus, latitude, longitude, powerSource });
+          mapped.push({
+            siteName,
+            vendor,
+            region,
+            district,
+            city,
+            cowStatus,
+            latitude,
+            longitude,
+            powerSource,
+          });
         }
-        const filtered = mapped.filter((m) => !(m.region || "").toLowerCase().includes("west"));
+        const filtered = mapped.filter(
+          (m) => !(m.region || "").toLowerCase().includes("west"),
+        );
         setRows(limit ? filtered.slice(0, limit) : filtered);
         // Push to Supabase (best-effort)
         const payload = filtered.map((m) => ({
@@ -113,7 +142,9 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
   return (
     <Card>
       <CardContent className="p-0">
-        <div className="px-6 pt-6 text-base font-medium">{t("sitesOverview")}</div>
+        <div className="px-6 pt-6 text-base font-medium">
+          {t("sitesOverview")}
+        </div>
         <Table>
           <TableHeader>
             <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
@@ -131,38 +162,49 @@ export function SitesTable({ sourceUrl, limit }: { sourceUrl: string; limit?: nu
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={9} className="text-center text-sm text-muted-foreground">
+                <TableCell
+                  colSpan={9}
+                  className="text-center text-sm text-muted-foreground"
+                >
                   {t("loading")}
                 </TableCell>
               </TableRow>
             )}
             {!loading && error && (
               <TableRow>
-                <TableCell colSpan={9} className="text-center text-sm text-destructive">
+                <TableCell
+                  colSpan={9}
+                  className="text-center text-sm text-destructive"
+                >
                   {t("failedToLoad")}
                 </TableCell>
               </TableRow>
             )}
             {!loading && !error && rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={9} className="text-center text-sm text-muted-foreground">
+                <TableCell
+                  colSpan={9}
+                  className="text-center text-sm text-muted-foreground"
+                >
                   {t("noDataYet")}
                 </TableCell>
               </TableRow>
             )}
-            {!loading && !error && rows.map((r, idx) => (
-              <TableRow key={idx}>
-                <TableCell className="font-medium">{r.siteName}</TableCell>
-                <TableCell>{r.vendor}</TableCell>
-                <TableCell>{r.region}</TableCell>
-                <TableCell>{r.district}</TableCell>
-                <TableCell>{r.city}</TableCell>
-                <TableCell>{r.cowStatus}</TableCell>
-                <TableCell>{r.latitude}</TableCell>
-                <TableCell>{r.longitude}</TableCell>
-                <TableCell>{r.powerSource}</TableCell>
-              </TableRow>
-            ))}
+            {!loading &&
+              !error &&
+              rows.map((r, idx) => (
+                <TableRow key={idx}>
+                  <TableCell className="font-medium">{r.siteName}</TableCell>
+                  <TableCell>{r.vendor}</TableCell>
+                  <TableCell>{r.region}</TableCell>
+                  <TableCell>{r.district}</TableCell>
+                  <TableCell>{r.city}</TableCell>
+                  <TableCell>{r.cowStatus}</TableCell>
+                  <TableCell>{r.latitude}</TableCell>
+                  <TableCell>{r.longitude}</TableCell>
+                  <TableCell>{r.powerSource}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </CardContent>

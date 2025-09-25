@@ -77,7 +77,9 @@ function AppSidebar() {
       <SidebarHeader className="px-4 py-3">
         <div className="flex items-center">
           <Link to="/" className="select-none">
-            <span className="block text-2xl font-extrabold leading-none tracking-widest text-white">ACES</span>
+            <span className="block text-2xl font-extrabold leading-none tracking-widest text-white">
+              ACES
+            </span>
           </Link>
         </div>
       </SidebarHeader>
