@@ -33,6 +33,7 @@ import {
   Printer,
   Pencil,
   Trash2,
+  UploadCloud,
 } from "lucide-react";
 
 // Mission type
@@ -288,6 +289,29 @@ export default function MissionsPage() {
     setAddOpen(false);
   };
 
+  const handleSyncAll = async () => {
+    if (rows.length === 0) {
+      toast({ title: "No missions to sync" });
+      return;
+    }
+    const payload = rows.map((r) => ({
+      site_id: null as number | null,
+      site_name: r.siteName,
+      driver_name: r.assignedDriver || r.driverName,
+      driver_phone: null as string | null,
+      scheduled_at: null as string | null,
+      status: "pending",
+      required_liters: r.quantityAddedLastTask || r.filledLiters || null,
+      notes: r.notes || null,
+    }));
+    const { error } = await supabase.from("driver_tasks").insert(payload);
+    if (error) {
+      toast({ title: "Sync failed", description: error.message });
+      return;
+    }
+    toast({ title: "Missions synced to Supabase" });
+  };
+
   const counts = useMemo(() => {
     const map: Record<Mission["missionStatus"], number> = {
       Creation: 0,
@@ -382,6 +406,9 @@ export default function MissionsPage() {
               onClick={() => window.print()}
             >
               <Printer className="mr-2 h-4 w-4" /> Print
+            </Button>
+            <Button variant="outline" className="hidden sm:inline-flex" onClick={handleSyncAll}>
+              <UploadCloud className="mr-2 h-4 w-4" /> Sync
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
