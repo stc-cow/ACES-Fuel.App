@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-export type Lang = "en" | "ar" | "ur";
+export type Lang = "en";
 
 type Dict = Record<string, string>;
 
@@ -227,7 +227,7 @@ const ur: Dict = {
   maxDistance: "اسٹیشن سے تصدیق کے لیے زیادہ سے زیادہ فاصلہ",
   language: "زبان",
   save: "محفوظ کریں",
-  saving: "محفوظ کیا جا رہا ہے...",
+  saving: "محفوظ کیا ��ا رہا ہے...",
   signInTitle: "سپر ایڈمن میں سائن ان کریں",
   signInSubtitle: "اپنے اکاؤنٹ میں سائن ان کرنے کے لیے تفصیلات درج کریں",
   username: "صارف نام",
@@ -285,7 +285,7 @@ const ur: Dict = {
   user: "صارف",
   time: "وقت",
   sync: "ہم آہنگ کریں",
-  sitesOverview: "سائٹس کا جائزہ",
+  sitesOverview: "سائٹس ک�� جائزہ",
   siteName: "سائٹ کا نام",
   vendor: "وینڈر",
   region: "ریجن",
@@ -297,28 +297,11 @@ const ur: Dict = {
   powerSource: "پاور سورس",
 };
 
-const dictionaries: Record<Lang, Dict> = { en, ar, ur };
+const dictionaries: Record<Lang, Dict> = { en };
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 function getInitialLang(): Lang {
-  try {
-    const fromKey = (localStorage.getItem("i18n.lang") as Lang | null) || null;
-    if (fromKey === "en" || fromKey === "ar" || fromKey === "ur")
-      return fromKey;
-    const raw = localStorage.getItem("settings.general");
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (
-        parsed &&
-        (parsed.language === "en" ||
-          parsed.language === "ar" ||
-          parsed.language === "ur")
-      ) {
-        return parsed.language;
-      }
-    }
-  } catch {}
   return "en";
 }
 
@@ -326,45 +309,14 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>(getInitialLang());
 
   useEffect(() => {
-    document.documentElement.dir =
-      lang === "ar" || lang === "ur" ? "rtl" : "ltr";
-  }, [lang]);
-
-  const setLang = useCallback((l: Lang) => {
-    setLangState(l);
-    try {
-      localStorage.setItem("i18n.lang", l);
-    } catch {}
-    window.dispatchEvent(new CustomEvent("i18n:language", { detail: l }));
+    document.documentElement.dir = "ltr";
   }, []);
 
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (
-        e.key === "i18n.lang" &&
-        (e.newValue === "en" || e.newValue === "ar" || e.newValue === "ur")
-      ) {
-        setLangState(e.newValue);
-      }
-      if (e.key === "settings.general" && e.newValue) {
-        try {
-          const parsed = JSON.parse(e.newValue);
-          const l = parsed?.language as Lang | undefined;
-          if (l === "en" || l === "ar" || l === "ur") setLangState(l);
-        } catch {}
-      }
-    };
-    const onCustom = (e: Event) => {
-      const l = (e as CustomEvent).detail as Lang;
-      if (l === "en" || l === "ar" || l === "ur") setLangState(l);
-    };
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("i18n:language", onCustom as EventListener);
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("i18n:language", onCustom as EventListener);
-    };
+  const setLang = useCallback((_l: Lang) => {
+    // no-op in single-language mode
   }, []);
+
+  // language change listeners removed in single-language mode
 
   const t = useCallback(
     (key: string) => {
