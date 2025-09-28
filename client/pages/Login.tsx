@@ -94,7 +94,7 @@ export default function Login() {
     navigate("/");
   };
 
-  const { t, lang, setLang } = useI18n();
+  const { t } = useI18n();
   const [resetOpen, setResetOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
@@ -197,18 +197,6 @@ export default function Login() {
               >
                 {isSubmitting ? t("signingIn") : t("login")}
               </Button>
-              <div className="mt-4 flex items-center justify-center gap-2">
-                {(["en", "ar", "ur"] as const).map((l) => (
-                  <Button
-                    key={l}
-                    size="sm"
-                    variant={l === lang ? "secondary" : "outline"}
-                    onClick={() => setLang(l)}
-                  >
-                    {l === "en" ? "EN" : l === "ar" ? "AR" : "UR"}
-                  </Button>
-                ))}
-              </div>
             </form>
           </CardContent>
         </Card>
