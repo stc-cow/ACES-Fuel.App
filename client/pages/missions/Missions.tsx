@@ -281,7 +281,10 @@ export default function MissionsPage() {
       notes: (data.notes as string) || "",
       missionStatus: "Creation",
       assignedDriver: (data.driver_name as string) || "",
-      createdBy: "Manual",
+      createdBy:
+        localStorage.getItem("auth.username") ||
+        localStorage.getItem("remember.username") ||
+        "User",
     };
     setRows((r) => [newRow, ...r]);
     toast({ title: "Task created" });
