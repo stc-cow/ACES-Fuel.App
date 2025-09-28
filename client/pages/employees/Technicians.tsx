@@ -17,7 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import {
   Columns2,
   Download,
@@ -100,7 +101,34 @@ export default function TechniciansPage() {
     URL.revokeObjectURL(url);
   };
 
-  const remove = (id: number) => setRows((r) => r.filter((x) => x.id !== id));
+  const remove = async (id: number) => {
+    const { error } = await supabase.from("technicians").delete().eq("id", id);
+    if (!error) setRows((r) => r.filter((x) => x.id !== id));
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("technicians")
+        .select("id, name, phone, active")
+        .order("created_at", { ascending: false });
+      if (!mounted) return;
+      if (!error && data) {
+        setRows(
+          data.map((d: any) => ({
+            id: Number(d.id),
+            name: d.name || "",
+            phone: d.phone || "",
+            active: Boolean(d.active),
+          })),
+        );
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <AppShell>
