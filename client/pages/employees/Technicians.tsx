@@ -157,6 +157,46 @@ export default function TechniciansPage() {
     if (!error) setRows((r) => r.filter((x) => x.id !== id));
   };
 
+  const [viewOpen, setViewOpen] = useState(false);
+  const [viewing, setViewing] = useState<Technician | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState<Technician | null>(null);
+
+  const openView = (row: Technician) => {
+    setViewing(row);
+    setViewOpen(true);
+  };
+  const openEdit = (row: Technician) => {
+    setEditForm({ ...row });
+    setEditOpen(true);
+  };
+
+  const handleEditSave = async () => {
+    if (!editForm) return;
+    const errs = validate({
+      name: editForm.name,
+      phone: editForm.phone,
+      active: editForm.active,
+    });
+    if (Object.keys(errs).length > 0) return;
+    const { error } = await supabase
+      .from("technicians")
+      .update({
+        name: editForm.name,
+        phone: editForm.phone || null,
+        active: editForm.active,
+      })
+      .eq("id", editForm.id);
+    if (error) {
+      toast({ title: "Update failed", description: error.message });
+      return;
+    }
+    setRows((r) => r.map((x) => (x.id === editForm.id ? { ...x, ...editForm } : x)));
+    toast({ title: "Technician updated" });
+    setEditOpen(false);
+    setEditForm(null);
+  };
+
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -254,6 +294,56 @@ export default function TechniciansPage() {
           </div>
         </div>
 
+        <Dialog open={viewOpen} onOpenChange={setViewOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Technician details</DialogTitle>
+            </DialogHeader>
+            {viewing && (
+              <div className="grid gap-3">
+                <div><span className="text-sm text-muted-foreground">Name</span><div>{viewing.name}</div></div>
+                <div><span className="text-sm text-muted-foreground">Phone</span><div>{viewing.phone}</div></div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Active</span>
+                  {viewing.active ? (
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-gray-400" />
+                  )}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={editOpen} onOpenChange={setEditOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Technician</DialogTitle>
+            </DialogHeader>
+            {editForm && (
+              <div className="grid gap-4 py-2">
+                <div className="grid gap-2">
+                  <Label htmlFor="te-name">Name</Label>
+                  <Input id="te-name" value={editForm.name} onChange={(e) => setEditForm((s) => (s ? { ...s, name: e.target.value } : s))} />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="te-phone">Phone</Label>
+                  <Input id="te-phone" value={editForm.phone} onChange={(e) => setEditForm((s) => (s ? { ...s, phone: e.target.value } : s))} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="te-active">Active</Label>
+                  <Switch id="te-active" checked={editForm.active} onCheckedChange={(v) => setEditForm((s) => (s ? { ...s, active: !!v } : s))} />
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+              <Button onClick={handleEditSave}>Save</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <Card>
           <CardContent className="p-0">
             <div className="flex items-center justify-between gap-4 p-4">
@@ -310,10 +400,10 @@ export default function TechniciansPage() {
                       )}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
-                          <Button size="icon" variant="ghost" aria-label="View">
+                          <Button size="icon" variant="ghost" aria-label="View" onClick={() => openView(r)}>
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" aria-label="Edit">
+                          <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => openEdit(r)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
