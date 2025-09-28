@@ -18,7 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import {
   Columns2,
   Download,
@@ -165,7 +166,35 @@ export default function DriversPage() {
     URL.revokeObjectURL(url);
   };
 
-  const remove = (id: number) => setRows((r) => r.filter((x) => x.id !== id));
+  const remove = async (id: number) => {
+    const { error } = await supabase.from("drivers").delete().eq("id", id);
+    if (!error) setRows((r) => r.filter((x) => x.id !== id));
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("drivers")
+        .select("id, name, phone, zone, active")
+        .order("created_at", { ascending: false });
+      if (!mounted) return;
+      if (!error && data) {
+        setRows(
+          data.map((d: any) => ({
+            id: Number(d.id),
+            name: d.name || "",
+            phone: d.phone || "",
+            zone: d.zone || "",
+            active: Boolean(d.active),
+          })),
+        );
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <AppShell>
