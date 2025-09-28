@@ -20,18 +20,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useI18n } from "@/i18n";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Gauge,
-  Users,
-  Route as RouteIcon,
-  UserCog,
-  Building2,
-  Factory,
-  FileBarChart2,
-  Bell,
-  Settings,
-  ChevronDown,
-} from "lucide-react";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -94,49 +82,43 @@ function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/")}>
-                  <Link to="/" className="flex items-center gap-2">
-                    <Gauge />
-                    <span>{t("dashboard")}</span>
+                  <Link to="/" className="flex items-center">
+                    <span className="font-bold text-white">{t("dashboard")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/users")}>
-                  <Link to="/users" className="flex items-center gap-2">
-                    <Users />
-                    <span>{t("usersAuth")}</span>
+                  <Link to="/users" className="flex items-center">
+                    <span className="font-bold text-white">{t("usersAuth")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/missions")}>
-                  <Link to="/missions" className="flex items-center gap-2">
-                    <RouteIcon />
-                    <span>{t("missions")}</span>
+                  <Link to="/missions" className="flex items-center">
+                    <span className="font-bold text-white">{t("missions")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/employees")}>
-                  <Link to="/employees" className="flex items-center gap-2">
-                    <UserCog />
-                    <span>{t("employees")}</span>
+                  <Link to="/employees" className="flex items-center">
+                    <span className="font-bold text-white">{t("employees")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/sites")}>
-                  <Link to="/sites" className="flex items-center gap-2">
-                    <Building2 />
-                    <span>{t("sites")}</span>
+                  <Link to="/sites" className="flex items-center">
+                    <span className="font-bold text-white">{t("sites")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/reports")}>
-                  <Link to="/reports" className="flex items-center gap-2">
-                    <FileBarChart2 />
-                    <span>{t("reports")}</span>
+                  <Link to="/reports" className="flex items-center">
+                    <span className="font-bold text-white">{t("reports")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -145,17 +127,15 @@ function AppSidebar() {
                   asChild
                   isActive={isActive("/notifications")}
                 >
-                  <Link to="/notifications" className="flex items-center gap-2">
-                    <Bell />
-                    <span>{t("notifications")}</span>
+                  <Link to="/notifications" className="flex items-center">
+                    <span className="font-bold text-white">{t("notifications")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/settings")}>
-                  <Link to="/settings" className="flex items-center gap-2">
-                    <Settings />
-                    <span>{t("settings")}</span>
+                  <Link to="/settings" className="flex items-center">
+                    <span className="font-bold text-white">{t("settings")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
