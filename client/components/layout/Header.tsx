@@ -13,13 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { t, lang, setLang } = useI18n();
+  const { t } = useI18n();
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
 
@@ -90,20 +88,6 @@ export default function Header() {
                   {t("login")}
                 </DropdownMenuItem>
               )}
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>{t("language")}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup
-                value={lang}
-                onValueChange={(v) => setLang(v as any)}
-              >
-                <DropdownMenuRadioItem value="en">
-                  English
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="ar">
-                  العربية
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="ur">اردو</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
