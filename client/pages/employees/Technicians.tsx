@@ -3,6 +3,10 @@ import Header from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -61,6 +65,53 @@ export default function TechniciansPage() {
     active: true,
     settings: true,
   });
+
+  type TechnicianForm = {
+    name: string;
+    phone: string;
+    active: boolean;
+  };
+  const emptyForm: TechnicianForm = { name: "", phone: "", active: true };
+  const [addOpen, setAddOpen] = useState(false);
+  const [addForm, setAddForm] = useState<TechnicianForm>(emptyForm);
+  const [addErrors, setAddErrors] = useState<Partial<Record<keyof TechnicianForm, string>>>({});
+
+  function validate(form: TechnicianForm) {
+    const errs: Partial<Record<keyof TechnicianForm, string>> = {};
+    if (!form.name.trim()) errs.name = "required";
+    return errs;
+  }
+
+  const handleAdd = async () => {
+    const errs = validate(addForm);
+    setAddErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+    const { data, error } = await supabase
+      .from("technicians")
+      .insert({
+        name: addForm.name,
+        phone: addForm.phone || null,
+        active: addForm.active,
+      })
+      .select("id, name, phone, active")
+      .single();
+    if (error || !data) {
+      toast({ title: "Create failed", description: error?.message || "Unknown error" });
+      return;
+    }
+    setRows((r) => [
+      {
+        id: Number(data.id),
+        name: (data.name as string) || "",
+        phone: (data.phone as string) || "",
+        active: Boolean(data.active),
+      },
+      ...r,
+    ]);
+    toast({ title: "Technician created" });
+    setAddForm(emptyForm);
+    setAddOpen(false);
+  };
 
   const filtered = useMemo(() => {
     if (!query) return rows;
@@ -169,9 +220,37 @@ export default function TechniciansPage() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="bg-sky-600 hover:bg-sky-500">
-              <Plus className="mr-2 h-4 w-4" /> Add
-            </Button>
+            <Dialog open={addOpen} onOpenChange={setAddOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-sky-600 hover:bg-sky-500">
+                  <Plus className="mr-2 h-4 w-4" /> Add
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Technician</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="t-name">Name</Label>
+                    <Input id="t-name" value={addForm.name} onChange={(e) => setAddForm((s) => ({ ...s, name: e.target.value }))} />
+                    {addErrors.name && <span className="text-sm text-red-500">required</span>}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="t-phone">Phone</Label>
+                    <Input id="t-phone" value={addForm.phone} onChange={(e) => setAddForm((s) => ({ ...s, phone: e.target.value }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="t-active">Active</Label>
+                    <Switch id="t-active" checked={addForm.active} onCheckedChange={(v) => setAddForm((s) => ({ ...s, active: !!v }))} />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+                  <Button onClick={handleAdd}>Save</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
