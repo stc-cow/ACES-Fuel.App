@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -133,7 +140,9 @@ export default function DriversPage() {
   const emptyForm: DriverForm = { name: "", phone: "", zone: "", active: true };
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<DriverForm>(emptyForm);
-  const [addErrors, setAddErrors] = useState<Partial<Record<keyof DriverForm, string>>>({});
+  const [addErrors, setAddErrors] = useState<
+    Partial<Record<keyof DriverForm, string>>
+  >({});
 
   function validate(form: DriverForm) {
     const errs: Partial<Record<keyof DriverForm, string>> = {};
@@ -156,7 +165,10 @@ export default function DriversPage() {
       .select("id, name, phone, zone, active")
       .single();
     if (error || !data) {
-      toast({ title: "Create failed", description: error?.message || "Unknown error" });
+      toast({
+        title: "Create failed",
+        description: error?.message || "Unknown error",
+      });
       return;
     }
     setRows((r) => [
@@ -210,7 +222,9 @@ export default function DriversPage() {
       toast({ title: "Update failed", description: error.message });
       return;
     }
-    setRows((r) => r.map((x) => (x.id === editForm.id ? { ...x, ...editForm } : x)));
+    setRows((r) =>
+      r.map((x) => (x.id === editForm.id ? { ...x, ...editForm } : x)),
+    );
     toast({ title: "Driver updated" });
     setEditOpen(false);
     setEditForm(null);
@@ -344,24 +358,52 @@ export default function DriversPage() {
                 <div className="grid gap-4 py-2">
                   <div className="grid gap-2">
                     <Label htmlFor="d-name">Name</Label>
-                    <Input id="d-name" value={addForm.name} onChange={(e) => setAddForm((s) => ({ ...s, name: e.target.value }))} />
-                    {addErrors.name && <span className="text-sm text-red-500">required</span>}
+                    <Input
+                      id="d-name"
+                      value={addForm.name}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, name: e.target.value }))
+                      }
+                    />
+                    {addErrors.name && (
+                      <span className="text-sm text-red-500">required</span>
+                    )}
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="d-phone">Phone</Label>
-                    <Input id="d-phone" value={addForm.phone} onChange={(e) => setAddForm((s) => ({ ...s, phone: e.target.value }))} />
+                    <Input
+                      id="d-phone"
+                      value={addForm.phone}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, phone: e.target.value }))
+                      }
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="d-zone">Zone</Label>
-                    <Input id="d-zone" value={addForm.zone} onChange={(e) => setAddForm((s) => ({ ...s, zone: e.target.value }))} />
+                    <Input
+                      id="d-zone"
+                      value={addForm.zone}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, zone: e.target.value }))
+                      }
+                    />
                   </div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="d-active">Active</Label>
-                    <Switch id="d-active" checked={addForm.active} onCheckedChange={(v) => setAddForm((s) => ({ ...s, active: !!v }))} />
+                    <Switch
+                      id="d-active"
+                      checked={addForm.active}
+                      onCheckedChange={(v) =>
+                        setAddForm((s) => ({ ...s, active: !!v }))
+                      }
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleAdd}>Save</Button>
                 </DialogFooter>
               </DialogContent>
@@ -376,9 +418,18 @@ export default function DriversPage() {
             </DialogHeader>
             {viewing && (
               <div className="grid gap-3">
-                <div><span className="text-sm text-muted-foreground">Name</span><div>{viewing.name}</div></div>
-                <div><span className="text-sm text-muted-foreground">Phone</span><div>{viewing.phone}</div></div>
-                <div><span className="text-sm text-muted-foreground">Zone</span><div>{viewing.zone}</div></div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Name</span>
+                  <div>{viewing.name}</div>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Phone</span>
+                  <div>{viewing.phone}</div>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Zone</span>
+                  <div>{viewing.zone}</div>
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Active</span>
                   {viewing.active ? (
@@ -401,24 +452,56 @@ export default function DriversPage() {
               <div className="grid gap-4 py-2">
                 <div className="grid gap-2">
                   <Label htmlFor="e-name">Name</Label>
-                  <Input id="e-name" value={editForm.name} onChange={(e) => setEditForm((s) => (s ? { ...s, name: e.target.value } : s))} />
+                  <Input
+                    id="e-name"
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm((s) =>
+                        s ? { ...s, name: e.target.value } : s,
+                      )
+                    }
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="e-phone">Phone</Label>
-                  <Input id="e-phone" value={editForm.phone} onChange={(e) => setEditForm((s) => (s ? { ...s, phone: e.target.value } : s))} />
+                  <Input
+                    id="e-phone"
+                    value={editForm.phone}
+                    onChange={(e) =>
+                      setEditForm((s) =>
+                        s ? { ...s, phone: e.target.value } : s,
+                      )
+                    }
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="e-zone">Zone</Label>
-                  <Input id="e-zone" value={editForm.zone} onChange={(e) => setEditForm((s) => (s ? { ...s, zone: e.target.value } : s))} />
+                  <Input
+                    id="e-zone"
+                    value={editForm.zone}
+                    onChange={(e) =>
+                      setEditForm((s) =>
+                        s ? { ...s, zone: e.target.value } : s,
+                      )
+                    }
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="e-active">Active</Label>
-                  <Switch id="e-active" checked={editForm.active} onCheckedChange={(v) => setEditForm((s) => (s ? { ...s, active: !!v } : s))} />
+                  <Switch
+                    id="e-active"
+                    checked={editForm.active}
+                    onCheckedChange={(v) =>
+                      setEditForm((s) => (s ? { ...s, active: !!v } : s))
+                    }
+                  />
                 </div>
               </div>
             )}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setEditOpen(false)}>
+                Cancel
+              </Button>
               <Button onClick={handleEditSave}>Save</Button>
             </DialogFooter>
           </DialogContent>
@@ -506,10 +589,20 @@ export default function DriversPage() {
                       )}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
-                          <Button size="icon" variant="ghost" aria-label="View" onClick={() => openView(r)}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="View"
+                            onClick={() => openView(r)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => openEdit(r)}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Edit"
+                            onClick={() => openEdit(r)}
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button

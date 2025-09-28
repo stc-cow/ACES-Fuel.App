@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -74,7 +81,9 @@ export default function TechniciansPage() {
   const emptyForm: TechnicianForm = { name: "", phone: "", active: true };
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<TechnicianForm>(emptyForm);
-  const [addErrors, setAddErrors] = useState<Partial<Record<keyof TechnicianForm, string>>>({});
+  const [addErrors, setAddErrors] = useState<
+    Partial<Record<keyof TechnicianForm, string>>
+  >({});
 
   function validate(form: TechnicianForm) {
     const errs: Partial<Record<keyof TechnicianForm, string>> = {};
@@ -96,7 +105,10 @@ export default function TechniciansPage() {
       .select("id, name, phone, active")
       .single();
     if (error || !data) {
-      toast({ title: "Create failed", description: error?.message || "Unknown error" });
+      toast({
+        title: "Create failed",
+        description: error?.message || "Unknown error",
+      });
       return;
     }
     setRows((r) => [
@@ -191,7 +203,9 @@ export default function TechniciansPage() {
       toast({ title: "Update failed", description: error.message });
       return;
     }
-    setRows((r) => r.map((x) => (x.id === editForm.id ? { ...x, ...editForm } : x)));
+    setRows((r) =>
+      r.map((x) => (x.id === editForm.id ? { ...x, ...editForm } : x)),
+    );
     toast({ title: "Technician updated" });
     setEditOpen(false);
     setEditForm(null);
@@ -273,20 +287,42 @@ export default function TechniciansPage() {
                 <div className="grid gap-4 py-2">
                   <div className="grid gap-2">
                     <Label htmlFor="t-name">Name</Label>
-                    <Input id="t-name" value={addForm.name} onChange={(e) => setAddForm((s) => ({ ...s, name: e.target.value }))} />
-                    {addErrors.name && <span className="text-sm text-red-500">required</span>}
+                    <Input
+                      id="t-name"
+                      value={addForm.name}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, name: e.target.value }))
+                      }
+                    />
+                    {addErrors.name && (
+                      <span className="text-sm text-red-500">required</span>
+                    )}
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="t-phone">Phone</Label>
-                    <Input id="t-phone" value={addForm.phone} onChange={(e) => setAddForm((s) => ({ ...s, phone: e.target.value }))} />
+                    <Input
+                      id="t-phone"
+                      value={addForm.phone}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, phone: e.target.value }))
+                      }
+                    />
                   </div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="t-active">Active</Label>
-                    <Switch id="t-active" checked={addForm.active} onCheckedChange={(v) => setAddForm((s) => ({ ...s, active: !!v }))} />
+                    <Switch
+                      id="t-active"
+                      checked={addForm.active}
+                      onCheckedChange={(v) =>
+                        setAddForm((s) => ({ ...s, active: !!v }))
+                      }
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleAdd}>Save</Button>
                 </DialogFooter>
               </DialogContent>
@@ -301,8 +337,14 @@ export default function TechniciansPage() {
             </DialogHeader>
             {viewing && (
               <div className="grid gap-3">
-                <div><span className="text-sm text-muted-foreground">Name</span><div>{viewing.name}</div></div>
-                <div><span className="text-sm text-muted-foreground">Phone</span><div>{viewing.phone}</div></div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Name</span>
+                  <div>{viewing.name}</div>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Phone</span>
+                  <div>{viewing.phone}</div>
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Active</span>
                   {viewing.active ? (
@@ -325,20 +367,44 @@ export default function TechniciansPage() {
               <div className="grid gap-4 py-2">
                 <div className="grid gap-2">
                   <Label htmlFor="te-name">Name</Label>
-                  <Input id="te-name" value={editForm.name} onChange={(e) => setEditForm((s) => (s ? { ...s, name: e.target.value } : s))} />
+                  <Input
+                    id="te-name"
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm((s) =>
+                        s ? { ...s, name: e.target.value } : s,
+                      )
+                    }
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="te-phone">Phone</Label>
-                  <Input id="te-phone" value={editForm.phone} onChange={(e) => setEditForm((s) => (s ? { ...s, phone: e.target.value } : s))} />
+                  <Input
+                    id="te-phone"
+                    value={editForm.phone}
+                    onChange={(e) =>
+                      setEditForm((s) =>
+                        s ? { ...s, phone: e.target.value } : s,
+                      )
+                    }
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="te-active">Active</Label>
-                  <Switch id="te-active" checked={editForm.active} onCheckedChange={(v) => setEditForm((s) => (s ? { ...s, active: !!v } : s))} />
+                  <Switch
+                    id="te-active"
+                    checked={editForm.active}
+                    onCheckedChange={(v) =>
+                      setEditForm((s) => (s ? { ...s, active: !!v } : s))
+                    }
+                  />
                 </div>
               </div>
             )}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setEditOpen(false)}>
+                Cancel
+              </Button>
               <Button onClick={handleEditSave}>Save</Button>
             </DialogFooter>
           </DialogContent>
@@ -400,10 +466,20 @@ export default function TechniciansPage() {
                       )}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
-                          <Button size="icon" variant="ghost" aria-label="View" onClick={() => openView(r)}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="View"
+                            onClick={() => openView(r)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => openEdit(r)}>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Edit"
+                            onClick={() => openEdit(r)}
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button

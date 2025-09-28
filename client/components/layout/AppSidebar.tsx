@@ -83,28 +83,36 @@ function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/")}>
                   <Link to="/" className="flex items-center">
-                    <span className="font-bold text-white">{t("dashboard")}</span>
+                    <span className="font-bold text-white">
+                      {t("dashboard")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/users")}>
                   <Link to="/users" className="flex items-center">
-                    <span className="font-bold text-white">{t("usersAuth")}</span>
+                    <span className="font-bold text-white">
+                      {t("usersAuth")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/missions")}>
                   <Link to="/missions" className="flex items-center">
-                    <span className="font-bold text-white">{t("missions")}</span>
+                    <span className="font-bold text-white">
+                      {t("missions")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/employees")}>
                   <Link to="/employees" className="flex items-center">
-                    <span className="font-bold text-white">{t("employees")}</span>
+                    <span className="font-bold text-white">
+                      {t("employees")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -128,14 +136,18 @@ function AppSidebar() {
                   isActive={isActive("/notifications")}
                 >
                   <Link to="/notifications" className="flex items-center">
-                    <span className="font-bold text-white">{t("notifications")}</span>
+                    <span className="font-bold text-white">
+                      {t("notifications")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/settings")}>
                   <Link to="/settings" className="flex items-center">
-                    <span className="font-bold text-white">{t("settings")}</span>
+                    <span className="font-bold text-white">
+                      {t("settings")}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

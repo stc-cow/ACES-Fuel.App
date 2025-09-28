@@ -23,8 +23,21 @@ import { supabase } from "@/lib/supabase";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Columns2,
   Download,
@@ -216,8 +229,12 @@ export default function MissionsPage() {
   };
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<AddTaskForm>(emptyForm);
-  const [addErrors, setAddErrors] = useState<Partial<Record<keyof AddTaskForm, string>>>({});
-  const [drivers, setDrivers] = useState<{ id: number; name: string; phone: string | null }[]>([]);
+  const [addErrors, setAddErrors] = useState<
+    Partial<Record<keyof AddTaskForm, string>>
+  >({});
+  const [drivers, setDrivers] = useState<
+    { id: number; name: string; phone: string | null }[]
+  >([]);
 
   useEffect(() => {
     let mounted = true;
@@ -227,7 +244,14 @@ export default function MissionsPage() {
         .select("id, name, phone, active")
         .order("name");
       if (!mounted) return;
-      if (data) setDrivers(data.map((d: any) => ({ id: Number(d.id), name: d.name || "", phone: d.phone || null })));
+      if (data)
+        setDrivers(
+          data.map((d: any) => ({
+            id: Number(d.id),
+            name: d.name || "",
+            phone: d.phone || null,
+          })),
+        );
     })();
     return () => {
       mounted = false;
@@ -245,7 +269,9 @@ export default function MissionsPage() {
     const errs = validate(addForm);
     setAddErrors(errs);
     if (Object.keys(errs).length > 0) return;
-    const scheduled_iso = addForm.scheduledAt ? new Date(addForm.scheduledAt).toISOString() : null;
+    const scheduled_iso = addForm.scheduledAt
+      ? new Date(addForm.scheduledAt).toISOString()
+      : null;
     const payload = {
       site_id: null as number | null,
       site_name: addForm.siteName.trim(),
@@ -259,13 +285,20 @@ export default function MissionsPage() {
     const { data, error } = await supabase
       .from("driver_tasks")
       .insert(payload)
-      .select("id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at")
+      .select(
+        "id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at",
+      )
       .single();
     if (error || !data) {
-      toast({ title: "Create failed", description: error?.message || "Unknown error" });
+      toast({
+        title: "Create failed",
+        description: error?.message || "Unknown error",
+      });
       return;
     }
-    const createdDate = (data.created_at as string)?.slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const createdDate =
+      (data.created_at as string)?.slice(0, 10) ||
+      new Date().toISOString().slice(0, 10);
     const newRow: Mission = {
       id: Number(data.id),
       siteName: (data.site_name as string) || "",
@@ -410,7 +443,11 @@ export default function MissionsPage() {
             >
               <Printer className="mr-2 h-4 w-4" /> Print
             </Button>
-            <Button variant="outline" className="hidden sm:inline-flex" onClick={handleSyncAll}>
+            <Button
+              variant="outline"
+              className="hidden sm:inline-flex"
+              onClick={handleSyncAll}
+            >
               <UploadCloud className="mr-2 h-4 w-4" /> Sync
             </Button>
             <DropdownMenu>
@@ -447,8 +484,16 @@ export default function MissionsPage() {
                 <div className="grid gap-4 py-2">
                   <div className="grid gap-2">
                     <Label htmlFor="m-site">Site name</Label>
-                    <Input id="m-site" value={addForm.siteName} onChange={(e) => setAddForm((s) => ({ ...s, siteName: e.target.value }))} />
-                    {addErrors.siteName && <span className="text-sm text-red-500">required</span>}
+                    <Input
+                      id="m-site"
+                      value={addForm.siteName}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, siteName: e.target.value }))
+                      }
+                    />
+                    {addErrors.siteName && (
+                      <span className="text-sm text-red-500">required</span>
+                    )}
                   </div>
                   <div className="grid gap-2">
                     <Label>Driver</Label>
@@ -469,30 +514,72 @@ export default function MissionsPage() {
                       </SelectTrigger>
                       <SelectContent>
                         {drivers.map((d) => (
-                          <SelectItem key={d.id} value={String(d.id)}>{d.name}</SelectItem>
+                          <SelectItem key={d.id} value={String(d.id)}>
+                            {d.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="m-phone">Driver phone</Label>
-                    <Input id="m-phone" value={addForm.driverPhone} onChange={(e) => setAddForm((s) => ({ ...s, driverPhone: e.target.value }))} />
+                    <Input
+                      id="m-phone"
+                      value={addForm.driverPhone}
+                      onChange={(e) =>
+                        setAddForm((s) => ({
+                          ...s,
+                          driverPhone: e.target.value,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="m-when">Scheduled at</Label>
-                    <Input id="m-when" type="datetime-local" value={addForm.scheduledAt} onChange={(e) => setAddForm((s) => ({ ...s, scheduledAt: e.target.value }))} />
+                    <Input
+                      id="m-when"
+                      type="datetime-local"
+                      value={addForm.scheduledAt}
+                      onChange={(e) =>
+                        setAddForm((s) => ({
+                          ...s,
+                          scheduledAt: e.target.value,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="m-liters">Required liters</Label>
-                    <Input id="m-liters" type="number" value={addForm.requiredLiters ?? ""} onChange={(e) => setAddForm((s) => ({ ...s, requiredLiters: e.target.value === "" ? null : Number(e.target.value) }))} />
+                    <Input
+                      id="m-liters"
+                      type="number"
+                      value={addForm.requiredLiters ?? ""}
+                      onChange={(e) =>
+                        setAddForm((s) => ({
+                          ...s,
+                          requiredLiters:
+                            e.target.value === ""
+                              ? null
+                              : Number(e.target.value),
+                        }))
+                      }
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="m-notes">Notes</Label>
-                    <Textarea id="m-notes" value={addForm.notes} onChange={(e) => setAddForm((s) => ({ ...s, notes: e.target.value }))} />
+                    <Textarea
+                      id="m-notes"
+                      value={addForm.notes}
+                      onChange={(e) =>
+                        setAddForm((s) => ({ ...s, notes: e.target.value }))
+                      }
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleAdd}>Save</Button>
                 </DialogFooter>
               </DialogContent>
