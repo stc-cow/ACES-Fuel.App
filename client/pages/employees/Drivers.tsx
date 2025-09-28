@@ -3,6 +3,10 @@ import Header from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -120,6 +124,56 @@ export default function DriversPage() {
     "all" | "active" | "inactive"
   >("all");
 
+  type DriverForm = {
+    name: string;
+    phone: string;
+    zone: string;
+    active: boolean;
+  };
+  const emptyForm: DriverForm = { name: "", phone: "", zone: "", active: true };
+  const [addOpen, setAddOpen] = useState(false);
+  const [addForm, setAddForm] = useState<DriverForm>(emptyForm);
+  const [addErrors, setAddErrors] = useState<Partial<Record<keyof DriverForm, string>>>({});
+
+  function validate(form: DriverForm) {
+    const errs: Partial<Record<keyof DriverForm, string>> = {};
+    if (!form.name.trim()) errs.name = "required";
+    return errs;
+  }
+
+  const handleAdd = async () => {
+    const errs = validate(addForm);
+    setAddErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+    const { data, error } = await supabase
+      .from("drivers")
+      .insert({
+        name: addForm.name,
+        phone: addForm.phone || null,
+        zone: addForm.zone || null,
+        active: addForm.active,
+      })
+      .select("id, name, phone, zone, active")
+      .single();
+    if (error || !data) {
+      toast({ title: "Create failed", description: error?.message || "Unknown error" });
+      return;
+    }
+    setRows((r) => [
+      {
+        id: Number(data.id),
+        name: (data.name as string) || "",
+        phone: (data.phone as string) || "",
+        zone: (data.zone as string) || "",
+        active: Boolean(data.active),
+      },
+      ...r,
+    ]);
+    toast({ title: "Driver created" });
+    setAddForm(emptyForm);
+    setAddOpen(false);
+  };
+
   const filteredBase = useMemo(() => {
     let arr = rows;
     if (filterActive !== "all")
@@ -235,9 +289,41 @@ export default function DriversPage() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="bg-sky-600 hover:bg-sky-500">
-              <Plus className="mr-2 h-4 w-4" /> Add
-            </Button>
+            <Dialog open={addOpen} onOpenChange={setAddOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-sky-600 hover:bg-sky-500">
+                  <Plus className="mr-2 h-4 w-4" /> Add
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Driver</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="d-name">Name</Label>
+                    <Input id="d-name" value={addForm.name} onChange={(e) => setAddForm((s) => ({ ...s, name: e.target.value }))} />
+                    {addErrors.name && <span className="text-sm text-red-500">required</span>}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="d-phone">Phone</Label>
+                    <Input id="d-phone" value={addForm.phone} onChange={(e) => setAddForm((s) => ({ ...s, phone: e.target.value }))} />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="d-zone">Zone</Label>
+                    <Input id="d-zone" value={addForm.zone} onChange={(e) => setAddForm((s) => ({ ...s, zone: e.target.value }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="d-active">Active</Label>
+                    <Switch id="d-active" checked={addForm.active} onCheckedChange={(v) => setAddForm((s) => ({ ...s, active: !!v }))} />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+                  <Button onClick={handleAdd}>Save</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
