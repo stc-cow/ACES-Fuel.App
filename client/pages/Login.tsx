@@ -130,7 +130,7 @@ export default function Login() {
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fcc12e1e1a8a240879dd12161adb1c5a7?format=webp&width=800"
                   alt="ACES"
-                  className="h-12 w-auto"
+                  className="h-20 w-auto"
                   loading="eager"
                   decoding="async"
                 />
