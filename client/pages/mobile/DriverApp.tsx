@@ -83,18 +83,22 @@ export default function DriverApp() {
     file: File,
   ) => {
     const k = keyMap[tag];
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Max file size is 10MB");
+      return;
+    }
     setUploading((u) => ({ ...u, [tag]: true }));
     try {
       const dir = `${(profile?.name || "driver").replace(/\s+/g, "_")}/${
         activeTask?.id || "misc"
       }`;
-      const ext = file.name.split(".").pop() || "jpg";
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
       const path = `${dir}/${tag}_${Date.now()}.${ext}`;
       const { error } = await supabase.storage
         .from(DRIVER_BUCKET)
-        .upload(path, file, { upsert: true, contentType: file.type });
+        .upload(path, file, { upsert: true, contentType: file.type || "image/jpeg" });
       if (error) {
-        alert("Image upload failed. Please try again.");
+        alert(`Image upload failed: ${error.message}`);
         return;
       }
       const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
