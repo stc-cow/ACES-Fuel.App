@@ -218,6 +218,51 @@ export default function DriverApp() {
     }
   };
 
+  const sha256 = async (text: string) => {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  };
+
+  const verifyPassword = async () => {
+    setErrorMsg("");
+    const n = name.trim();
+    const p = phone.trim();
+    const pw = password;
+    if (!n || !p || !pw) {
+      setErrorMsg("Enter name, phone and password");
+      return;
+    }
+    setVerifying(true);
+    try {
+      const pNoPlus = p.replace(/^\+/, "");
+      const last9 = p.replace(/\D/g, "").slice(-9);
+      const { data } = await supabase
+        .from("drivers")
+        .select("id,name,phone,active,password_sha256")
+        .or(`phone.eq.${p},phone.eq.${pNoPlus},phone.ilike.%${last9}%`)
+        .order("id", { ascending: false })
+        .limit(1);
+      const row = data && data[0];
+      if (!row || row.active === false || !row.password_sha256) {
+        setErrorMsg("Account not found or inactive");
+        return;
+      }
+      const hash = await sha256(pw);
+      if (hash !== row.password_sha256) {
+        setErrorMsg("Invalid password");
+        return;
+      }
+      const prof = { name: n || row.name || "", phone: p };
+      setProfile(prof);
+      try { localStorage.setItem("driver.profile", JSON.stringify(prof)); } catch {}
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const verifyOtp = async () => {
     setErrorMsg("");
     const n = name.trim();
