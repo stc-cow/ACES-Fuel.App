@@ -420,12 +420,17 @@ export default function DriverApp() {
                 placeholder="e.g. +9665xxxxxxxx"
               />
             </div>
-            {!otpPhase && (
+            <div className="flex items-center justify-between text-sm">
+              <button type="button" className="underline" onClick={() => setUsePassword((v)=>!v)}>
+                {usePassword ? "Use OTP instead" : "Use password instead"}
+              </button>
+            </div>
+            {!usePassword && !otpPhase && (
               <Button className="w-full" onClick={sendOtp} disabled={sending}>
                 {sending ? "Sending..." : "Send OTP via WhatsApp"}
               </Button>
             )}
-            {otpPhase && (
+            {!usePassword && otpPhase && (
               <div className="space-y-3">
                 <div>
                   <Label htmlFor="otp">Enter OTP</Label>
@@ -438,26 +443,37 @@ export default function DriverApp() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button
-                    className="flex-1"
-                    onClick={verifyOtp}
-                    disabled={verifying}
-                  >
+                  <Button className="flex-1" onClick={verifyOtp} disabled={verifying}>
                     {verifying ? "Verifying..." : "Approve"}
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={sendOtp}
-                    disabled={sending}
-                  >
+                  <Button type="button" variant="outline" onClick={sendOtp} disabled={sending}>
                     Resend
                   </Button>
                 </div>
                 {errorMsg && (
-                  <div className="text-sm text-red-600" role="alert">
-                    {errorMsg}
-                  </div>
+                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                )}
+              </div>
+            )}
+            {usePassword && (
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="pw">Password</Label>
+                  <Input
+                    id="pw"
+                    type="password"
+                    value={password}
+                    onChange={(e)=> setPassword(e.target.value)}
+                    placeholder="Enter password"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button className="flex-1" onClick={verifyPassword} disabled={verifying}>
+                    {verifying ? "Checking..." : "Login"}
+                  </Button>
+                </div>
+                {errorMsg && (
+                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
                 )}
               </div>
             )}
