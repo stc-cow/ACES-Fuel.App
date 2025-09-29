@@ -75,7 +75,6 @@ export default function Index() {
         setMetricCards([
           { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
           { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
-          { key: "stcCow30", value: `${sum30.toFixed(2)} liters`, bg: "bg-green-500" },
         ]);
       }
       // Zone distribution from drivers table
