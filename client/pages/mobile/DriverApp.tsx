@@ -124,7 +124,7 @@ export default function DriverApp() {
         .select(
           "id, site_name, driver_name, driver_phone, scheduled_at, status, required_liters, notes",
         )
-        .or(`driver_name.eq.${profile.name},driver_phone.eq.${profile.phone}`)
+        .or(`driver_name.eq.${profile.name},driver_phone.eq.${profile.phone || ""}`)
         .order("scheduled_at", { ascending: true });
       setTasks(data || []);
     })();
