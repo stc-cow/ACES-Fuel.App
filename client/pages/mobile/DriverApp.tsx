@@ -239,15 +239,23 @@ export default function DriverApp() {
     try {
       const pNoPlus = p.replace(/^\+/, "");
       const last9 = p.replace(/\D/g, "").slice(-9);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("drivers")
-        .select("id,name,phone,active,password_sha256")
+        .select("*")
         .or(`phone.eq.${p},phone.eq.${pNoPlus},phone.ilike.%${last9}%`)
         .order("id", { ascending: false })
         .limit(1);
-      const row = data && data[0];
-      if (!row || row.active === false || !row.password_sha256) {
+      if (error) {
+        setErrorMsg("Password login unavailable; use OTP");
+        return;
+      }
+      const row: any = data && data[0];
+      if (!row || row.active === false) {
         setErrorMsg("Account not found or inactive");
+        return;
+      }
+      if (!row.password_sha256) {
+        setErrorMsg("Password not set; use OTP");
         return;
       }
       const hash = await sha256(pw);
