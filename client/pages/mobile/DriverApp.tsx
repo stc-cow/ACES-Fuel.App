@@ -420,15 +420,6 @@ export default function DriverApp() {
                 placeholder="Enter username"
               />
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <button
-                type="button"
-                className="underline"
-                onClick={() => setUsePassword((v) => !v)}
-              >
-                {usePassword ? "Use OTP instead" : "Use password instead"}
-              </button>
-            </div>
             {!usePassword && !otpPhase && (
               <Button className="w-full" onClick={sendOtp} disabled={sending}>
                 {sending ? "Sending..." : "Send OTP via WhatsApp"}
