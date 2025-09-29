@@ -117,7 +117,7 @@ type ColumnKey = (typeof allColumns)[number]["key"];
 
 export default function DriversPage() {
   const [query, setQuery] = useState("");
-  const [rows, setRows] = useState<Driver[]>(initialRows);
+  const [rows, setRows] = useState<Driver[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [cols, setCols] = useState<Record<ColumnKey, boolean>>({
