@@ -39,6 +39,16 @@ export default function DriverApp() {
   const [editOpen, setEditOpen] = useState(false);
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [entry, setEntry] = useState({
+    // IDs and meta
+    site_id: "",
+    mission_id: "",
+    tank_type: "",
+    completed_at: "",
+    // measurements
+    vertical_calculated_liters: "",
+    actual_liters_in_tank: "",
+    quantity_added: "",
+    // legacy fields kept for compatibility
     liters: "",
     rate: "",
     station: "",
@@ -46,6 +56,11 @@ export default function DriverApp() {
     photo_url: "",
     odometer: "",
     notes: "",
+    // photos
+    counter_before_url: "",
+    quantity_measure_before_url: "",
+    counter_after_url: "",
+    quantity_after_url: "",
   });
 
   useEffect(() => {
@@ -70,9 +85,10 @@ export default function DriverApp() {
   }, [profile]);
 
   const filtered = useMemo(() => {
-    if (!query) return tasks;
+    const base = tasks.filter((t) => t.status !== "completed");
+    if (!query) return base;
     const q = query.toLowerCase();
-    return tasks.filter((t) =>
+    return base.filter((t) =>
       [t.site_name, t.status, t.notes].some((v: any) =>
         String(v || "")
           .toLowerCase()
@@ -113,6 +129,13 @@ export default function DriverApp() {
   const openComplete = (t: any) => {
     setActiveTask(t);
     setEntry({
+      site_id: "",
+      mission_id: "",
+      tank_type: "",
+      completed_at: "",
+      vertical_calculated_liters: "",
+      actual_liters_in_tank: "",
+      quantity_added: "",
       liters: "",
       rate: "",
       station: "",
@@ -120,18 +143,22 @@ export default function DriverApp() {
       photo_url: "",
       odometer: "",
       notes: t.notes || "",
+      counter_before_url: "",
+      quantity_measure_before_url: "",
+      counter_after_url: "",
+      quantity_after_url: "",
     });
     setEditOpen(true);
   };
 
   const saveCompletion = async () => {
     if (!activeTask) return;
-    const liters = parseFloat(entry.liters || "0");
+    const qty = parseFloat(entry.quantity_added || entry.liters || "0");
     const rate = entry.rate ? parseFloat(entry.rate) : null;
     const odometer = entry.odometer ? parseInt(entry.odometer) : null;
     await supabase.from("driver_task_entries").insert({
       task_id: activeTask.id,
-      liters,
+      liters: qty,
       rate,
       station: entry.station || null,
       receipt_number: entry.receipt || null,
@@ -143,13 +170,7 @@ export default function DriverApp() {
       .from("driver_tasks")
       .update({ status: "completed", notes: entry.notes || null })
       .eq("id", activeTask.id);
-    setTasks((arr) =>
-      arr.map((x) =>
-        x.id === activeTask.id
-          ? { ...x, status: "completed", notes: entry.notes }
-          : x,
-      ),
-    );
+    setTasks((arr) => arr.filter((x) => x.id !== activeTask.id));
     setEditOpen(false);
     setActiveTask(null);
   };
@@ -272,29 +293,73 @@ export default function DriverApp() {
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Submit Refuel</DialogTitle>
+            <DialogTitle>Submit Task</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <div>
-              <Label htmlFor="liters">Liters</Label>
-              <Input
-                id="liters"
-                inputMode="decimal"
-                value={entry.liters}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, liters: e.target.value }))
-                }
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="site_id">Site ID</Label>
+                <Input
+                  id="site_id"
+                  value={entry.site_id}
+                  onChange={(e) => setEntry((s) => ({ ...s, site_id: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="mission_id">Mission ID</Label>
+                <Input
+                  id="mission_id"
+                  value={entry.mission_id}
+                  onChange={(e) => setEntry((s) => ({ ...s, mission_id: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="tank_type">Tank Type</Label>
+                <Input
+                  id="tank_type"
+                  value={entry.tank_type}
+                  onChange={(e) => setEntry((s) => ({ ...s, tank_type: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="completed_at">Completed Date</Label>
+                <Input
+                  id="completed_at"
+                  type="datetime-local"
+                  value={entry.completed_at}
+                  onChange={(e) => setEntry((s) => ({ ...s, completed_at: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="vertical_calculated_liters">Vertical Calculated Liters</Label>
+                <Input
+                  id="vertical_calculated_liters"
+                  inputMode="decimal"
+                  value={entry.vertical_calculated_liters}
+                  onChange={(e) => setEntry((s) => ({ ...s, vertical_calculated_liters: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="actual_liters_in_tank">Actual Liters in Tank</Label>
+                <Input
+                  id="actual_liters_in_tank"
+                  inputMode="decimal"
+                  value={entry.actual_liters_in_tank}
+                  onChange={(e) => setEntry((s) => ({ ...s, actual_liters_in_tank: e.target.value }))}
+                />
+              </div>
             </div>
             <div>
-              <Label htmlFor="rate">Rate (SAR/L)</Label>
+              <Label htmlFor="quantity_added">Quantity Added</Label>
               <Input
-                id="rate"
+                id="quantity_added"
                 inputMode="decimal"
-                value={entry.rate}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, rate: e.target.value }))
-                }
+                value={entry.quantity_added}
+                onChange={(e) => setEntry((s) => ({ ...s, quantity_added: e.target.value }))}
               />
             </div>
             <div>
@@ -302,9 +367,7 @@ export default function DriverApp() {
               <Input
                 id="station"
                 value={entry.station}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, station: e.target.value }))
-                }
+                onChange={(e) => setEntry((s) => ({ ...s, station: e.target.value }))}
               />
             </div>
             <div>
@@ -312,40 +375,71 @@ export default function DriverApp() {
               <Input
                 id="receipt"
                 value={entry.receipt}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, receipt: e.target.value }))
-                }
+                onChange={(e) => setEntry((s) => ({ ...s, receipt: e.target.value }))}
               />
             </div>
-            <div>
-              <Label htmlFor="photo">Photo URL</Label>
-              <Input
-                id="photo"
-                value={entry.photo_url}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, photo_url: e.target.value }))
-                }
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="counter_before_url">Image: Counter Before</Label>
+                <Input
+                  id="counter_before_url"
+                  value={entry.counter_before_url}
+                  onChange={(e) => setEntry((s) => ({ ...s, counter_before_url: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="quantity_measure_before_url">Image: Quantity & Measurement Before</Label>
+                <Input
+                  id="quantity_measure_before_url"
+                  value={entry.quantity_measure_before_url}
+                  onChange={(e) => setEntry((s) => ({ ...s, quantity_measure_before_url: e.target.value }))}
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="odo">Odometer</Label>
-              <Input
-                id="odo"
-                inputMode="numeric"
-                value={entry.odometer}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, odometer: e.target.value }))
-                }
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="counter_after_url">Image: Counter After</Label>
+                <Input
+                  id="counter_after_url"
+                  value={entry.counter_after_url}
+                  onChange={(e) => setEntry((s) => ({ ...s, counter_after_url: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="quantity_after_url">Image: Quantity After</Label>
+                <Input
+                  id="quantity_after_url"
+                  value={entry.quantity_after_url}
+                  onChange={(e) => setEntry((s) => ({ ...s, quantity_after_url: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="odo">Odometer</Label>
+                <Input
+                  id="odo"
+                  inputMode="numeric"
+                  value={entry.odometer}
+                  onChange={(e) => setEntry((s) => ({ ...s, odometer: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="rate">Rate (SAR/L)</Label>
+                <Input
+                  id="rate"
+                  inputMode="decimal"
+                  value={entry.rate}
+                  onChange={(e) => setEntry((s) => ({ ...s, rate: e.target.value }))}
+                />
+              </div>
             </div>
             <div>
               <Label htmlFor="notes">Notes</Label>
               <Input
                 id="notes"
                 value={entry.notes}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, notes: e.target.value }))
-                }
+                onChange={(e) => setEntry((s) => ({ ...s, notes: e.target.value }))}
               />
             </div>
           </div>
@@ -353,7 +447,7 @@ export default function DriverApp() {
             <Button variant="outline" onClick={() => setEditOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={saveCompletion}>Save</Button>
+            <Button onClick={saveCompletion}>Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
