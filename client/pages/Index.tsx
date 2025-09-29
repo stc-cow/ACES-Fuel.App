@@ -34,6 +34,7 @@ type MetricCard = { key: string; value: string; bg: string };
 const initialMetricCards: MetricCard[] = [
   { key: "totalLitersToday", value: "0.00 liters", bg: "bg-rose-500" },
   { key: "totalLiters30", value: "0.00 liters", bg: "bg-sky-500" },
+  { key: "totalLiters7", value: "0.00 liters", bg: "bg-emerald-600" },
 ];
 
 export default function Index() {
@@ -77,6 +78,7 @@ export default function Index() {
         setMetricCards([
           { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
           { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
+          { key: "totalLiters7", value: `${(last7Liters + 0).toFixed(2)} liters`, bg: "bg-emerald-600" },
         ]);
       }
       // Zone distribution from drivers table
@@ -199,17 +201,6 @@ export default function Index() {
                 {last7StatusCount}
               </div>
               <div className="text-xs text-muted-foreground">Total sites</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-base font-medium">
-                Total Liters in Last 7 Days
-              </div>
-              <div className="mt-3 text-3xl font-semibold">
-                {last7Liters.toFixed(2)} liters
-              </div>
-              <div className="text-xs text-muted-foreground">From driver submissions</div>
             </CardContent>
           </Card>
         </div>
