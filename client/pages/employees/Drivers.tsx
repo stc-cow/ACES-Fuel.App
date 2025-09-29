@@ -411,7 +411,7 @@ export default function DriversPage() {
                       id="d-pass"
                       type="password"
                       value={addPassword}
-                      onChange={(e)=> setAddPassword(e.target.value)}
+                      onChange={(e) => setAddPassword(e.target.value)}
                     />
                   </div>
                   <div className="flex items-center justify-between">
@@ -512,12 +512,14 @@ export default function DriversPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="e-pass">New Password (leave blank to keep)</Label>
+                  <Label htmlFor="e-pass">
+                    New Password (leave blank to keep)
+                  </Label>
                   <Input
                     id="e-pass"
                     type="password"
                     value={editPassword}
-                    onChange={(e)=> setEditPassword(e.target.value)}
+                    onChange={(e) => setEditPassword(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center justify-between">

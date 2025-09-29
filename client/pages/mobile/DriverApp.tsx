@@ -257,7 +257,9 @@ export default function DriverApp() {
       }
       const prof = { name: n || row.name || "", phone: p };
       setProfile(prof);
-      try { localStorage.setItem("driver.profile", JSON.stringify(prof)); } catch {}
+      try {
+        localStorage.setItem("driver.profile", JSON.stringify(prof));
+      } catch {}
     } finally {
       setVerifying(false);
     }
@@ -421,7 +423,11 @@ export default function DriverApp() {
               />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <button type="button" className="underline" onClick={() => setUsePassword((v)=>!v)}>
+              <button
+                type="button"
+                className="underline"
+                onClick={() => setUsePassword((v) => !v)}
+              >
                 {usePassword ? "Use OTP instead" : "Use password instead"}
               </button>
             </div>
@@ -443,15 +449,26 @@ export default function DriverApp() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button className="flex-1" onClick={verifyOtp} disabled={verifying}>
+                  <Button
+                    className="flex-1"
+                    onClick={verifyOtp}
+                    disabled={verifying}
+                  >
                     {verifying ? "Verifying..." : "Approve"}
                   </Button>
-                  <Button type="button" variant="outline" onClick={sendOtp} disabled={sending}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={sendOtp}
+                    disabled={sending}
+                  >
                     Resend
                   </Button>
                 </div>
                 {errorMsg && (
-                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                  <div className="text-sm text-red-600" role="alert">
+                    {errorMsg}
+                  </div>
                 )}
               </div>
             )}
@@ -463,17 +480,23 @@ export default function DriverApp() {
                     id="pw"
                     type="password"
                     value={password}
-                    onChange={(e)=> setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button className="flex-1" onClick={verifyPassword} disabled={verifying}>
+                  <Button
+                    className="flex-1"
+                    onClick={verifyPassword}
+                    disabled={verifying}
+                  >
                     {verifying ? "Checking..." : "Login"}
                   </Button>
                 </div>
                 {errorMsg && (
-                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                  <div className="text-sm text-red-600" role="alert">
+                    {errorMsg}
+                  </div>
                 )}
               </div>
             )}
