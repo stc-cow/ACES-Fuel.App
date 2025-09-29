@@ -100,8 +100,8 @@ export default function Index() {
       const { count: sitesCount } = await supabase
         .from("sites")
         .select("id", { count: "exact", head: true })
-        .in("cow_status", ["ON-AIR", "INPROGRESS", "IN-PROGRESS", "In Progress", "on-air", "inprogress"])
-        .or("district.ilike.%central%,district.ilike.%east%,city.ilike.%central%,city.ilike.%east%");
+        .or("cow_status.eq.ON-AIR,cow_status.ilike.%in progress%")
+        .in("region", ["Central", "East"]);
       setLast7StatusCount(sitesCount || 0);
 
       const since = new Date();
