@@ -52,6 +52,7 @@ import {
 // Mission type
 type Mission = {
   id: number;
+  missionId: string;
   siteName: string;
   generator: string;
   project: string;
@@ -164,6 +165,7 @@ const statusColor: Record<Mission["missionStatus"], string> = {
 };
 
 const allColumns = [
+  { key: "missionId", label: "Mission ID" },
   { key: "siteName", label: "Site Name" },
   { key: "generator", label: "Generator" },
   { key: "project", label: "Project" },
@@ -352,7 +354,7 @@ export default function MissionsPage() {
     const { data, error } = await supabase
       .from("driver_tasks")
       .select(
-        "id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at",
+        "id, mission_id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at",
       )
       .order("created_at", { ascending: false });
     if (error || !data) return;
@@ -370,6 +372,7 @@ export default function MissionsPage() {
     };
     const mapped: Mission[] = data.map((d: any) => ({
       id: Number(d.id),
+      missionId: String(d.mission_id || ""),
       siteName: d.site_name || "",
       generator: "",
       project: "",
@@ -691,6 +694,9 @@ export default function MissionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
+                      {cols.missionId && (
+                      <TableHead className="text-white">Mission ID</TableHead>
+                    )}
                     {cols.siteName && (
                       <TableHead className="text-white">Site Name</TableHead>
                     )}
@@ -751,6 +757,9 @@ export default function MissionsPage() {
                 <TableBody>
                   {current.map((r) => (
                     <TableRow key={r.id}>
+                      {cols.missionId && (
+                        <TableCell className="font-medium">{r.missionId}</TableCell>
+                      )}
                       {cols.siteName && (
                         <TableCell className="font-medium">
                           {r.siteName}
