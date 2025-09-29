@@ -31,6 +31,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+
+async function sha256(text: string) {
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 import {
   Columns2,
   Download,
@@ -139,6 +147,7 @@ export default function DriversPage() {
   };
   const emptyForm: DriverForm = { name: "", phone: "", zone: "", active: true };
   const [addOpen, setAddOpen] = useState(false);
+  const [addPassword, setAddPassword] = useState("");
   const [addForm, setAddForm] = useState<DriverForm>(emptyForm);
   const [addErrors, setAddErrors] = useState<
     Partial<Record<keyof DriverForm, string>>
@@ -154,14 +163,16 @@ export default function DriversPage() {
     const errs = validate(addForm);
     setAddErrors(errs);
     if (Object.keys(errs).length > 0) return;
+    const insertBody: any = {
+      name: addForm.name,
+      phone: addForm.phone || null,
+      zone: addForm.zone || null,
+      active: addForm.active,
+    };
+    if (addPassword) insertBody.password_sha256 = await sha256(addPassword);
     const { data, error } = await supabase
       .from("drivers")
-      .insert({
-        name: addForm.name,
-        phone: addForm.phone || null,
-        zone: addForm.zone || null,
-        active: addForm.active,
-      })
+      .insert(insertBody)
       .select("id, name, phone, zone, active")
       .single();
     if (error || !data) {
@@ -183,6 +194,7 @@ export default function DriversPage() {
     ]);
     toast({ title: "Driver created" });
     setAddForm(emptyForm);
+    setAddPassword("");
     setAddOpen(false);
   };
 
@@ -190,6 +202,7 @@ export default function DriversPage() {
   const [viewing, setViewing] = useState<Driver | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Driver | null>(null);
+  const [editPassword, setEditPassword] = useState("");
 
   const openView = (row: Driver) => {
     setViewing(row);
@@ -209,14 +222,16 @@ export default function DriversPage() {
       active: editForm.active,
     });
     if (Object.keys(errs).length > 0) return;
+    const updateBody: any = {
+      name: editForm.name,
+      phone: editForm.phone || null,
+      zone: editForm.zone || null,
+      active: editForm.active,
+    };
+    if (editPassword) updateBody.password_sha256 = await sha256(editPassword);
     const { error } = await supabase
       .from("drivers")
-      .update({
-        name: editForm.name,
-        phone: editForm.phone || null,
-        zone: editForm.zone || null,
-        active: editForm.active,
-      })
+      .update(updateBody)
       .eq("id", editForm.id);
     if (error) {
       toast({ title: "Update failed", description: error.message });
@@ -228,6 +243,7 @@ export default function DriversPage() {
     toast({ title: "Driver updated" });
     setEditOpen(false);
     setEditForm(null);
+    setEditPassword("");
   };
 
   const filteredBase = useMemo(() => {
@@ -389,6 +405,15 @@ export default function DriversPage() {
                       }
                     />
                   </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="d-pass">Password (optional)</Label>
+                    <Input
+                      id="d-pass"
+                      type="password"
+                      value={addPassword}
+                      onChange={(e)=> setAddPassword(e.target.value)}
+                    />
+                  </div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="d-active">Active</Label>
                     <Switch
@@ -484,6 +509,15 @@ export default function DriversPage() {
                         s ? { ...s, zone: e.target.value } : s,
                       )
                     }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="e-pass">New Password (leave blank to keep)</Label>
+                  <Input
+                    id="e-pass"
+                    type="password"
+                    value={editPassword}
+                    onChange={(e)=> setEditPassword(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center justify-between">
