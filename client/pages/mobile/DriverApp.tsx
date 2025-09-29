@@ -125,6 +125,7 @@ export default function DriverApp() {
           {
             id: 1001,
             site_name: "Site A",
+            site_id: "SITE-A-001",
             driver_name: demoProfile.name,
             driver_phone: demoProfile.phone,
             scheduled_at: new Date().toISOString(),
@@ -135,6 +136,7 @@ export default function DriverApp() {
           {
             id: 1002,
             site_name: "Site B",
+            site_id: "SITE-B-002",
             driver_name: demoProfile.name,
             driver_phone: demoProfile.phone,
             scheduled_at: new Date(Date.now() + 3600000).toISOString(),
@@ -159,9 +161,7 @@ export default function DriverApp() {
       if (!profile || demoMode) return;
       const { data } = await supabase
         .from("driver_tasks")
-        .select(
-          "id, site_name, driver_name, driver_phone, scheduled_at, status, required_liters, notes",
-        )
+        .select("*")
         .or(
           `driver_name.eq.${profile.name},driver_phone.eq.${profile.phone || ""}`,
         )
@@ -256,7 +256,7 @@ export default function DriverApp() {
   const openComplete = (t: any) => {
     setActiveTask(t);
     setEntry({
-      site_id: "",
+      site_id: String(t.site_id || ""),
       mission_id: String(t.id || ""),
       actual_liters_in_tank: "",
       quantity_added: "",
@@ -444,9 +444,8 @@ export default function DriverApp() {
                 <Input
                   id="site_id"
                   value={entry.site_id}
-                  onChange={(e) =>
-                    setEntry((s) => ({ ...s, site_id: e.target.value }))
-                  }
+                  readOnly
+                  disabled
                 />
               </div>
               <div>
