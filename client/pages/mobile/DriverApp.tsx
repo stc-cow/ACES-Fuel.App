@@ -161,24 +161,21 @@ export default function DriverApp() {
   const verifyPassword = async () => {
     setErrorMsg("");
     const n = name.trim();
-    const p = phone.trim();
     const pw = password;
-    if (!n || !p || !pw) {
-      setErrorMsg("Enter name, phone and password");
+    if (!n || !pw) {
+      setErrorMsg("Enter username and password");
       return;
     }
     setVerifying(true);
     try {
-      const pNoPlus = p.replace(/^\+/, "");
-      const last9 = p.replace(/\D/g, "").slice(-9);
       const { data, error } = await supabase
         .from("drivers")
         .select("*")
-        .or(`phone.eq.${p},phone.eq.${pNoPlus},phone.ilike.%${last9}%`)
+        .ilike("name", n)
         .order("id", { ascending: false })
         .limit(1);
       if (error) {
-        setErrorMsg("Password login unavailable; use OTP");
+        setErrorMsg("Login unavailable");
         return;
       }
       const row: any = data && data[0];
@@ -187,7 +184,7 @@ export default function DriverApp() {
         return;
       }
       if (!row.password_sha256) {
-        setErrorMsg("Password not set; use OTP");
+        setErrorMsg("Password not set");
         return;
       }
       const hash = await sha256(pw);
@@ -195,7 +192,7 @@ export default function DriverApp() {
         setErrorMsg("Invalid password");
         return;
       }
-      const prof = { name: n || row.name || "", phone: p };
+      const prof = { name: row.name || n, phone: row.phone || "" };
       setProfile(prof);
       try {
         localStorage.setItem("driver.profile", JSON.stringify(prof));
