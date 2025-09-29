@@ -186,7 +186,7 @@ export default function DriverApp() {
         setErrorMsg("Invalid password");
         return;
       }
-      const prof = { name: row.name || n, phone: row.phone || "" };
+      const prof = { name: row.name || n, phone: (row.phone as string) || "" };
       setProfile(prof);
       try {
         localStorage.setItem("driver.profile", JSON.stringify(prof));
