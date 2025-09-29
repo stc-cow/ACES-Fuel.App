@@ -66,7 +66,15 @@ export default function DriverApp() {
 
   useEffect(() => {
     try {
-      const params = new URLSearchParams(window.location.search);
+      const getParams = () => {
+        const search = window.location.search;
+        if (search && search.length > 1) return new URLSearchParams(search);
+        const hash = window.location.hash || "";
+        const qIndex = hash.indexOf("?");
+        if (qIndex >= 0) return new URLSearchParams(hash.substring(qIndex));
+        return new URLSearchParams();
+      };
+      const params = getParams();
       const demo = params.get("demo") === "1";
       setDemoMode(demo);
       if (demo) {
