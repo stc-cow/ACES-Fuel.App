@@ -168,7 +168,10 @@ export default function DriverApp() {
       try {
         await supabase
           .from("driver_otps")
-          .upsert({ phone: p, code, expires_at, used: false }, { onConflict: "phone" });
+          .upsert(
+            { phone: p, code, expires_at, used: false },
+            { onConflict: "phone" },
+          );
       } catch {}
 
       try {
@@ -193,7 +196,13 @@ export default function DriverApp() {
           await fetch(ZAP_HOOK, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
+            body: JSON.stringify({
+              channel: "whatsapp",
+              phone: p,
+              name: n,
+              code,
+              expires_at,
+            }),
           });
           sent = true;
         } catch {}
@@ -224,7 +233,12 @@ export default function DriverApp() {
           .select("code, expires_at, used")
           .eq("phone", p)
           .maybeSingle();
-        if (data && data.code === inp && !data.used && data.expires_at >= nowIso) {
+        if (
+          data &&
+          data.code === inp &&
+          !data.used &&
+          data.expires_at >= nowIso
+        ) {
           valid = true;
           await supabase
             .from("driver_otps")
@@ -239,7 +253,10 @@ export default function DriverApp() {
           if (raw) {
             const obj = JSON.parse(raw);
             if (
-              obj && obj.phone === p && obj.code === inp && Date.parse(obj.expires_at) > Date.now()
+              obj &&
+              obj.phone === p &&
+              obj.code === inp &&
+              Date.parse(obj.expires_at) > Date.now()
             ) {
               valid = true;
               localStorage.removeItem("driver.otp");
@@ -374,15 +391,26 @@ export default function DriverApp() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Button className="flex-1" onClick={verifyOtp} disabled={verifying}>
+                  <Button
+                    className="flex-1"
+                    onClick={verifyOtp}
+                    disabled={verifying}
+                  >
                     {verifying ? "Verifying..." : "Approve"}
                   </Button>
-                  <Button type="button" variant="outline" onClick={sendOtp} disabled={sending}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={sendOtp}
+                    disabled={sending}
+                  >
                     Resend
                   </Button>
                 </div>
                 {errorMsg && (
-                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                  <div className="text-sm text-red-600" role="alert">
+                    {errorMsg}
+                  </div>
                 )}
               </div>
             )}
