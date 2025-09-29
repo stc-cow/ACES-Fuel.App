@@ -281,6 +281,7 @@ export default function MissionsPage() {
       driver_phone: addForm.driverPhone || null,
       scheduled_at: scheduled_iso,
       status: "pending",
+      admin_status: "Creation",
       required_liters: addForm.requiredLiters ?? null,
       notes: addForm.notes || null,
     };
