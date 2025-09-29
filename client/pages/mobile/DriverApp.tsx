@@ -375,7 +375,7 @@ export default function DriverApp() {
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={verifyOtp} disabled={verifying}>
-                    {verifying ? "Verifying..." : "Verify"}
+                    {verifying ? "Verifying..." : "Approve"}
                   </Button>
                   <Button type="button" variant="outline" onClick={sendOtp} disabled={sending}>
                     Resend
