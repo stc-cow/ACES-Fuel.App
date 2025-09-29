@@ -10,15 +10,17 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { useEffect, useState } from "react";
 import { ChartContainer } from "@/components/ui/chart";
 import { SitesTable } from "@/components/dashboard/SitesTable";
+import { supabase } from "@/lib/supabase";
 
-const statusData = [
-  { name: "Creation", value: 71.5, color: "#f43f5e" },
-  { name: "Finished by Driver", value: 22.2, color: "#fb923c" },
-  { name: "Task approved", value: 3.5, color: "#22c55e" },
-  { name: "Rejected by driver", value: 1.3, color: "#06b6d4" },
-  { name: "Canceled", value: 1.5, color: "#a3a3a3" },
+const defaultStatusData = [
+  { name: "Creation", value: 0, color: "#f43f5e" },
+  { name: "Finished by Driver", value: 0, color: "#fb923c" },
+  { name: "Task approved", value: 0, color: "#22c55e" },
+  { name: "Rejected by driver", value: 0, color: "#06b6d4" },
+  { name: "Canceled", value: 0, color: "#a3a3a3" },
 ];
 
 const zoneData = [
@@ -36,6 +38,26 @@ const metricCards = [
 
 export default function Index() {
   const { t } = useI18n();
+  const [statusData, setStatusData] = useState(defaultStatusData);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase.from("driver_tasks").select("status");
+      if (error || !data) return;
+      const counts: Record<string, number> = {};
+      for (const row of data) {
+        const s = String(row.status || "");
+        counts[s] = (counts[s] || 0) + 1;
+      }
+      setStatusData([
+        { name: "Creation", value: counts["pending"] || 0, color: "#f43f5e" },
+        { name: "Finished by Driver", value: counts["completed"] || 0, color: "#fb923c" },
+        { name: "Task approved", value: counts["approved"] || 0, color: "#22c55e" },
+        { name: "Rejected by driver", value: counts["rejected"] || 0, color: "#06b6d4" },
+        { name: "Canceled", value: counts["canceled"] || 0, color: "#a3a3a3" },
+      ]);
+    })();
+  }, []);
   return (
     <AppShell>
       <Header />
