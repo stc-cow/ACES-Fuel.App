@@ -170,11 +170,27 @@ export default function DriversPage() {
       active: addForm.active,
     };
     if (addPassword) insertBody.password_sha256 = await sha256(addPassword);
-    const { data, error } = await supabase
+    let data, error;
+    ({ data, error } = await supabase
       .from("drivers")
       .insert(insertBody)
       .select("id, name, phone, zone, active")
-      .single();
+      .single());
+    if (error && addPassword && /password_sha256/.test(error.message)) {
+      ({ data, error } = await supabase
+        .from("drivers")
+        .insert({
+          name: insertBody.name,
+          phone: insertBody.phone,
+          zone: insertBody.zone,
+          active: insertBody.active,
+        })
+        .select("id, name, phone, zone, active")
+        .single());
+      if (!error) {
+        toast({ title: "Saved without password", description: "Create a 'password_sha256' column in Supabase to enable password login." });
+      }
+    }
     if (error || !data) {
       toast({
         title: "Create failed",
@@ -229,10 +245,25 @@ export default function DriversPage() {
       active: editForm.active,
     };
     if (editPassword) updateBody.password_sha256 = await sha256(editPassword);
-    const { error } = await supabase
+    let error;
+    ({ error } = await supabase
       .from("drivers")
       .update(updateBody)
-      .eq("id", editForm.id);
+      .eq("id", editForm.id));
+    if (error && editPassword && /password_sha256/.test(error.message)) {
+      ({ error } = await supabase
+        .from("drivers")
+        .update({
+          name: updateBody.name,
+          phone: updateBody.phone,
+          zone: updateBody.zone,
+          active: updateBody.active,
+        })
+        .eq("id", editForm.id));
+      if (!error) {
+        toast({ title: "Updated without password", description: "Add 'password_sha256' column in Supabase to store passwords." });
+      }
+    }
     if (error) {
       toast({ title: "Update failed", description: error.message });
       return;
