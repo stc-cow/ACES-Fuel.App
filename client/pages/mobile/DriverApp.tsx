@@ -420,15 +420,6 @@ export default function DriverApp() {
                 placeholder="Enter username"
               />
             </div>
-            <div>
-              <Label htmlFor="phone">WhatsApp Number</Label>
-              <Input
-                id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +9665xxxxxxxx"
-              />
-            </div>
             <div className="flex items-center justify-between text-sm">
               <button
                 type="button"
