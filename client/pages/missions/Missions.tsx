@@ -353,6 +353,7 @@ export default function MissionsPage() {
       driver_phone: null as string | null,
       scheduled_at: null as string | null,
       status: "pending",
+      admin_status: r.missionStatus,
       required_liters: r.quantityAddedLastTask || r.filledLiters || null,
       notes: r.notes || null,
     }));
