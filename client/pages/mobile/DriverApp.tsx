@@ -412,7 +412,7 @@ export default function DriverApp() {
         <Card>
           <CardContent className="space-y-4 p-6">
             <div>
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Username</Label>
               <Input
                 id="name"
                 value={name}
