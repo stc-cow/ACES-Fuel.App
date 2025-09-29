@@ -815,17 +815,43 @@ export default function MissionsPage() {
                       {cols.createdBy && <TableCell>{r.createdBy}</TableCell>}
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
-                          <Button size="icon" variant="ghost" aria-label="Edit">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            aria-label="Delete"
-                            onClick={() => remove(r.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div className="flex flex-wrap items-center justify-end gap-1">
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setAdminStatus(r.id, "Task approved")}
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setAdminStatus(r.id, "Task returned to the driver")}
+                            >
+                              Back to driver
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setAdminStatus(r.id, "Canceled")}
+                            >
+                              Cancel
+                            </Button>
+                            <Button size="icon" variant="ghost" aria-label="Edit">
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              aria-label="Delete"
+                              onClick={() => remove(r.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       )}
                     </TableRow>
