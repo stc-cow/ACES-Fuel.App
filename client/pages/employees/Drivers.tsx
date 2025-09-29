@@ -188,7 +188,11 @@ export default function DriversPage() {
         .select("id, name, phone, zone, active")
         .single());
       if (!error) {
-        toast({ title: "Saved without password", description: "Create a 'password_sha256' column in Supabase to enable password login." });
+        toast({
+          title: "Saved without password",
+          description:
+            "Create a 'password_sha256' column in Supabase to enable password login.",
+        });
       }
     }
     if (error || !data) {
@@ -261,7 +265,11 @@ export default function DriversPage() {
         })
         .eq("id", editForm.id));
       if (!error) {
-        toast({ title: "Updated without password", description: "Add 'password_sha256' column in Supabase to store passwords." });
+        toast({
+          title: "Updated without password",
+          description:
+            "Add 'password_sha256' column in Supabase to store passwords.",
+        });
       }
     }
     if (error) {

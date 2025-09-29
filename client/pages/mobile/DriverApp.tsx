@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
 
-
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
     name: string;
@@ -124,7 +123,9 @@ export default function DriverApp() {
         .select(
           "id, site_name, driver_name, driver_phone, scheduled_at, status, required_liters, notes",
         )
-        .or(`driver_name.eq.${profile.name},driver_phone.eq.${profile.phone || ""}`)
+        .or(
+          `driver_name.eq.${profile.name},driver_phone.eq.${profile.phone || ""}`,
+        )
         .order("scheduled_at", { ascending: true });
       setTasks(data || []);
     })();
@@ -142,7 +143,6 @@ export default function DriverApp() {
       ),
     );
   }, [tasks, query]);
-
 
   const sha256 = async (text: string) => {
     const enc = new TextEncoder().encode(text);
@@ -195,7 +195,6 @@ export default function DriverApp() {
       setVerifying(false);
     }
   };
-
 
   const logout = () => {
     setProfile(null);
@@ -291,12 +290,18 @@ export default function DriverApp() {
                 />
               </div>
               <div className="flex gap-2">
-                <Button className="w-full" onClick={verifyPassword} disabled={verifying}>
+                <Button
+                  className="w-full"
+                  onClick={verifyPassword}
+                  disabled={verifying}
+                >
                   {verifying ? "Checking..." : "Login"}
                 </Button>
               </div>
               {errorMsg && (
-                <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                <div className="text-sm text-red-600" role="alert">
+                  {errorMsg}
+                </div>
               )}
             </div>
           </CardContent>
