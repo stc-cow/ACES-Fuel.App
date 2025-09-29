@@ -402,7 +402,7 @@ export default function MissionsPage() {
       quantityAddedLastTask: Number(d.required_liters || 0),
       city: "",
       notes: d.notes || "",
-      missionStatus: mapStatus(d.status),
+      missionStatus: (d.admin_status as string) || mapStatus(d.status),
       assignedDriver: d.driver_name || "",
       createdBy: "System",
     }));
