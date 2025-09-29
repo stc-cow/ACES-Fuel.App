@@ -345,7 +345,9 @@ export default function DriverApp() {
                 <Input
                   id="site_id"
                   value={entry.site_id}
-                  onChange={(e) => setEntry((s) => ({ ...s, site_id: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, site_id: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -353,7 +355,9 @@ export default function DriverApp() {
                 <Input
                   id="mission_id"
                   value={entry.mission_id}
-                  onChange={(e) => setEntry((s) => ({ ...s, mission_id: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, mission_id: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -363,7 +367,9 @@ export default function DriverApp() {
                 <Input
                   id="tank_type"
                   value={entry.tank_type}
-                  onChange={(e) => setEntry((s) => ({ ...s, tank_type: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, tank_type: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -372,27 +378,43 @@ export default function DriverApp() {
                   id="completed_at"
                   type="datetime-local"
                   value={entry.completed_at}
-                  onChange={(e) => setEntry((s) => ({ ...s, completed_at: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, completed_at: e.target.value }))
+                  }
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="vertical_calculated_liters">Vertical Calculated Liters</Label>
+                <Label htmlFor="vertical_calculated_liters">
+                  Vertical Calculated Liters
+                </Label>
                 <Input
                   id="vertical_calculated_liters"
                   inputMode="decimal"
                   value={entry.vertical_calculated_liters}
-                  onChange={(e) => setEntry((s) => ({ ...s, vertical_calculated_liters: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      vertical_calculated_liters: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div>
-                <Label htmlFor="actual_liters_in_tank">Actual Liters in Tank</Label>
+                <Label htmlFor="actual_liters_in_tank">
+                  Actual Liters in Tank
+                </Label>
                 <Input
                   id="actual_liters_in_tank"
                   inputMode="decimal"
                   value={entry.actual_liters_in_tank}
-                  onChange={(e) => setEntry((s) => ({ ...s, actual_liters_in_tank: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      actual_liters_in_tank: e.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -402,7 +424,9 @@ export default function DriverApp() {
                 id="quantity_added"
                 inputMode="decimal"
                 value={entry.quantity_added}
-                onChange={(e) => setEntry((s) => ({ ...s, quantity_added: e.target.value }))}
+                onChange={(e) =>
+                  setEntry((s) => ({ ...s, quantity_added: e.target.value }))
+                }
               />
             </div>
             <div>
@@ -410,7 +434,9 @@ export default function DriverApp() {
               <Input
                 id="station"
                 value={entry.station}
-                onChange={(e) => setEntry((s) => ({ ...s, station: e.target.value }))}
+                onChange={(e) =>
+                  setEntry((s) => ({ ...s, station: e.target.value }))
+                }
               />
             </div>
             <div>
@@ -418,24 +444,40 @@ export default function DriverApp() {
               <Input
                 id="receipt"
                 value={entry.receipt}
-                onChange={(e) => setEntry((s) => ({ ...s, receipt: e.target.value }))}
+                onChange={(e) =>
+                  setEntry((s) => ({ ...s, receipt: e.target.value }))
+                }
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="counter_before_url">Image: Counter Before</Label>
+                <Label htmlFor="counter_before_url">
+                  Image: Counter Before
+                </Label>
                 <Input
                   id="counter_before_url"
                   value={entry.counter_before_url}
-                  onChange={(e) => setEntry((s) => ({ ...s, counter_before_url: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      counter_before_url: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div>
-                <Label htmlFor="quantity_measure_before_url">Image: Quantity & Measurement Before</Label>
+                <Label htmlFor="quantity_measure_before_url">
+                  Image: Quantity & Measurement Before
+                </Label>
                 <Input
                   id="quantity_measure_before_url"
                   value={entry.quantity_measure_before_url}
-                  onChange={(e) => setEntry((s) => ({ ...s, quantity_measure_before_url: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      quantity_measure_before_url: e.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -445,15 +487,27 @@ export default function DriverApp() {
                 <Input
                   id="counter_after_url"
                   value={entry.counter_after_url}
-                  onChange={(e) => setEntry((s) => ({ ...s, counter_after_url: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      counter_after_url: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div>
-                <Label htmlFor="quantity_after_url">Image: Quantity After</Label>
+                <Label htmlFor="quantity_after_url">
+                  Image: Quantity After
+                </Label>
                 <Input
                   id="quantity_after_url"
                   value={entry.quantity_after_url}
-                  onChange={(e) => setEntry((s) => ({ ...s, quantity_after_url: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({
+                      ...s,
+                      quantity_after_url: e.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -464,7 +518,9 @@ export default function DriverApp() {
                   id="odo"
                   inputMode="numeric"
                   value={entry.odometer}
-                  onChange={(e) => setEntry((s) => ({ ...s, odometer: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, odometer: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -473,7 +529,9 @@ export default function DriverApp() {
                   id="rate"
                   inputMode="decimal"
                   value={entry.rate}
-                  onChange={(e) => setEntry((s) => ({ ...s, rate: e.target.value }))}
+                  onChange={(e) =>
+                    setEntry((s) => ({ ...s, rate: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -482,7 +540,9 @@ export default function DriverApp() {
               <Input
                 id="notes"
                 value={entry.notes}
-                onChange={(e) => setEntry((s) => ({ ...s, notes: e.target.value }))}
+                onChange={(e) =>
+                  setEntry((s) => ({ ...s, notes: e.target.value }))
+                }
               />
             </div>
           </div>
