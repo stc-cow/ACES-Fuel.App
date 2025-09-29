@@ -369,7 +369,7 @@ export default function MissionsPage() {
     const { data, error } = await supabase
       .from("driver_tasks")
       .select(
-        "id, mission_id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at",
+        "id, mission_id, site_name, driver_name, scheduled_at, status, admin_status, required_liters, notes, created_at",
       )
       .order("created_at", { ascending: false });
     if (error || !data) return;
