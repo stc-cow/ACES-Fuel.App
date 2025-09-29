@@ -417,7 +417,7 @@ export default function DriverApp() {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder="Enter username"
               />
             </div>
             <div>
