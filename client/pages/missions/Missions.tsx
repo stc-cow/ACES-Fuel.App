@@ -327,6 +327,19 @@ export default function MissionsPage() {
     setAddOpen(false);
   };
 
+  const setAdminStatus = async (id: number, status: Mission["missionStatus"]) => {
+    const { error } = await supabase
+      .from("driver_tasks")
+      .update({ admin_status: status })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Update failed", description: error.message });
+      return;
+    }
+    setRows((arr) => arr.map((r) => (r.id === id ? { ...r, missionStatus: status } : r)));
+    toast({ title: `Status: ${status}` });
+  };
+
   const handleSyncAll = async () => {
     if (rows.length === 0) {
       toast({ title: "No missions to sync" });
