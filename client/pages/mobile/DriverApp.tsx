@@ -161,6 +161,10 @@ export default function DriverApp() {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const expires_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
+      // Show OTP input immediately
+      setOtpPhase(true);
+      setOtpSentAt(Date.now());
+
       try {
         await supabase
           .from("driver_otps")
@@ -185,18 +189,17 @@ export default function DriverApp() {
       } catch {}
 
       if (!sent) {
-        await fetch(ZAP_HOOK, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
-        });
-        sent = true;
+        try {
+          await fetch(ZAP_HOOK, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
+          });
+          sent = true;
+        } catch {}
       }
 
-      if (!sent) throw new Error("send failed");
-
-      setOtpPhase(true);
-      setOtpSentAt(Date.now());
+      if (!sent) setErrorMsg("Could not send OTP message. You can retry.");
     } catch (e: any) {
       setErrorMsg("Failed to send OTP. Check connection and try again.");
     } finally {
