@@ -34,7 +34,6 @@ type MetricCard = { key: string; value: string; bg: string };
 const initialMetricCards: MetricCard[] = [
   { key: "totalLitersToday", value: "0.00 liters", bg: "bg-rose-500" },
   { key: "totalLiters30", value: "0.00 liters", bg: "bg-sky-500" },
-  { key: "stcCow30", value: "0.00 liters", bg: "bg-green-500" },
 ];
 
 export default function Index() {
