@@ -33,6 +33,7 @@ export default function DriverApp() {
     phone: string;
   } | null>(null);
   const [name, setName] = useState("");
+  const [demoMode, setDemoMode] = useState(false);
   const [phone, setPhone] = useState("");
   const [tasks, setTasks] = useState<any[]>([]);
   const [query, setQuery] = useState("");
@@ -65,6 +66,40 @@ export default function DriverApp() {
 
   useEffect(() => {
     try {
+      const params = new URLSearchParams(window.location.search);
+      const demo = params.get("demo") === "1";
+      setDemoMode(demo);
+      if (demo) {
+        const demoProfile = { name: "Demo Driver", phone: "0500000000" };
+        setProfile(demoProfile);
+        setTasks([
+          {
+            id: 1001,
+            site_name: "Site A",
+            driver_name: demoProfile.name,
+            driver_phone: demoProfile.phone,
+            scheduled_at: new Date().toISOString(),
+            status: "pending",
+            required_liters: 500,
+            notes: "Check tank level before refuel",
+          },
+          {
+            id: 1002,
+            site_name: "Site B",
+            driver_name: demoProfile.name,
+            driver_phone: demoProfile.phone,
+            scheduled_at: new Date(Date.now() + 3600000).toISOString(),
+            status: "in_progress",
+            required_liters: 300,
+            notes: "Photograph counter",
+          },
+        ]);
+        if (params.get("open") === "1") {
+          setActiveTask({ id: 1001 });
+          setEditOpen(true);
+        }
+        return;
+      }
       const raw = localStorage.getItem("driver.profile");
       if (raw) setProfile(JSON.parse(raw));
     } catch {}
@@ -72,7 +107,7 @@ export default function DriverApp() {
 
   useEffect(() => {
     (async () => {
-      if (!profile) return;
+      if (!profile || demoMode) return;
       const { data } = await supabase
         .from("driver_tasks")
         .select(
@@ -82,7 +117,7 @@ export default function DriverApp() {
         .order("scheduled_at", { ascending: true });
       setTasks(data || []);
     })();
-  }, [profile]);
+  }, [profile, demoMode]);
 
   const filtered = useMemo(() => {
     const base = tasks.filter((t) => t.status !== "completed");
