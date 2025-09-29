@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
 
-const ZAP_HOOK = "https://hooks.zapier.com/hooks/catch/24787962/u1nzkun/";
 
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
