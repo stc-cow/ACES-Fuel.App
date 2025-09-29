@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -42,29 +43,67 @@ export default function DriverApp() {
   const [editOpen, setEditOpen] = useState(false);
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [entry, setEntry] = useState({
-    // IDs and meta
+    // required fields for this form
     site_id: "",
     mission_id: "",
-    tank_type: "",
-    completed_at: "",
-    // measurements
-    vertical_calculated_liters: "",
     actual_liters_in_tank: "",
     quantity_added: "",
-    // legacy fields kept for compatibility
+    notes: "",
+    // image urls (filled after upload)
+    counter_before_url: "",
+    tank_before_url: "",
+    counter_after_url: "",
+    tank_after_url: "",
+    // legacy/compat fields used by existing submit logic (kept hidden)
+    tank_type: "",
+    completed_at: "",
+    vertical_calculated_liters: "",
     liters: "",
     rate: "",
     station: "",
     receipt: "",
     photo_url: "",
     odometer: "",
-    notes: "",
-    // photos
-    counter_before_url: "",
-    quantity_measure_before_url: "",
-    counter_after_url: "",
-    quantity_after_url: "",
   });
+
+  // upload state
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [previews, setPreviews] = useState<Record<string, string>>({});
+  const DRIVER_BUCKET = "driver-uploads";
+
+  const keyMap = {
+    counter_before: "counter_before_url",
+    tank_before: "tank_before_url",
+    counter_after: "counter_after_url",
+    tank_after: "tank_after_url",
+  } as const;
+
+  const handleFile = async (
+    tag: keyof typeof keyMap,
+    file: File,
+  ) => {
+    const k = keyMap[tag];
+    setUploading((u) => ({ ...u, [tag]: true }));
+    try {
+      const dir = `${(profile?.name || "driver").replace(/\s+/g, "_")}/${
+        activeTask?.id || "misc"
+      }`;
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${dir}/${tag}_${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from(DRIVER_BUCKET)
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (error) {
+        alert("Image upload failed. Please try again.");
+        return;
+      }
+      const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
+      const url = data.publicUrl;
+      setEntry((s: any) => ({ ...s, [k]: url }));
+    } finally {
+      setUploading((u) => ({ ...u, [tag]: false }));
+    }
+  };
 
   useEffect(() => {
     try {
@@ -218,24 +257,25 @@ export default function DriverApp() {
     setActiveTask(t);
     setEntry({
       site_id: "",
-      mission_id: "",
+      mission_id: String(t.id || ""),
+      actual_liters_in_tank: "",
+      quantity_added: "",
+      notes: t.notes || "",
+      counter_before_url: "",
+      tank_before_url: "",
+      counter_after_url: "",
+      tank_after_url: "",
       tank_type: "",
       completed_at: "",
       vertical_calculated_liters: "",
-      actual_liters_in_tank: "",
-      quantity_added: "",
       liters: "",
       rate: "",
       station: "",
       receipt: "",
       photo_url: "",
       odometer: "",
-      notes: t.notes || "",
-      counter_before_url: "",
-      quantity_measure_before_url: "",
-      counter_after_url: "",
-      quantity_after_url: "",
     });
+    setPreviews({});
     setEditOpen(true);
   };
 
@@ -414,56 +454,15 @@ export default function DriverApp() {
                 <Input
                   id="mission_id"
                   value={entry.mission_id}
-                  onChange={(e) =>
-                    setEntry((s) => ({ ...s, mission_id: e.target.value }))
-                  }
+                  readOnly
+                  disabled
                 />
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="tank_type">Tank Type</Label>
-                <Input
-                  id="tank_type"
-                  value={entry.tank_type}
-                  onChange={(e) =>
-                    setEntry((s) => ({ ...s, tank_type: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="completed_at">Completed Date</Label>
-                <Input
-                  id="completed_at"
-                  type="datetime-local"
-                  value={entry.completed_at}
-                  onChange={(e) =>
-                    setEntry((s) => ({ ...s, completed_at: e.target.value }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="vertical_calculated_liters">
-                  Vertical Calculated Liters
-                </Label>
-                <Input
-                  id="vertical_calculated_liters"
-                  inputMode="decimal"
-                  value={entry.vertical_calculated_liters}
-                  onChange={(e) =>
-                    setEntry((s) => ({
-                      ...s,
-                      vertical_calculated_liters: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="actual_liters_in_tank">
-                  Actual Liters in Tank
-                </Label>
+                <Label htmlFor="actual_liters_in_tank">Actual Liters in Tank</Label>
                 <Input
                   id="actual_liters_in_tank"
                   inputMode="decimal"
@@ -476,132 +475,131 @@ export default function DriverApp() {
                   }
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="quantity_added">Quantity Added</Label>
-              <Input
-                id="quantity_added"
-                inputMode="decimal"
-                value={entry.quantity_added}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, quantity_added: e.target.value }))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="station">Station</Label>
-              <Input
-                id="station"
-                value={entry.station}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, station: e.target.value }))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="receipt">Receipt #</Label>
-              <Input
-                id="receipt"
-                value={entry.receipt}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, receipt: e.target.value }))
-                }
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="counter_before_url">
-                  Image: Counter Before
-                </Label>
+                <Label htmlFor="quantity_added">Quantity Added</Label>
                 <Input
-                  id="counter_before_url"
-                  value={entry.counter_before_url}
-                  onChange={(e) =>
-                    setEntry((s) => ({
-                      ...s,
-                      counter_before_url: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="quantity_measure_before_url">
-                  Image: Quantity & Measurement Before
-                </Label>
-                <Input
-                  id="quantity_measure_before_url"
-                  value={entry.quantity_measure_before_url}
-                  onChange={(e) =>
-                    setEntry((s) => ({
-                      ...s,
-                      quantity_measure_before_url: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="counter_after_url">Image: Counter After</Label>
-                <Input
-                  id="counter_after_url"
-                  value={entry.counter_after_url}
-                  onChange={(e) =>
-                    setEntry((s) => ({
-                      ...s,
-                      counter_after_url: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="quantity_after_url">
-                  Image: Quantity After
-                </Label>
-                <Input
-                  id="quantity_after_url"
-                  value={entry.quantity_after_url}
-                  onChange={(e) =>
-                    setEntry((s) => ({
-                      ...s,
-                      quantity_after_url: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="odo">Odometer</Label>
-                <Input
-                  id="odo"
-                  inputMode="numeric"
-                  value={entry.odometer}
-                  onChange={(e) =>
-                    setEntry((s) => ({ ...s, odometer: e.target.value }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="rate">Rate (SAR/L)</Label>
-                <Input
-                  id="rate"
+                  id="quantity_added"
                   inputMode="decimal"
-                  value={entry.rate}
+                  value={entry.quantity_added}
                   onChange={(e) =>
-                    setEntry((s) => ({ ...s, rate: e.target.value }))
+                    setEntry((s) => ({ ...s, quantity_added: e.target.value }))
                   }
                 />
               </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Image: Counter Before</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const url = URL.createObjectURL(f);
+                    setPreviews((p) => ({ ...p, counter_before: url }));
+                    await handleFile("counter_before", f);
+                  }}
+                />
+                {(previews.counter_before || entry.counter_before_url) && (
+                  <img
+                    src={previews.counter_before || entry.counter_before_url}
+                    alt="Counter before"
+                    className="mt-2 h-24 w-24 rounded object-cover"
+                  />
+                )}
+                {uploading.counter_before && (
+                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                )}
+              </div>
+              <div>
+                <Label>Image: Tank Before</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const url = URL.createObjectURL(f);
+                    setPreviews((p) => ({ ...p, tank_before: url }));
+                    await handleFile("tank_before", f);
+                  }}
+                />
+                {(previews.tank_before || entry.tank_before_url) && (
+                  <img
+                    src={previews.tank_before || entry.tank_before_url}
+                    alt="Tank before"
+                    className="mt-2 h-24 w-24 rounded object-cover"
+                  />
+                )}
+                {uploading.tank_before && (
+                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Image: Counter After</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const url = URL.createObjectURL(f);
+                    setPreviews((p) => ({ ...p, counter_after: url }));
+                    await handleFile("counter_after", f);
+                  }}
+                />
+                {(previews.counter_after || entry.counter_after_url) && (
+                  <img
+                    src={previews.counter_after || entry.counter_after_url}
+                    alt="Counter after"
+                    className="mt-2 h-24 w-24 rounded object-cover"
+                  />
+                )}
+                {uploading.counter_after && (
+                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                )}
+              </div>
+              <div>
+                <Label>Image: Tank After</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const url = URL.createObjectURL(f);
+                    setPreviews((p) => ({ ...p, tank_after: url }));
+                    await handleFile("tank_after", f);
+                  }}
+                />
+                {(previews.tank_after || entry.tank_after_url) && (
+                  <img
+                    src={previews.tank_after || entry.tank_after_url}
+                    alt="Tank after"
+                    className="mt-2 h-24 w-24 rounded object-cover"
+                  />
+                )}
+                {uploading.tank_after && (
+                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                )}
+              </div>
+            </div>
+
             <div>
-              <Label htmlFor="notes">Notes</Label>
-              <Input
+              <Label htmlFor="notes">Remarks</Label>
+              <Textarea
                 id="notes"
                 value={entry.notes}
-                onChange={(e) =>
-                  setEntry((s) => ({ ...s, notes: e.target.value }))
-                }
+                onChange={(e) => setEntry((s) => ({ ...s, notes: e.target.value }))}
               />
             </div>
           </div>
