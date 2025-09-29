@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
 
+const ZAP_HOOK = "https://hooks.zapier.com/hooks/catch/24787962/u1nzkun/";
+
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
     name: string;
@@ -35,6 +37,12 @@ export default function DriverApp() {
   const [name, setName] = useState("");
   const [demoMode, setDemoMode] = useState(false);
   const [phone, setPhone] = useState("");
+  const [otpPhase, setOtpPhase] = useState(false);
+  const [otpInput, setOtpInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [editOpen, setEditOpen] = useState(false);
@@ -140,15 +148,103 @@ export default function DriverApp() {
     );
   }, [tasks, query]);
 
-  const login = () => {
+  const sendOtp = async () => {
+    setErrorMsg("");
     const n = name.trim();
-    if (!n) return;
     const p = phone.trim();
-    const prof = { name: n, phone: p };
-    setProfile(prof);
+    if (!n || !p) {
+      setErrorMsg("Enter name and phone");
+      return;
+    }
+    setSending(true);
     try {
-      localStorage.setItem("driver.profile", JSON.stringify(prof));
-    } catch {}
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expires_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+      try {
+        await supabase
+          .from("driver_otps")
+          .upsert({ phone: p, code, expires_at, used: false }, { onConflict: "phone" });
+      } catch {}
+
+      try {
+        localStorage.setItem(
+          "driver.otp",
+          JSON.stringify({ phone: p, code, expires_at }),
+        );
+      } catch {}
+
+      await fetch(ZAP_HOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
+      });
+
+      setOtpPhase(true);
+      setOtpSentAt(Date.now());
+    } catch (e: any) {
+      setErrorMsg("Failed to send OTP. Check connection and try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    setErrorMsg("");
+    const n = name.trim();
+    const p = phone.trim();
+    const inp = otpInput.trim();
+    if (!inp) return;
+    setVerifying(true);
+    try {
+      let valid = false;
+
+      try {
+        const nowIso = new Date().toISOString();
+        const { data } = await supabase
+          .from("driver_otps")
+          .select("code, expires_at, used")
+          .eq("phone", p)
+          .maybeSingle();
+        if (data && data.code === inp && !data.used && data.expires_at >= nowIso) {
+          valid = true;
+          await supabase
+            .from("driver_otps")
+            .update({ used: true })
+            .eq("phone", p);
+        }
+      } catch {}
+
+      if (!valid) {
+        try {
+          const raw = localStorage.getItem("driver.otp");
+          if (raw) {
+            const obj = JSON.parse(raw);
+            if (
+              obj && obj.phone === p && obj.code === inp && Date.parse(obj.expires_at) > Date.now()
+            ) {
+              valid = true;
+              localStorage.removeItem("driver.otp");
+            }
+          }
+        } catch {}
+      }
+
+      if (!valid) {
+        setErrorMsg("Invalid or expired OTP");
+        return;
+      }
+
+      const prof = { name: n, phone: p };
+      setProfile(prof);
+      try {
+        localStorage.setItem("driver.profile", JSON.stringify(prof));
+      } catch {}
+      setOtpPhase(false);
+      setOtpInput("");
+    } finally {
+      setVerifying(false);
+    }
   };
 
   const logout = () => {
@@ -234,17 +330,44 @@ export default function DriverApp() {
               />
             </div>
             <div>
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">WhatsApp Number</Label>
               <Input
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="05xxxxxxxx"
+                placeholder="e.g. +9665xxxxxxxx"
               />
             </div>
-            <Button className="w-full" onClick={login}>
-              Continue
-            </Button>
+            {!otpPhase && (
+              <Button className="w-full" onClick={sendOtp} disabled={sending}>
+                {sending ? "Sending..." : "Send OTP via WhatsApp"}
+              </Button>
+            )}
+            {otpPhase && (
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="otp">Enter OTP</Label>
+                  <Input
+                    id="otp"
+                    inputMode="numeric"
+                    value={otpInput}
+                    onChange={(e) => setOtpInput(e.target.value)}
+                    placeholder="6-digit code"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button className="flex-1" onClick={verifyOtp} disabled={verifying}>
+                    {verifying ? "Verifying..." : "Verify"}
+                  </Button>
+                  <Button type="button" variant="outline" onClick={sendOtp} disabled={sending}>
+                    Resend
+                  </Button>
+                </div>
+                {errorMsg && (
+                  <div className="text-sm text-red-600" role="alert">{errorMsg}</div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
