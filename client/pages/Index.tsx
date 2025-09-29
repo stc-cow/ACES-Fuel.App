@@ -23,14 +23,15 @@ const defaultStatusData = [
   { name: "Canceled", value: 0, color: "#a3a3a3" },
 ];
 
-const zoneData = [
-  { name: "COW East Region", value: 45.8, color: "#8b5cf6" },
-  { name: "COW West Region", value: 21.9, color: "#06b6d4" },
-  { name: "Mobily Central Region", value: 31.5, color: "#f59e0b" },
-  { name: "stc-cow", value: 0.8, color: "#22c55e" },
+const defaultZoneData = [
+  { name: "Riyadh", value: 0, color: "#8b5cf6" },
+  { name: "Jeddah", value: 0, color: "#06b6d4" },
+  { name: "Dammam", value: 0, color: "#f59e0b" },
+  { name: "Other", value: 0, color: "#22c55e" },
 ];
 
-const metricCards = [
+type MetricCard = { key: string; value: string; bg: string };
+const initialMetricCards: MetricCard[] = [
   { key: "totalLitersToday", value: "0.00 liters", bg: "bg-rose-500" },
   { key: "totalLiters30", value: "0.00 liters", bg: "bg-sky-500" },
   { key: "stcCow30", value: "0.00 liters", bg: "bg-green-500" },
@@ -39,23 +40,61 @@ const metricCards = [
 export default function Index() {
   const { t } = useI18n();
   const [statusData, setStatusData] = useState(defaultStatusData);
+  const [zoneData, setZoneData] = useState(defaultZoneData);
+  const [metricCards, setMetricCards] = useState(initialMetricCards);
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.from("driver_tasks").select("status");
-      if (error || !data) return;
-      const counts: Record<string, number> = {};
-      for (const row of data) {
-        const s = String(row.status || "");
-        counts[s] = (counts[s] || 0) + 1;
+      // Status distribution from driver_tasks
+      const { data: tasks } = await supabase.from("driver_tasks").select("status, required_liters, scheduled_at, created_at");
+      if (tasks) {
+        const counts: Record<string, number> = {};
+        let sumToday = 0;
+        let sum30 = 0;
+        const today = new Date();
+        const start30 = new Date();
+        start30.setDate(today.getDate() - 30);
+        for (const row of tasks as any[]) {
+          const s = String(row.status || "");
+          counts[s] = (counts[s] || 0) + 1;
+          const dStr = row.scheduled_at || row.created_at;
+          if (dStr) {
+            const d = new Date(dStr);
+            const liters = Number(row.required_liters || 0);
+            const sameDay = d.toISOString().slice(0,10) === today.toISOString().slice(0,10);
+            if (sameDay) sumToday += liters;
+            if (d >= start30 && d <= today) sum30 += liters;
+          }
+        }
+        setStatusData([
+          { name: "Creation", value: counts["pending"] || 0, color: "#f43f5e" },
+          { name: "Finished by Driver", value: counts["completed"] || 0, color: "#fb923c" },
+          { name: "Task approved", value: counts["approved"] || 0, color: "#22c55e" },
+          { name: "Rejected by driver", value: counts["rejected"] || 0, color: "#06b6d4" },
+          { name: "Canceled", value: counts["canceled"] || 0, color: "#a3a3a3" },
+        ]);
+        setMetricCards([
+          { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
+          { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
+          { key: "stcCow30", value: `${sum30.toFixed(2)} liters`, bg: "bg-green-500" },
+        ]);
       }
-      setStatusData([
-        { name: "Creation", value: counts["pending"] || 0, color: "#f43f5e" },
-        { name: "Finished by Driver", value: counts["completed"] || 0, color: "#fb923c" },
-        { name: "Task approved", value: counts["approved"] || 0, color: "#22c55e" },
-        { name: "Rejected by driver", value: counts["rejected"] || 0, color: "#06b6d4" },
-        { name: "Canceled", value: counts["canceled"] || 0, color: "#a3a3a3" },
-      ]);
+      // Zone distribution from drivers table
+      const { data: drivers } = await supabase.from("drivers").select("zone");
+      if (drivers) {
+        const counts: Record<string, number> = {};
+        for (const d of drivers as any[]) {
+          const z = (d.zone || "Other").trim() || "Other";
+          counts[z] = (counts[z] || 0) + 1;
+        }
+        const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+        const palette = ["#8b5cf6", "#06b6d4", "#f59e0b", "#22c55e", "#ef4444", "#0ea5e9"];
+        const dyn = Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([name, count], i) => ({ name, value: (count / total) * 100, color: palette[i % palette.length] }));
+        setZoneData(dyn.length ? dyn : defaultZoneData);
+      }
     })();
   }, []);
   return (
