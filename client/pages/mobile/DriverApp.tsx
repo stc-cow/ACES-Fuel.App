@@ -37,6 +37,8 @@ export default function DriverApp() {
   const [name, setName] = useState("");
   const [demoMode, setDemoMode] = useState(false);
   const [phone, setPhone] = useState("");
+  const [usePassword, setUsePassword] = useState(false);
+  const [password, setPassword] = useState("");
   const [otpPhase, setOtpPhase] = useState(false);
   const [otpInput, setOtpInput] = useState("");
   const [sending, setSending] = useState(false);
