@@ -174,11 +174,26 @@ export default function DriverApp() {
         );
       } catch {}
 
-      await fetch(ZAP_HOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
-      });
+      let sent = false;
+      try {
+        const r = await fetch("/api/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ to: p, name: n, code, expires_at }),
+        });
+        if (r.ok) sent = true;
+      } catch {}
+
+      if (!sent) {
+        await fetch(ZAP_HOOK, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ channel: "whatsapp", phone: p, name: n, code, expires_at }),
+        });
+        sent = true;
+      }
+
+      if (!sent) throw new Error("send failed");
 
       setOtpPhase(true);
       setOtpSentAt(Date.now());
