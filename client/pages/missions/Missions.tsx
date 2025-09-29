@@ -185,7 +185,7 @@ type ColumnKey = (typeof allColumns)[number]["key"];
 
 export default function MissionsPage() {
   const [query, setQuery] = useState("");
-  const [rows, setRows] = useState<Mission[]>(initialRows);
+  const [rows, setRows] = useState<Mission[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [statusFilter, setStatusFilter] = useState<
@@ -348,6 +348,53 @@ export default function MissionsPage() {
     toast({ title: "Missions synced to Supabase" });
   };
 
+  const loadFromDb = async () => {
+    const { data, error } = await supabase
+      .from("driver_tasks")
+      .select(
+        "id, site_name, driver_name, scheduled_at, status, required_liters, notes, created_at",
+      )
+      .order("created_at", { ascending: false });
+    if (error || !data) return;
+    const mapStatus = (s?: string): Mission["missionStatus"] => {
+      switch ((s || "").toLowerCase()) {
+        case "completed":
+          return "Finished by Driver";
+        case "in_progress":
+          return "Reported by driver";
+        case "canceled":
+          return "Canceled";
+        default:
+          return "Creation";
+      }
+    };
+    const mapped: Mission[] = data.map((d: any) => ({
+      id: Number(d.id),
+      siteName: d.site_name || "",
+      generator: "",
+      project: "",
+      driverName: d.driver_name || "",
+      createdDate:
+        (d.scheduled_at as string)?.slice(0, 10) ||
+        (d.created_at as string)?.slice(0, 10) ||
+        new Date().toISOString().slice(0, 10),
+      filledLiters: 0,
+      virtualCalculated: 0,
+      actualInTank: 0,
+      quantityAddedLastTask: Number(d.required_liters || 0),
+      city: "",
+      notes: d.notes || "",
+      missionStatus: mapStatus(d.status),
+      assignedDriver: d.driver_name || "",
+      createdBy: "System",
+    }));
+    setRows(mapped);
+  };
+
+  useEffect(() => {
+    loadFromDb();
+  }, []);
+
   const counts = useMemo(() => {
     const map: Record<Mission["missionStatus"], number> = {
       Creation: 0,
@@ -446,9 +493,9 @@ export default function MissionsPage() {
             <Button
               variant="outline"
               className="hidden sm:inline-flex"
-              onClick={handleSyncAll}
+              onClick={loadFromDb}
             >
-              <UploadCloud className="mr-2 h-4 w-4" /> Sync
+              <UploadCloud className="mr-2 h-4 w-4" /> Refresh
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
