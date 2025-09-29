@@ -41,6 +41,8 @@ export default function Index() {
   const [statusData, setStatusData] = useState(defaultStatusData);
   const [zoneData, setZoneData] = useState(defaultZoneData);
   const [metricCards, setMetricCards] = useState(initialMetricCards);
+  const [last7StatusCount, setLast7StatusCount] = useState(0);
+  const [last7Liters, setLast7Liters] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -92,6 +94,21 @@ export default function Index() {
           .slice(0, 5)
           .map(([name, count], i) => ({ name, value: (count / total) * 100, color: palette[i % palette.length] }));
         setZoneData(dyn.length ? dyn : defaultZoneData);
+      }
+
+      // Last 7 days cards
+      const { data: sitesAgg } = await supabase.from("sites").select("id", { count: "exact", head: true });
+      setLast7StatusCount((sitesAgg as any)?.length ?? (sitesAgg as any)?.count ?? 0);
+
+      const since = new Date();
+      since.setDate(since.getDate() - 7);
+      const { data: entries } = await supabase
+        .from("driver_task_entries")
+        .select("liters, created_at")
+        .gte("created_at", since.toISOString());
+      if (entries) {
+        const sum = (entries as any[]).reduce((acc, r) => acc + Number(r.liters || 0), 0);
+        setLast7Liters(sum);
       }
     })();
   }, []);
@@ -174,9 +191,10 @@ export default function Index() {
               <div className="text-base font-medium">
                 Total Status Count in Last 7 Days
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">
-                {t("noDataYet")}
+              <div className="mt-3 text-3xl font-semibold">
+                {last7StatusCount}
               </div>
+              <div className="text-xs text-muted-foreground">Total sites</div>
             </CardContent>
           </Card>
           <Card>
@@ -184,9 +202,10 @@ export default function Index() {
               <div className="text-base font-medium">
                 Total Liters in Last 7 Days
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">
-                {t("noDataYet")}
+              <div className="mt-3 text-3xl font-semibold">
+                {last7Liters.toFixed(2)} liters
               </div>
+              <div className="text-xs text-muted-foreground">From driver submissions</div>
             </CardContent>
           </Card>
         </div>
