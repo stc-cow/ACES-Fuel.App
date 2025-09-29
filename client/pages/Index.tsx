@@ -97,8 +97,10 @@ export default function Index() {
       }
 
       // Last 7 days cards
-      const { data: sitesAgg } = await supabase.from("sites").select("id", { count: "exact", head: true });
-      setLast7StatusCount((sitesAgg as any)?.length ?? (sitesAgg as any)?.count ?? 0);
+      const { count: sitesCount } = await supabase
+        .from("sites")
+        .select("id", { count: "exact", head: true });
+      setLast7StatusCount(sitesCount || 0);
 
       const since = new Date();
       since.setDate(since.getDate() - 7);
