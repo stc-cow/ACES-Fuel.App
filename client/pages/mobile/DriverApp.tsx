@@ -52,6 +52,7 @@ export default function DriverApp() {
     "all",
   );
   const [editOpen, setEditOpen] = useState(false);
+  const [showTasks, setShowTasks] = useState(false);
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [entry, setEntry] = useState({
     // required fields for this form
@@ -434,17 +435,49 @@ export default function DriverApp() {
             placeholder="Search tasks"
           />
         </div>
+        <div className="mt-3 flex items-center gap-2">
+          <Button
+            className="flex-1"
+            onClick={() => {
+              setFilterMode("active");
+              setShowTasks(true);
+            }}
+          >
+            Active task
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => {
+              setFilterMode("returned");
+              setShowTasks(true);
+            }}
+          >
+            Returned tasks
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => {
+              setFilterMode("all");
+              setShowTasks(true);
+            }}
+          >
+            All tasks
+          </Button>
+        </div>
       </div>
 
-      <div className="mt-2 space-y-3">
-        {filtered.length === 0 && (
-          <div className="text-center text-sm text-muted-foreground">
-            No tasks
-          </div>
-        )}
-        {filtered.map((t) => (
-          <Card key={t.id} className="overflow-hidden">
-            <CardContent className="p-0">
+      {showTasks ? (
+        <div className="mt-2 space-y-3">
+          {filtered.length === 0 && (
+            <div className="text-center text-sm text-muted-foreground">
+              No tasks
+            </div>
+          )}
+          {filtered.map((t) => (
+            <Card key={t.id} className="overflow-hidden">
+              <CardContent className="p-0">
               <div className="flex items-center justify-between p-4">
                 <div>
                   <div className="text-sm text-muted-foreground">
@@ -495,7 +528,12 @@ export default function DriverApp() {
             </CardContent>
           </Card>
         ))}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          Tap a button above to view tasks
+        </div>
+      )}
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
