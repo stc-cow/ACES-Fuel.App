@@ -166,18 +166,21 @@ export default function DriverApp() {
     } catch {}
   }, []);
 
+  const loadTasks = async () => {
+    if (!profile || demoMode) return;
+    const ors: string[] = [`driver_name.eq.${profile.name}`];
+    if (profile.phone && profile.phone.trim()) ors.push(`driver_phone.eq.${profile.phone}`);
+    const { data } = await supabase
+      .from("driver_tasks")
+      .select("*")
+      .or(ors.join(","))
+      .order("scheduled_at", { ascending: true });
+    setTasks(data || []);
+  };
+
   useEffect(() => {
-    (async () => {
-      if (!profile || demoMode) return;
-      const { data } = await supabase
-        .from("driver_tasks")
-        .select("*")
-        .or(
-          `driver_name.eq.${profile.name},driver_phone.eq.${profile.phone || ""}`,
-        )
-        .order("scheduled_at", { ascending: true });
-      setTasks(data || []);
-    })();
+    loadTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, demoMode]);
 
   const activeCount = useMemo(
@@ -403,6 +406,9 @@ export default function DriverApp() {
             >
               <Bell className="h-5 w-5" />
             </Button>
+            <Button variant="outline" size="sm" onClick={loadTasks}>
+              Refresh
+            </Button>
             <Button variant="outline" size="sm" onClick={logout}>
               Logout
             </Button>
@@ -418,9 +424,10 @@ export default function DriverApp() {
         <div className="mt-3 flex items-center gap-2">
           <Button
             className="flex-1"
-            onClick={() => {
+            onClick={async () => {
               setFilterMode("active");
               setShowTasks(true);
+              await loadTasks();
             }}
           >
             Active task
@@ -428,9 +435,10 @@ export default function DriverApp() {
           <Button
             variant="outline"
             className="flex-1"
-            onClick={() => {
+            onClick={async () => {
               setFilterMode("returned");
               setShowTasks(true);
+              await loadTasks();
             }}
           >
             Returned tasks
@@ -438,9 +446,10 @@ export default function DriverApp() {
           <Button
             variant="outline"
             className="flex-1"
-            onClick={() => {
+            onClick={async () => {
               setFilterMode("all");
               setShowTasks(true);
+              await loadTasks();
             }}
           >
             All tasks
