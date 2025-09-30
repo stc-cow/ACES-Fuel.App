@@ -238,6 +238,8 @@ export default function MissionsPage() {
     { id: number; name: string; phone: string | null }[]
   >([]);
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
+  const [entryByTask, setEntryByTask] = useState<Record<number, any | null>>({});
+  const [imagesByTask, setImagesByTask] = useState<Record<number, string[]>>({});
 
   useEffect(() => {
     let mounted = true;
@@ -327,6 +329,38 @@ export default function MissionsPage() {
     toast({ title: "Task created" });
     setAddForm(emptyForm);
     setAddOpen(false);
+  };
+
+  const toggleExpand = async (r: Mission) => {
+    setExpanded((e) => ({ ...e, [r.id]: !e[r.id] }));
+    if (!expanded[r.id]) {
+      // load latest driver entry
+      const { data } = await supabase
+        .from("driver_task_entries")
+        .select(
+          "liters, rate, station, receipt_number, photo_url, odometer, submitted_by, submitted_at",
+        )
+        .eq("task_id", r.id)
+        .order("submitted_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      setEntryByTask((m) => ({ ...m, [r.id]: data || null }));
+      // try list storage pics
+      try {
+        const dir = `${(r.driverName || "driver").replace(/\s+/g, "_")}/${r.id}`;
+        const { data: files } = await (supabase.storage as any)
+          .from("driver-uploads")
+          .list(dir, { limit: 20 });
+        if (files && Array.isArray(files)) {
+          const urls = files.map((f: any) =>
+            (supabase.storage as any)
+              .from("driver-uploads")
+              .getPublicUrl(`${dir}/${f.name}`).data.publicUrl,
+          );
+          setImagesByTask((m) => ({ ...m, [r.id]: urls }));
+        }
+      } catch {}
+    }
   };
 
   const setAdminStatus = async (id: number, status: Mission["missionStatus"]) => {
@@ -861,7 +895,7 @@ export default function MissionsPage() {
                 </TableHeader>
                 <TableBody>
                   {current.map((r) => (
-                    <TableRow key={r.id}>
+                    <TableRow key={r.id} onClick={() => toggleExpand(r)} className="cursor-pointer">
                       {cols.missionId && (
                         <TableCell className="font-medium">{r.missionId}</TableCell>
                       )}
@@ -906,11 +940,12 @@ export default function MissionsPage() {
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
                           <div className="flex flex-wrap items-center justify-end gap-1">
+                            <img src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F6104b03ad0e647e89d8eb60c6aa2ad70?format=webp&width=256" alt="expand" className="h-5 w-5 cursor-pointer" onClick={(e) => { e.stopPropagation(); toggleExpand(r); }} />
                             <Button
                               size="sm"
                               variant="outline"
                               className="h-7 px-2 text-xs"
-                              onClick={() => setAdminStatus(r.id, "Task returned to the driver")}
+                              onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Task returned to the driver"); }}
                             >
                               Back to driver
                             </Button>
@@ -918,7 +953,7 @@ export default function MissionsPage() {
                               size="sm"
                               variant="destructive"
                               className="h-7 px-2 text-xs"
-                              onClick={() => setAdminStatus(r.id, "Canceled")}
+                              onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Canceled"); }}
                             >
                               Cancel
                             </Button>
@@ -934,7 +969,7 @@ export default function MissionsPage() {
                               size="icon"
                               variant="ghost"
                               aria-label="Delete"
-                              onClick={() => remove(r.id)}
+                              onClick={(e) => { e.stopPropagation(); remove(r.id); }}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -949,51 +984,51 @@ export default function MissionsPage() {
                         <TableCell colSpan={allColumns.length}>
                           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                             <div>
+                              <div className="text-xs text-muted-foreground">Mission ID</div>
+                              <div className="font-medium">{r.missionId}</div>
+                            </div>
+                            <div>
                               <div className="text-xs text-muted-foreground">Site Name</div>
-                              <Input
-                                value={r.siteName}
-                                onChange={(e) =>
-                                  setRows((arr) =>
-                                    arr.map((x) =>
-                                      x.id === r.id ? { ...x, siteName: e.target.value } : x,
-                                    ),
-                                  )
-                                }
-                              />
+                              <div className="font-medium">{r.siteName}</div>
                             </div>
                             <div>
                               <div className="text-xs text-muted-foreground">Driver Name</div>
-                              <Input
-                                value={r.driverName}
-                                onChange={(e) =>
-                                  setRows((arr) =>
-                                    arr.map((x) =>
-                                      x.id === r.id ? { ...x, driverName: e.target.value } : x,
-                                    ),
-                                  )
-                                }
-                              />
+                              <div className="font-medium">{r.driverName}</div>
                             </div>
                             <div>
-                              <div className="text-xs text-muted-foreground">Quantity Added</div>
-                              <Input
-                                value={r.quantityAddedLastTask}
-                                onChange={(e) =>
-                                  setRows((arr) =>
-                                    arr.map((x) =>
-                                      x.id === r.id
-                                        ? { ...x, quantityAddedLastTask: Number(e.target.value || 0) }
-                                        : x,
-                                    ),
-                                  )
-                                }
-                              />
+                              <div className="text-xs text-muted-foreground">Required Liters</div>
+                              <div className="font-medium">{r.quantityAddedLastTask}</div>
                             </div>
-                            <div className="md:col-span-3 flex items-center justify-between gap-2">
-                              <div className="text-xs text-muted-foreground">Mission ID: {r.missionId}</div>
+                            <div className="md:col-span-3">
+                              <div className="text-xs text-muted-foreground">Driver Entry</div>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>Liters: {entryByTask[r.id]?.liters ?? '-'}</div>
+                                <div>Rate: {entryByTask[r.id]?.rate ?? '-'}</div>
+                                <div>Station: {entryByTask[r.id]?.station ?? '-'}</div>
+                                <div>Receipt #: {entryByTask[r.id]?.receipt_number ?? '-'}</div>
+                                <div>Odometer: {entryByTask[r.id]?.odometer ?? '-'}</div>
+                                <div>Submitted By: {entryByTask[r.id]?.submitted_by ?? '-'}</div>
+                                <div className="col-span-2">Submitted At: {entryByTask[r.id]?.submitted_at ?? '-'}</div>
+                              </div>
+                            </div>
+                            <div className="md:col-span-3">
+                              <div className="text-xs text-muted-foreground mb-1">Images</div>
+                              <div className="flex flex-wrap gap-2">
+                                {entryByTask[r.id]?.photo_url && (
+                                  <img src={entryByTask[r.id]?.photo_url} alt="photo" className="h-24 w-24 rounded object-cover" />
+                                )}
+                                {(imagesByTask[r.id] || []).map((u, i) => (
+                                  <img key={i} src={u} alt="upload" className="h-24 w-24 rounded object-cover" />
+                                ))}
+                                {(!entryByTask[r.id]?.photo_url && (!imagesByTask[r.id] || imagesByTask[r.id].length === 0)) && (
+                                  <div className="text-sm text-muted-foreground">No images</div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="md:col-span-3 flex items-center justify-end gap-2">
                               <Button
                                 className="bg-emerald-600 hover:bg-emerald-500"
-                                onClick={() => setAdminStatus(r.id, "Task approved")}
+                                onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Task approved"); }}
                               >
                                 Approve
                               </Button>
