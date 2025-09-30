@@ -185,8 +185,20 @@ export default function DriverApp() {
     })();
   }, [profile, demoMode]);
 
+  const activeCount = useMemo(
+    () => tasks.filter((t) => t.status === "in_progress").length,
+    [tasks],
+  );
+  const returnedCount = useMemo(
+    () => tasks.filter((t) => t.admin_status === "Task returned to the driver").length,
+    [tasks],
+  );
+
   const filtered = useMemo(() => {
-    const base = tasks.filter((t) => t.status !== "completed");
+    let base = tasks.filter((t) => t.status !== "completed");
+    if (filterMode === "active") base = base.filter((t) => t.status === "in_progress");
+    if (filterMode === "returned")
+      base = base.filter((t) => t.admin_status === "Task returned to the driver");
     if (!query) return base;
     const q = query.toLowerCase();
     return base.filter((t) =>
@@ -196,7 +208,7 @@ export default function DriverApp() {
           .includes(q),
       ),
     );
-  }, [tasks, query]);
+  }, [tasks, query, filterMode]);
 
   const sha256 = async (text: string) => {
     const enc = new TextEncoder().encode(text);
