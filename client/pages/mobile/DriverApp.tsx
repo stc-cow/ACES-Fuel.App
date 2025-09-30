@@ -12,12 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -384,7 +378,7 @@ export default function DriverApp() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fcc12e1e1a8a240879dd12161adb1c5a7?format=webp&width=200"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fdab107460bc24c05b37400810c2b1332?format=webp&width=800"
               alt="ACES"
               className="h-8 w-auto"
               loading="eager"
@@ -409,20 +403,6 @@ export default function DriverApp() {
             >
               <Bell className="h-5 w-5" />
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">Tasks</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => setFilterMode("all")}>All tasks</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterMode("active")}>
-                  Active task ({activeCount})
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterMode("returned")}>
-                  Task returned to the driver ({returnedCount})
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Button variant="outline" size="sm" onClick={logout}>
               Logout
             </Button>
