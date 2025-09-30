@@ -374,7 +374,13 @@ export default function MissionsPage() {
       .order("created_at", { ascending: false });
     if (error || !data) {
       console.error("Missions load error", error);
-      toast({ title: "Failed to load missions", description: error?.message || "Unknown error" });
+      let desc = "Unknown error";
+      try {
+        desc = error?.message || JSON.stringify(error);
+      } catch (e) {
+        desc = String(error);
+      }
+      toast({ title: "Failed to load missions", description: desc });
       return;
     }
     if (data.length === 0) {
