@@ -329,6 +329,19 @@ export default function MissionsPage() {
     };
     setRows((r) => [newRow, ...r]);
     toast({ title: "Task created" });
+    // send notification to the assigned driver
+    try {
+      const sentBy =
+        localStorage.getItem("auth.username") ||
+        localStorage.getItem("remember.username") ||
+        "Admin";
+      await supabase.from("driver_notifications").insert({
+        title: "New mission assigned",
+        message: `A new mission has been assigned to you for site: ${addForm.siteName}`,
+        driver_name: addForm.driverName || null,
+        sent_by: sentBy,
+      });
+    } catch {}
     setAddForm(emptyForm);
     setAddOpen(false);
   };
@@ -418,6 +431,19 @@ export default function MissionsPage() {
       toast({ title: "Sync failed", description: error.message });
       return;
     }
+    try {
+      const sentBy =
+        localStorage.getItem("auth.username") ||
+        localStorage.getItem("remember.username") ||
+        "Admin";
+      const notices = rows.map((r) => ({
+        title: "New mission assigned",
+        message: `A new mission has been assigned to you for site: ${r.siteName}`,
+        driver_name: r.assignedDriver || r.driverName || null,
+        sent_by: sentBy,
+      }));
+      if (notices.length > 0) await supabase.from("driver_notifications").insert(notices);
+    } catch {}
     toast({ title: "Missions synced to Supabase" });
   };
 
