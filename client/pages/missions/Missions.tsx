@@ -237,6 +237,7 @@ export default function MissionsPage() {
   const [drivers, setDrivers] = useState<
     { id: number; name: string; phone: string | null }[]
   >([]);
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     let mounted = true;
@@ -907,14 +908,6 @@ export default function MissionsPage() {
                           <div className="flex flex-wrap items-center justify-end gap-1">
                             <Button
                               size="sm"
-                              variant="secondary"
-                              className="h-7 px-2 text-xs"
-                              onClick={() => setAdminStatus(r.id, "Task approved")}
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
                               variant="outline"
                               className="h-7 px-2 text-xs"
                               onClick={() => setAdminStatus(r.id, "Task returned to the driver")}
@@ -929,8 +922,13 @@ export default function MissionsPage() {
                             >
                               Cancel
                             </Button>
-                            <Button size="icon" variant="ghost" aria-label="Edit">
-                              <Pencil className="h-4 w-4" />
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setExpanded((e) => ({ ...e, [r.id]: !e[r.id] }))}
+                            >
+                              {expanded[r.id] ? "Hide" : "Edit / Approve"}
                             </Button>
                             <Button
                               size="icon"
@@ -945,6 +943,66 @@ export default function MissionsPage() {
                       )}
                     </TableRow>
                   ))}
+                  {current.map((r) =>
+                    expanded[r.id] ? (
+                      <TableRow key={`exp-${r.id}`} className="bg-muted/30">
+                        <TableCell colSpan={allColumns.length}>
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                            <div>
+                              <div className="text-xs text-muted-foreground">Site Name</div>
+                              <Input
+                                value={r.siteName}
+                                onChange={(e) =>
+                                  setRows((arr) =>
+                                    arr.map((x) =>
+                                      x.id === r.id ? { ...x, siteName: e.target.value } : x,
+                                    ),
+                                  )
+                                }
+                              />
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground">Driver Name</div>
+                              <Input
+                                value={r.driverName}
+                                onChange={(e) =>
+                                  setRows((arr) =>
+                                    arr.map((x) =>
+                                      x.id === r.id ? { ...x, driverName: e.target.value } : x,
+                                    ),
+                                  )
+                                }
+                              />
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground">Quantity Added</div>
+                              <Input
+                                value={r.quantityAddedLastTask}
+                                onChange={(e) =>
+                                  setRows((arr) =>
+                                    arr.map((x) =>
+                                      x.id === r.id
+                                        ? { ...x, quantityAddedLastTask: Number(e.target.value || 0) }
+                                        : x,
+                                    ),
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="md:col-span-3 flex items-center justify-between gap-2">
+                              <div className="text-xs text-muted-foreground">Mission ID: {r.missionId}</div>
+                              <Button
+                                className="bg-emerald-600 hover:bg-emerald-500"
+                                onClick={() => setAdminStatus(r.id, "Task approved")}
+                              >
+                                Approve
+                              </Button>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : null,
+                  )}
                   {current.length === 0 && (
                     <TableRow>
                       <TableCell
