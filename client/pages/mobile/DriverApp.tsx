@@ -12,6 +12,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -27,6 +33,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
+import { Bell } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
