@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import { I18nProvider } from "./i18n";
 import Placeholder from "./pages/Placeholder";
@@ -26,6 +26,7 @@ import GeneralSettingsPage from "./pages/settings/General";
 import AdminLogPage from "./pages/settings/AdminLog";
 import NotFound from "./pages/NotFound";
 import DriverApp from "./pages/mobile/DriverApp";
+import { Capacitor } from "@capacitor/core";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,21 @@ const RequireAuth = ({ children }: { children: React.ReactElement }) => {
   return isAuth ? children : <Navigate to="/login" replace />;
 };
 
+const NativeStartRedirect = () => {
+  const nav = useNavigate();
+  const loc = useLocation();
+  useEffect(() => {
+    const isNative = Capacitor?.isNativePlatform?.() ?? false;
+    if (isNative) {
+      const p = loc.pathname || "/";
+      if (p === "/" || p === "/login") {
+        nav("/driver", { replace: true });
+      }
+    }
+  }, [loc.pathname, nav]);
+  return null;
+};
+
 const App = () => (
   <I18nProvider>
     <QueryClientProvider client={queryClient}>
@@ -43,6 +59,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <HashRouter>
+          <NativeStartRedirect />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
