@@ -380,14 +380,52 @@ export default function DriverApp() {
   return (
     <div className="mx-auto min-h-screen max-w-md p-3">
       <div className="sticky top-0 z-10 bg-background pb-3 pt-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-xs text-muted-foreground">Signed in as</div>
-            <div className="text-base font-semibold">{profile.name}</div>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fcc12e1e1a8a240879dd12161adb1c5a7?format=webp&width=200"
+              alt="ACES"
+              className="h-8 w-auto"
+              loading="eager"
+              decoding="async"
+            />
+            <div>
+              <div className="text-xs text-muted-foreground">Signed in as</div>
+              <div className="text-base font-semibold">{profile.name}</div>
+            </div>
           </div>
-          <Button variant="outline" size="sm" onClick={logout}>
-            Logout
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Notifications"
+              onClick={() =>
+                toast({
+                  title: "Driver updates",
+                  description: `${activeCount} active, ${returnedCount} returned`,
+                })
+              }
+            >
+              <Bell className="h-5 w-5" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">Tasks</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={() => setFilterMode("all")}>All tasks</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilterMode("active")}>
+                  Active task ({activeCount})
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilterMode("returned")}>
+                  Task returned to the driver ({returnedCount})
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button variant="outline" size="sm" onClick={logout}>
+              Logout
+            </Button>
+          </div>
         </div>
         <div className="mt-3 flex items-center gap-2">
           <Input
