@@ -366,19 +366,75 @@ export default function MissionsPage() {
   };
 
   const loadFromDb = async () => {
-    // try a simple RPC first to debug
+    // Try using the supabase client first (handles auth/CORS). If that fails, fall back to direct REST to surface network/CORS errors.
     try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/driver_tasks?select=id,mission_id,site_name,driver_name,status,admin_status,required_liters,notes,created_at`, {
-        headers: { apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY as string}` },
-      });
-      if (!res.ok) {
-        const t = await res.text();
-        console.error('REST fetch failed', res.status, t);
-        toast({ title: 'Failed to load missions', description: `REST ${res.status}: ${t}` });
-      } else {
+      const { data, error } = await supabase
+        .from("driver_tasks")
+        .select(
+          "id, mission_id, site_name, driver_name, scheduled_at, status, admin_status, required_liters, notes, created_at",
+        )
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
+        setRows([]);
+        return;
+      }
+      const mapStatus = (s?: string): Mission["missionStatus"] => {
+        switch ((s || "").toLowerCase()) {
+          case "completed":
+            return "Finished by Driver";
+          case "in_progress":
+            return "Reported by driver";
+          case "canceled":
+            return "Canceled";
+          default:
+            return "Creation";
+        }
+      };
+      const mapped: Mission[] = data.map((d: any) => ({
+        id: Number(d.id),
+        missionId: String(d.mission_id || ""),
+        siteName: d.site_name || "",
+        generator: "",
+        project: "",
+        driverName: d.driver_name || "",
+        createdDate:
+          (d.scheduled_at as string)?.slice(0, 10) ||
+          (d.created_at as string)?.slice(0, 10) ||
+          new Date().toISOString().slice(0, 10),
+        filledLiters: 0,
+        virtualCalculated: 0,
+        actualInTank: 0,
+        quantityAddedLastTask: Number(d.required_liters || 0),
+        city: "",
+        notes: d.notes || "",
+        missionStatus: (d.admin_status as string) || mapStatus(d.status),
+        assignedDriver: d.driver_name || "",
+        createdBy: "System",
+      }));
+      setRows(mapped);
+      return;
+    } catch (clientErr) {
+      console.error("Supabase client error", clientErr);
+      // REST fallback to surface CORS/network issues
+      try {
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/driver_tasks?select=id,mission_id,site_name,driver_name,status,admin_status,required_liters,notes,created_at`;
+        const res = await fetch(url, {
+          headers: {
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY as string}`,
+          },
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("REST fetch failed", res.status, text);
+          toast({ title: "Failed to load missions", description: `REST ${res.status}: ${text}` });
+          return;
+        }
         const json = await res.json();
         if (!Array.isArray(json) || json.length === 0) {
-          toast({ title: 'No missions found', description: 'Try adding a mission or refreshing.' });
+          toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
           setRows([]);
           return;
         }
@@ -402,68 +458,18 @@ export default function MissionsPage() {
         }));
         setRows(mapped);
         return;
+      } catch (restErr) {
+        console.error("REST fetch exception", restErr);
+        const origin = typeof window !== "undefined" ? window.location.origin : "your app origin";
+        toast({
+          title: "Failed to load missions",
+          description:
+            "Network error (Failed to fetch). This commonly happens due to CORS or network restrictions. Add the app origin to Supabase Allowed Origins or ensure the project URL is reachable.",
+        });
+        console.info(`Action: add ${origin} to Supabase → Settings → API → Allowed origins (CORS)`);
+        return;
       }
-    } catch (err) {
-      console.error('REST fetch exception', err);
-      toast({ title: 'Failed to load missions', description: String(err) });
     }
-
-    const { data, error } = await supabase
-      .from("driver_tasks")
-      .select(
-        "id, mission_id, site_name, driver_name, scheduled_at, status, admin_status, required_liters, notes, created_at",
-      )
-      .order("created_at", { ascending: false });
-    if (error || !data) {
-      console.error("Missions load error (client)", error);
-      let desc = "Unknown error";
-      try {
-        desc = error?.message || JSON.stringify(error);
-      } catch (e) {
-        desc = String(error);
-      }
-      toast({ title: "Failed to load missions", description: desc });
-      return;
-    }
-    if (data.length === 0) {
-      toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
-      setRows([]);
-      return;
-    }
-    const mapStatus = (s?: string): Mission["missionStatus"] => {
-      switch ((s || "").toLowerCase()) {
-        case "completed":
-          return "Finished by Driver";
-        case "in_progress":
-          return "Reported by driver";
-        case "canceled":
-          return "Canceled";
-        default:
-          return "Creation";
-      }
-    };
-    const mapped: Mission[] = data.map((d: any) => ({
-      id: Number(d.id),
-      missionId: String(d.mission_id || ""),
-      siteName: d.site_name || "",
-      generator: "",
-      project: "",
-      driverName: d.driver_name || "",
-      createdDate:
-        (d.scheduled_at as string)?.slice(0, 10) ||
-        (d.created_at as string)?.slice(0, 10) ||
-        new Date().toISOString().slice(0, 10),
-      filledLiters: 0,
-      virtualCalculated: 0,
-      actualInTank: 0,
-      quantityAddedLastTask: Number(d.required_liters || 0),
-      city: "",
-      notes: d.notes || "",
-      missionStatus: (d.admin_status as string) || mapStatus(d.status),
-      assignedDriver: d.driver_name || "",
-      createdBy: "System",
-    }));
-    setRows(mapped);
   };
 
   useEffect(() => {
