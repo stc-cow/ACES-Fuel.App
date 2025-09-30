@@ -368,7 +368,7 @@ export default function MissionsPage() {
   const loadFromDb = async () => {
     // try a simple RPC first to debug
     try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/driver_tasks?select=id,mission_id,site_name,status,admin_status,required_liters,notes,created_at`, {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/driver_tasks?select=id,mission_id,site_name,driver_name,status,admin_status,required_liters,notes,created_at`, {
         headers: { apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY as string}` },
       });
       if (!res.ok) {
@@ -557,6 +557,13 @@ export default function MissionsPage() {
               onClick={exportCsv}
             >
               <Download className="mr-2 h-4 w-4" /> Export
+            </Button>
+            <Button
+              variant="outline"
+              className="hidden sm:inline-flex"
+              onClick={handleSyncAll}
+            >
+              Sync to DB
             </Button>
             <Button
               variant="outline"
