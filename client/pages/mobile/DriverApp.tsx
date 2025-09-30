@@ -87,10 +87,7 @@ export default function DriverApp() {
     tank_after: "tank_after_url",
   } as const;
 
-  const handleFile = async (
-    tag: keyof typeof keyMap,
-    file: File,
-  ) => {
+  const handleFile = async (tag: keyof typeof keyMap, file: File) => {
     const k = keyMap[tag];
     if (file.size > 10 * 1024 * 1024) {
       alert("Max file size is 10MB");
@@ -105,7 +102,10 @@ export default function DriverApp() {
       const path = `${dir}/${tag}_${Date.now()}.${ext}`;
       const { error } = await supabase.storage
         .from(DRIVER_BUCKET)
-        .upload(path, file, { upsert: true, contentType: file.type || "image/jpeg" });
+        .upload(path, file, {
+          upsert: true,
+          contentType: file.type || "image/jpeg",
+        });
       if (error) {
         alert(`Image upload failed: ${error.message}`);
         return;
@@ -172,7 +172,8 @@ export default function DriverApp() {
   const loadTasks = async () => {
     if (!profile || demoMode) return;
     const ors: string[] = [`driver_name.eq.${profile.name}`];
-    if (profile.phone && profile.phone.trim()) ors.push(`driver_phone.eq.${profile.phone}`);
+    if (profile.phone && profile.phone.trim())
+      ors.push(`driver_phone.eq.${profile.phone}`);
     const { data } = await supabase
       .from("driver_tasks")
       .select("*")
@@ -194,7 +195,9 @@ export default function DriverApp() {
     [tasks],
   );
   const returnedCount = useMemo(
-    () => tasks.filter((t) => t.admin_status === "Task returned to the driver").length,
+    () =>
+      tasks.filter((t) => t.admin_status === "Task returned to the driver")
+        .length,
     [tasks],
   );
 
@@ -224,9 +227,12 @@ export default function DriverApp() {
 
   const filtered = useMemo(() => {
     let base = tasks.filter((t) => t.status !== "completed");
-    if (filterMode === "active") base = base.filter((t) => t.status === "in_progress");
+    if (filterMode === "active")
+      base = base.filter((t) => t.status === "in_progress");
     if (filterMode === "returned")
-      base = base.filter((t) => t.admin_status === "Task returned to the driver");
+      base = base.filter(
+        (t) => t.admin_status === "Task returned to the driver",
+      );
     if (!query) return base;
     const q = query.toLowerCase();
     return base.filter((t) =>
@@ -432,8 +438,15 @@ export default function DriverApp() {
                   await loadNotifications();
                   const ids = (notifications || []).map((n) => n.id);
                   if (ids.length > 0) {
-                    const rows = ids.map((id) => ({ notification_id: id, driver_name: profile.name }));
-                    await supabase.from("driver_notification_reads").upsert(rows, { onConflict: "notification_id,driver_name" } as any);
+                    const rows = ids.map((id) => ({
+                      notification_id: id,
+                      driver_name: profile.name,
+                    }));
+                    await supabase
+                      .from("driver_notification_reads")
+                      .upsert(rows, {
+                        onConflict: "notification_id,driver_name",
+                      } as any);
                     setUnreadCount(0);
                   }
                   setNotifOpen(true);
@@ -505,7 +518,9 @@ export default function DriverApp() {
           </DialogHeader>
           <div className="max-h-[60vh] space-y-3 overflow-y-auto">
             {notifications.length === 0 && (
-              <div className="text-sm text-muted-foreground">No notifications</div>
+              <div className="text-sm text-muted-foreground">
+                No notifications
+              </div>
             )}
             {notifications.map((n) => (
               <Card key={n.id}>
@@ -513,7 +528,9 @@ export default function DriverApp() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="font-medium">{n.title}</div>
-                      <div className="whitespace-pre-line text-sm text-muted-foreground">{n.message}</div>
+                      <div className="whitespace-pre-line text-sm text-muted-foreground">
+                        {n.message}
+                      </div>
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {new Date(n.created_at).toLocaleString()}
@@ -524,7 +541,9 @@ export default function DriverApp() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setNotifOpen(false)}>Close</Button>
+            <Button variant="outline" onClick={() => setNotifOpen(false)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -539,56 +558,58 @@ export default function DriverApp() {
           {filtered.map((t) => (
             <Card key={t.id} className="overflow-hidden">
               <CardContent className="p-0">
-              <div className="flex items-center justify-between p-4">
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                <div className="flex items-center justify-between p-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                    </div>
+                    <div className="text-lg font-semibold">{t.site_name}</div>
                   </div>
-                  <div className="text-lg font-semibold">{t.site_name}</div>
+                  <div className="text-xs">
+                    <span
+                      className={`rounded px-2 py-1 ${t.admin_status === "Task returned to the driver" ? "bg-indigo-500/10 text-indigo-600" : t.status === "completed" ? "bg-emerald-500/10 text-emerald-600" : t.status === "in_progress" ? "bg-amber-500/10 text-amber-600" : "bg-sky-500/10 text-sky-600"}`}
+                    >
+                      {t.admin_status === "Task returned to the driver"
+                        ? "Returned"
+                        : t.status}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-xs">
-                  <span
-                    className={`rounded px-2 py-1 ${t.admin_status === "Task returned to the driver" ? "bg-indigo-500/10 text-indigo-600" : t.status === "completed" ? "bg-emerald-500/10 text-emerald-600" : t.status === "in_progress" ? "bg-amber-500/10 text-amber-600" : "bg-sky-500/10 text-sky-600"}`}
-                  >
-                    {t.admin_status === "Task returned to the driver" ? "Returned" : t.status}
-                  </span>
+                <div className="grid gap-3 p-4 text-sm text-muted-foreground">
+                  <div>
+                    <span className="font-medium text-foreground">Driver:</span>{" "}
+                    {t.driver_name}
+                  </div>
+                  <div>
+                    <span className="font-medium text-foreground">
+                      Required Liters:
+                    </span>{" "}
+                    {t.required_liters ?? "-"}
+                  </div>
+                  <div>
+                    <span className="font-medium text-foreground">Notes:</span>{" "}
+                    {t.notes ?? "-"}
+                  </div>
                 </div>
-              </div>
-              <div className="grid gap-3 p-4 text-sm text-muted-foreground">
-                <div>
-                  <span className="font-medium text-foreground">Driver:</span>{" "}
-                  {t.driver_name}
+                <div className="flex items-center justify-end gap-2 border-t p-3">
+                  {t.status === "pending" && (
+                    <Button size="sm" onClick={() => startTask(t)}>
+                      Start
+                    </Button>
+                  )}
+                  {t.status !== "completed" && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => openComplete(t)}
+                    >
+                      Complete
+                    </Button>
+                  )}
                 </div>
-                <div>
-                  <span className="font-medium text-foreground">
-                    Required Liters:
-                  </span>{" "}
-                  {t.required_liters ?? "-"}
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">Notes:</span>{" "}
-                  {t.notes ?? "-"}
-                </div>
-              </div>
-              <div className="flex items-center justify-end gap-2 border-t p-3">
-                {t.status === "pending" && (
-                  <Button size="sm" onClick={() => startTask(t)}>
-                    Start
-                  </Button>
-                )}
-                {t.status !== "completed" && (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => openComplete(t)}
-                  >
-                    Complete
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
         </div>
       ) : (
         <div className="mt-6 text-center text-sm text-muted-foreground">
@@ -605,12 +626,7 @@ export default function DriverApp() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="site_id">Site ID</Label>
-                <Input
-                  id="site_id"
-                  value={entry.site_id}
-                  readOnly
-                  disabled
-                />
+                <Input id="site_id" value={entry.site_id} readOnly disabled />
               </div>
               <div>
                 <Label htmlFor="mission_id">Mission ID</Label>
@@ -625,7 +641,9 @@ export default function DriverApp() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="actual_liters_in_tank">Actual Liters in Tank</Label>
+                <Label htmlFor="actual_liters_in_tank">
+                  Actual Liters in Tank
+                </Label>
                 <Input
                   id="actual_liters_in_tank"
                   inputMode="decimal"
@@ -674,7 +692,9 @@ export default function DriverApp() {
                   />
                 )}
                 {uploading.counter_before && (
-                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                  <div className="text-xs text-muted-foreground">
+                    Uploading...
+                  </div>
                 )}
               </div>
               <div>
@@ -699,7 +719,9 @@ export default function DriverApp() {
                   />
                 )}
                 {uploading.tank_before && (
-                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                  <div className="text-xs text-muted-foreground">
+                    Uploading...
+                  </div>
                 )}
               </div>
             </div>
@@ -727,7 +749,9 @@ export default function DriverApp() {
                   />
                 )}
                 {uploading.counter_after && (
-                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                  <div className="text-xs text-muted-foreground">
+                    Uploading...
+                  </div>
                 )}
               </div>
               <div>
@@ -752,7 +776,9 @@ export default function DriverApp() {
                   />
                 )}
                 {uploading.tank_after && (
-                  <div className="text-xs text-muted-foreground">Uploading...</div>
+                  <div className="text-xs text-muted-foreground">
+                    Uploading...
+                  </div>
                 )}
               </div>
             </div>
@@ -762,7 +788,9 @@ export default function DriverApp() {
               <Textarea
                 id="notes"
                 value={entry.notes}
-                onChange={(e) => setEntry((s) => ({ ...s, notes: e.target.value }))}
+                onChange={(e) =>
+                  setEntry((s) => ({ ...s, notes: e.target.value }))
+                }
               />
             </div>
           </div>

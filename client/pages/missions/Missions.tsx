@@ -238,8 +238,12 @@ export default function MissionsPage() {
     { id: number; name: string; phone: string | null }[]
   >([]);
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
-  const [entryByTask, setEntryByTask] = useState<Record<number, any | null>>({});
-  const [imagesByTask, setImagesByTask] = useState<Record<number, string[]>>({});
+  const [entryByTask, setEntryByTask] = useState<Record<number, any | null>>(
+    {},
+  );
+  const [imagesByTask, setImagesByTask] = useState<Record<number, string[]>>(
+    {},
+  );
   const [imageOpen, setImageOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
@@ -367,10 +371,11 @@ export default function MissionsPage() {
           .from("driver-uploads")
           .list(dir, { limit: 20 });
         if (files && Array.isArray(files)) {
-          const urls = files.map((f: any) =>
-            (supabase.storage as any)
-              .from("driver-uploads")
-              .getPublicUrl(`${dir}/${f.name}`).data.publicUrl,
+          const urls = files.map(
+            (f: any) =>
+              (supabase.storage as any)
+                .from("driver-uploads")
+                .getPublicUrl(`${dir}/${f.name}`).data.publicUrl,
           );
           setImagesByTask((m) => ({ ...m, [r.id]: urls }));
         }
@@ -378,7 +383,10 @@ export default function MissionsPage() {
     }
   };
 
-  const setAdminStatus = async (id: number, status: Mission["missionStatus"]) => {
+  const setAdminStatus = async (
+    id: number,
+    status: Mission["missionStatus"],
+  ) => {
     const { error } = await supabase
       .from("driver_tasks")
       .update({ admin_status: status })
@@ -390,23 +398,23 @@ export default function MissionsPage() {
     if (status === "Task approved") {
       const t = rows.find((r) => r.id === id);
       if (t) {
-        await supabase
-          .from("approved_reports")
-          .upsert(
-            {
-              task_id: id,
-              mission_id: t.missionId,
-              site_name: t.siteName,
-              driver_name: t.driverName,
-              quantity_added: t.quantityAddedLastTask || t.filledLiters || null,
-              notes: t.notes || null,
-              status: "approved",
-            },
-            { onConflict: "task_id" },
-          );
+        await supabase.from("approved_reports").upsert(
+          {
+            task_id: id,
+            mission_id: t.missionId,
+            site_name: t.siteName,
+            driver_name: t.driverName,
+            quantity_added: t.quantityAddedLastTask || t.filledLiters || null,
+            notes: t.notes || null,
+            status: "approved",
+          },
+          { onConflict: "task_id" },
+        );
       }
     }
-    setRows((arr) => arr.map((r) => (r.id === id ? { ...r, missionStatus: status } : r)));
+    setRows((arr) =>
+      arr.map((r) => (r.id === id ? { ...r, missionStatus: status } : r)),
+    );
     toast({ title: `Status: ${status}` });
   };
 
@@ -442,7 +450,8 @@ export default function MissionsPage() {
         driver_name: r.assignedDriver || r.driverName || null,
         sent_by: sentBy,
       }));
-      if (notices.length > 0) await supabase.from("driver_notifications").insert(notices);
+      if (notices.length > 0)
+        await supabase.from("driver_notifications").insert(notices);
     } catch {}
     toast({ title: "Missions synced to Supabase" });
   };
@@ -458,7 +467,10 @@ export default function MissionsPage() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       if (!data || !Array.isArray(data) || data.length === 0) {
-        toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
+        toast({
+          title: "No missions found",
+          description: "Try adding a mission or refreshing.",
+        });
         setRows([]);
         return;
       }
@@ -511,12 +523,18 @@ export default function MissionsPage() {
         if (!res.ok) {
           const text = await res.text();
           console.error("REST fetch failed", res.status, text);
-          toast({ title: "Failed to load missions", description: `REST ${res.status}: ${text}` });
+          toast({
+            title: "Failed to load missions",
+            description: `REST ${res.status}: ${text}`,
+          });
           return;
         }
         const json = await res.json();
         if (!Array.isArray(json) || json.length === 0) {
-          toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
+          toast({
+            title: "No missions found",
+            description: "Try adding a mission or refreshing.",
+          });
           setRows([]);
           return;
         }
@@ -542,13 +560,18 @@ export default function MissionsPage() {
         return;
       } catch (restErr) {
         console.error("REST fetch exception", restErr);
-        const origin = typeof window !== "undefined" ? window.location.origin : "your app origin";
+        const origin =
+          typeof window !== "undefined"
+            ? window.location.origin
+            : "your app origin";
         toast({
           title: "Failed to load missions",
           description:
             "Network error (Failed to fetch). This commonly happens due to CORS or network restrictions. Add the app origin to Supabase Allowed Origins or ensure the project URL is reachable.",
         });
-        console.info(`Action: add ${origin} to Supabase → Settings → API → Allowed origins (CORS)`);
+        console.info(
+          `Action: add ${origin} to Supabase → Settings → API → Allowed origins (CORS)`,
+        );
         return;
       }
     }
@@ -861,7 +884,7 @@ export default function MissionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary))]">
-                      {cols.missionId && (
+                    {cols.missionId && (
                       <TableHead className="text-white">Mission ID</TableHead>
                     )}
                     {cols.siteName && (
@@ -923,9 +946,15 @@ export default function MissionsPage() {
                 </TableHeader>
                 <TableBody>
                   {current.map((r) => (
-                    <TableRow key={r.id} onClick={() => toggleExpand(r)} className="cursor-pointer">
+                    <TableRow
+                      key={r.id}
+                      onClick={() => toggleExpand(r)}
+                      className="cursor-pointer"
+                    >
                       {cols.missionId && (
-                        <TableCell className="font-medium">{r.missionId}</TableCell>
+                        <TableCell className="font-medium">
+                          {r.missionId}
+                        </TableCell>
                       )}
                       {cols.siteName && (
                         <TableCell className="font-medium">
@@ -968,12 +997,26 @@ export default function MissionsPage() {
                       {cols.settings && (
                         <TableCell className="space-x-2 text-right">
                           <div className="flex flex-wrap items-center justify-end gap-1">
-                            <img src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F6104b03ad0e647e89d8eb60c6aa2ad70?format=webp&width=256" alt="expand" className="h-5 w-5 cursor-pointer" onClick={(e) => { e.stopPropagation(); toggleExpand(r); }} />
+                            <img
+                              src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F6104b03ad0e647e89d8eb60c6aa2ad70?format=webp&width=256"
+                              alt="expand"
+                              className="h-5 w-5 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleExpand(r);
+                              }}
+                            />
                             <Button
                               size="sm"
                               variant="outline"
                               className="h-7 px-2 text-xs"
-                              onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Task returned to the driver"); }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setAdminStatus(
+                                  r.id,
+                                  "Task returned to the driver",
+                                );
+                              }}
                             >
                               Back to driver
                             </Button>
@@ -981,7 +1024,10 @@ export default function MissionsPage() {
                               size="sm"
                               variant="destructive"
                               className="h-7 px-2 text-xs"
-                              onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Canceled"); }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setAdminStatus(r.id, "Canceled");
+                              }}
                             >
                               Cancel
                             </Button>
@@ -989,7 +1035,9 @@ export default function MissionsPage() {
                               size="sm"
                               variant="ghost"
                               className="h-7 px-2 text-xs"
-                              onClick={() => setExpanded((e) => ({ ...e, [r.id]: !e[r.id] }))}
+                              onClick={() =>
+                                setExpanded((e) => ({ ...e, [r.id]: !e[r.id] }))
+                              }
                             >
                               {expanded[r.id] ? "Hide" : "Edit / Approve"}
                             </Button>
@@ -997,7 +1045,10 @@ export default function MissionsPage() {
                               size="icon"
                               variant="ghost"
                               aria-label="Delete"
-                              onClick={(e) => { e.stopPropagation(); remove(r.id); }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                remove(r.id);
+                              }}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -1012,35 +1063,66 @@ export default function MissionsPage() {
                         <TableCell colSpan={allColumns.length}>
                           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                             <div>
-                              <div className="text-xs text-muted-foreground">Mission ID</div>
+                              <div className="text-xs text-muted-foreground">
+                                Mission ID
+                              </div>
                               <div className="font-medium">{r.missionId}</div>
                             </div>
                             <div>
-                              <div className="text-xs text-muted-foreground">Site Name</div>
+                              <div className="text-xs text-muted-foreground">
+                                Site Name
+                              </div>
                               <div className="font-medium">{r.siteName}</div>
                             </div>
                             <div>
-                              <div className="text-xs text-muted-foreground">Driver Name</div>
+                              <div className="text-xs text-muted-foreground">
+                                Driver Name
+                              </div>
                               <div className="font-medium">{r.driverName}</div>
                             </div>
                             <div>
-                              <div className="text-xs text-muted-foreground">Required Liters</div>
-                              <div className="font-medium">{r.quantityAddedLastTask}</div>
-                            </div>
-                            <div className="md:col-span-3">
-                              <div className="text-xs text-muted-foreground">Driver Entry</div>
-                              <div className="grid grid-cols-2 gap-2 text-sm">
-                                <div>Liters: {entryByTask[r.id]?.liters ?? '-'}</div>
-                                <div>Rate: {entryByTask[r.id]?.rate ?? '-'}</div>
-                                <div>Station: {entryByTask[r.id]?.station ?? '-'}</div>
-                                <div>Receipt #: {entryByTask[r.id]?.receipt_number ?? '-'}</div>
-                                <div>Odometer: {entryByTask[r.id]?.odometer ?? '-'}</div>
-                                <div>Submitted By: {entryByTask[r.id]?.submitted_by ?? '-'}</div>
-                                <div className="col-span-2">Submitted At: {entryByTask[r.id]?.submitted_at ?? '-'}</div>
+                              <div className="text-xs text-muted-foreground">
+                                Required Liters
+                              </div>
+                              <div className="font-medium">
+                                {r.quantityAddedLastTask}
                               </div>
                             </div>
                             <div className="md:col-span-3">
-                              <div className="text-xs text-muted-foreground mb-1">Images</div>
+                              <div className="text-xs text-muted-foreground">
+                                Driver Entry
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                  Liters: {entryByTask[r.id]?.liters ?? "-"}
+                                </div>
+                                <div>
+                                  Rate: {entryByTask[r.id]?.rate ?? "-"}
+                                </div>
+                                <div>
+                                  Station: {entryByTask[r.id]?.station ?? "-"}
+                                </div>
+                                <div>
+                                  Receipt #:{" "}
+                                  {entryByTask[r.id]?.receipt_number ?? "-"}
+                                </div>
+                                <div>
+                                  Odometer: {entryByTask[r.id]?.odometer ?? "-"}
+                                </div>
+                                <div>
+                                  Submitted By:{" "}
+                                  {entryByTask[r.id]?.submitted_by ?? "-"}
+                                </div>
+                                <div className="col-span-2">
+                                  Submitted At:{" "}
+                                  {entryByTask[r.id]?.submitted_at ?? "-"}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="md:col-span-3">
+                              <div className="text-xs text-muted-foreground mb-1">
+                                Images
+                              </div>
                               <div className="flex flex-wrap gap-2">
                                 {entryByTask[r.id]?.photo_url && (
                                   <img
@@ -1049,7 +1131,9 @@ export default function MissionsPage() {
                                     className="h-24 w-24 rounded object-cover cursor-zoom-in"
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      setImageSrc(entryByTask[r.id]?.photo_url as string);
+                                      setImageSrc(
+                                        entryByTask[r.id]?.photo_url as string,
+                                      );
                                       setImageOpen(true);
                                     }}
                                   />
@@ -1067,15 +1151,22 @@ export default function MissionsPage() {
                                     }}
                                   />
                                 ))}
-                                {(!entryByTask[r.id]?.photo_url && (!imagesByTask[r.id] || imagesByTask[r.id].length === 0)) && (
-                                  <div className="text-sm text-muted-foreground">No images</div>
-                                )}
+                                {!entryByTask[r.id]?.photo_url &&
+                                  (!imagesByTask[r.id] ||
+                                    imagesByTask[r.id].length === 0) && (
+                                    <div className="text-sm text-muted-foreground">
+                                      No images
+                                    </div>
+                                  )}
                               </div>
                             </div>
                             <div className="md:col-span-3 flex items-center justify-end gap-2">
                               <Button
                                 className="bg-emerald-600 hover:bg-emerald-500"
-                                onClick={(e) => { e.stopPropagation(); setAdminStatus(r.id, "Task approved"); }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setAdminStatus(r.id, "Task approved");
+                                }}
                               >
                                 Approve
                               </Button>
@@ -1128,18 +1219,30 @@ export default function MissionsPage() {
           </CardContent>
         </Card>
       </div>
-      <Dialog open={imageOpen} onOpenChange={(o) => { setImageOpen(o); if (!o) setImageSrc(null); }}>
+      <Dialog
+        open={imageOpen}
+        onOpenChange={(o) => {
+          setImageOpen(o);
+          if (!o) setImageSrc(null);
+        }}
+      >
         <DialogContent className="sm:max-w-[90vw]">
           <DialogHeader>
             <DialogTitle>Image preview</DialogTitle>
           </DialogHeader>
           {imageSrc && (
             <div className="max-h-[80vh] w-full">
-              <img src={imageSrc} alt="preview" className="mx-auto max-h-[75vh] w-auto rounded object-contain" />
+              <img
+                src={imageSrc}
+                alt="preview"
+                className="mx-auto max-h-[75vh] w-auto rounded object-contain"
+              />
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setImageOpen(false)}>Close</Button>
+            <Button variant="outline" onClick={() => setImageOpen(false)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

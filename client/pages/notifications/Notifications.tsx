@@ -25,14 +25,23 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("drivers").select("name").order("name");
-      setDrivers(["All", ...(data || []).map((d: any) => d.name).filter(Boolean)]);
+      const { data } = await supabase
+        .from("drivers")
+        .select("name")
+        .order("name");
+      setDrivers([
+        "All",
+        ...(data || []).map((d: any) => d.name).filter(Boolean),
+      ]);
     })();
   }, []);
 
   const onSubmit = async () => {
     if (!title.trim() || !message.trim()) {
-      toast({ title: "Missing fields", description: "Title and Message are required." });
+      toast({
+        title: "Missing fields",
+        description: "Title and Message are required.",
+      });
       return;
     }
     setSubmitting(true);
@@ -47,13 +56,18 @@ export default function NotificationsPage() {
         driver_name: driver === "All" ? null : driver,
         sent_by: sentBy,
       } as any;
-      const { error } = await supabase.from("driver_notifications").insert(payload);
+      const { error } = await supabase
+        .from("driver_notifications")
+        .insert(payload);
       if (error) throw error;
       toast({ title: "Notification sent", description: `To: ${driver}` });
       setTitle("");
       setMessage("");
     } catch (e: any) {
-      toast({ title: "Send failed", description: e?.message || "Unknown error" });
+      toast({
+        title: "Send failed",
+        description: e?.message || "Unknown error",
+      });
     } finally {
       setSubmitting(false);
     }
