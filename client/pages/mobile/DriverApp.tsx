@@ -50,6 +50,7 @@ export default function DriverApp() {
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [entry, setEntry] = useState({
     // required fields for this form
     site_id: "",
@@ -182,6 +183,9 @@ export default function DriverApp() {
 
   useEffect(() => {
     loadTasks();
+    if (profile && !demoMode) {
+      loadNotifications();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, demoMode]);
 
@@ -203,6 +207,19 @@ export default function DriverApp() {
       .order("created_at", { ascending: false })
       .limit(50);
     setNotifications(data || []);
+    const ids = (data || []).map((n: any) => n.id);
+    if (ids.length === 0) {
+      setUnreadCount(0);
+      return;
+    }
+    const { data: reads } = await supabase
+      .from("driver_notification_reads")
+      .select("notification_id")
+      .eq("driver_name", profile.name)
+      .in("notification_id", ids);
+    const readSet = new Set((reads || []).map((r: any) => r.notification_id));
+    const unread = ids.filter((id: number) => !readSet.has(id)).length;
+    setUnreadCount(unread);
   };
 
   const filtered = useMemo(() => {
@@ -406,17 +423,30 @@ export default function DriverApp() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Notifications"
-              onClick={async () => {
-                await loadNotifications();
-                setNotifOpen(true);
-              }}
-            >
-              <Bell className="h-5 w-5" />
-            </Button>
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Notifications"
+                onClick={async () => {
+                  await loadNotifications();
+                  const ids = (notifications || []).map((n) => n.id);
+                  if (ids.length > 0) {
+                    const rows = ids.map((id) => ({ notification_id: id, driver_name: profile.name }));
+                    await supabase.from("driver_notification_reads").upsert(rows, { onConflict: "notification_id,driver_name" } as any);
+                    setUnreadCount(0);
+                  }
+                  setNotifOpen(true);
+                }}
+              >
+                <Bell className="h-5 w-5" />
+              </Button>
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-600 px-1 text-center text-[11px] font-semibold leading-4 text-white">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+            </div>
             <Button variant="outline" size="sm" onClick={loadTasks}>
               Refresh
             </Button>
