@@ -467,9 +467,9 @@ export default function DriverApp() {
                 </div>
                 <div className="text-xs">
                   <span
-                    className={`rounded px-2 py-1 ${t.status === "completed" ? "bg-emerald-500/10 text-emerald-600" : t.status === "in_progress" ? "bg-amber-500/10 text-amber-600" : "bg-sky-500/10 text-sky-600"}`}
+                    className={`rounded px-2 py-1 ${t.admin_status === "Task returned to the driver" ? "bg-indigo-500/10 text-indigo-600" : t.status === "completed" ? "bg-emerald-500/10 text-emerald-600" : t.status === "in_progress" ? "bg-amber-500/10 text-amber-600" : "bg-sky-500/10 text-sky-600"}`}
                   >
-                    {t.status}
+                    {t.admin_status === "Task returned to the driver" ? "Returned" : t.status}
                   </span>
                 </div>
               </div>
