@@ -240,6 +240,8 @@ export default function MissionsPage() {
   const [expanded, setExpanded] = useState<Record<number, boolean>>({});
   const [entryByTask, setEntryByTask] = useState<Record<number, any | null>>({});
   const [imagesByTask, setImagesByTask] = useState<Record<number, string[]>>({});
+  const [imageOpen, setImageOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -1015,10 +1017,29 @@ export default function MissionsPage() {
                               <div className="text-xs text-muted-foreground mb-1">Images</div>
                               <div className="flex flex-wrap gap-2">
                                 {entryByTask[r.id]?.photo_url && (
-                                  <img src={entryByTask[r.id]?.photo_url} alt="photo" className="h-24 w-24 rounded object-cover" />
+                                  <img
+                                    src={entryByTask[r.id]?.photo_url}
+                                    alt="photo"
+                                    className="h-24 w-24 rounded object-cover cursor-zoom-in"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setImageSrc(entryByTask[r.id]?.photo_url as string);
+                                      setImageOpen(true);
+                                    }}
+                                  />
                                 )}
                                 {(imagesByTask[r.id] || []).map((u, i) => (
-                                  <img key={i} src={u} alt="upload" className="h-24 w-24 rounded object-cover" />
+                                  <img
+                                    key={i}
+                                    src={u}
+                                    alt={`upload-${i + 1}`}
+                                    className="h-24 w-24 rounded object-cover cursor-zoom-in"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setImageSrc(u);
+                                      setImageOpen(true);
+                                    }}
+                                  />
                                 ))}
                                 {(!entryByTask[r.id]?.photo_url && (!imagesByTask[r.id] || imagesByTask[r.id].length === 0)) && (
                                   <div className="text-sm text-muted-foreground">No images</div>
@@ -1081,6 +1102,21 @@ export default function MissionsPage() {
           </CardContent>
         </Card>
       </div>
+      <Dialog open={imageOpen} onOpenChange={(o) => { setImageOpen(o); if (!o) setImageSrc(null); }}>
+        <DialogContent className="sm:max-w-[90vw]">
+          <DialogHeader>
+            <DialogTitle>Image preview</DialogTitle>
+          </DialogHeader>
+          {imageSrc && (
+            <div className="max-h-[80vh] w-full">
+              <img src={imageSrc} alt="preview" className="mx-auto max-h-[75vh] w-auto rounded object-contain" />
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setImageOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }
