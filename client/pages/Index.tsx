@@ -43,30 +43,18 @@ export default function Index() {
   const [zoneData, setZoneData] = useState(defaultZoneData);
   const [metricCards, setMetricCards] = useState(initialMetricCards);
   const [last7StatusCount, setLast7StatusCount] = useState(0);
-  const [last7Liters, setLast7Liters] = useState(0);
 
   useEffect(() => {
     (async () => {
       // Status distribution from driver_tasks
-      const { data: tasks } = await supabase.from("driver_tasks").select("status, required_liters, scheduled_at, created_at");
+      const { data: tasks } = await supabase
+        .from("driver_tasks")
+        .select("status, scheduled_at, created_at");
       if (tasks) {
         const counts: Record<string, number> = {};
-        let sumToday = 0;
-        let sum30 = 0;
-        const today = new Date();
-        const start30 = new Date();
-        start30.setDate(today.getDate() - 30);
         for (const row of tasks as any[]) {
           const s = String(row.status || "");
           counts[s] = (counts[s] || 0) + 1;
-          const dStr = row.scheduled_at || row.created_at;
-          if (dStr) {
-            const d = new Date(dStr);
-            const liters = Number(row.required_liters || 0);
-            const sameDay = d.toISOString().slice(0,10) === today.toISOString().slice(0,10);
-            if (sameDay) sumToday += liters;
-            if (d >= start30 && d <= today) sum30 += liters;
-          }
         }
         setStatusData([
           { name: "Creation", value: counts["pending"] || 0, color: "#f43f5e" },
@@ -75,12 +63,40 @@ export default function Index() {
           { name: "Rejected by driver", value: counts["rejected"] || 0, color: "#06b6d4" },
           { name: "Canceled", value: counts["canceled"] || 0, color: "#a3a3a3" },
         ]);
-        setMetricCards([
-          { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
-          { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
-          { key: "totalLiters7", value: `${(last7Liters + 0).toFixed(2)} liters`, bg: "bg-emerald-600" },
-        ]);
       }
+
+      // Liters metrics from driver_task_entries (actual refilled)
+      const today = new Date();
+      const start30 = new Date();
+      start30.setDate(today.getDate() - 30);
+      const start7 = new Date();
+      start7.setDate(today.getDate() - 7);
+
+      const { data: entries30 } = await supabase
+        .from("driver_task_entries")
+        .select("liters, submitted_at, created_at")
+        .gte("created_at", start30.toISOString());
+
+      let sumToday = 0;
+      let sum30 = 0;
+      let sum7 = 0;
+      if (entries30) {
+        const todayStr = today.toISOString().slice(0, 10);
+        for (const e of entries30 as any[]) {
+          const liters = Number(e.liters || 0);
+          const whenStr = String(e.submitted_at || e.created_at || "");
+          if (!whenStr) continue;
+          const when = new Date(whenStr);
+          if (when >= start30 && when <= today) sum30 += liters;
+          if (when >= start7 && when <= today) sum7 += liters;
+          if (whenStr.slice(0, 10) === todayStr) sumToday += liters;
+        }
+      }
+      setMetricCards([
+        { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
+        { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
+        { key: "totalLiters7", value: `${sum7.toFixed(2)} liters`, bg: "bg-emerald-600" },
+      ]);
       // Zone distribution from drivers table
       const { data: drivers } = await supabase.from("drivers").select("zone");
       if (drivers) {
@@ -106,16 +122,7 @@ export default function Index() {
         .in("region", ["Central", "East"]);
       setLast7StatusCount(sitesCount || 0);
 
-      const since = new Date();
-      since.setDate(since.getDate() - 7);
-      const { data: entries } = await supabase
-        .from("driver_task_entries")
-        .select("liters, created_at")
-        .gte("created_at", since.toISOString());
-      if (entries) {
-        const sum = (entries as any[]).reduce((acc, r) => acc + Number(r.liters || 0), 0);
-        setLast7Liters(sum);
-      }
+      // (last7 liters already computed above into metric cards)
     })();
   }, []);
   return (
