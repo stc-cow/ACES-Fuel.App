@@ -58,10 +58,26 @@ export default function Index() {
         }
         setStatusData([
           { name: "Creation", value: counts["pending"] || 0, color: "#f43f5e" },
-          { name: "Finished by Driver", value: counts["completed"] || 0, color: "#fb923c" },
-          { name: "Task approved", value: counts["approved"] || 0, color: "#22c55e" },
-          { name: "Rejected by driver", value: counts["rejected"] || 0, color: "#06b6d4" },
-          { name: "Canceled", value: counts["canceled"] || 0, color: "#a3a3a3" },
+          {
+            name: "Finished by Driver",
+            value: counts["completed"] || 0,
+            color: "#fb923c",
+          },
+          {
+            name: "Task approved",
+            value: counts["approved"] || 0,
+            color: "#22c55e",
+          },
+          {
+            name: "Rejected by driver",
+            value: counts["rejected"] || 0,
+            color: "#06b6d4",
+          },
+          {
+            name: "Canceled",
+            value: counts["canceled"] || 0,
+            color: "#a3a3a3",
+          },
         ]);
       }
 
@@ -93,9 +109,21 @@ export default function Index() {
         }
       }
       setMetricCards([
-        { key: "totalLitersToday", value: `${sumToday.toFixed(2)} liters`, bg: "bg-rose-500" },
-        { key: "totalLiters30", value: `${sum30.toFixed(2)} liters`, bg: "bg-sky-500" },
-        { key: "totalLiters7", value: `${sum7.toFixed(2)} liters`, bg: "bg-emerald-600" },
+        {
+          key: "totalLitersToday",
+          value: `${sumToday.toFixed(2)} liters`,
+          bg: "bg-rose-500",
+        },
+        {
+          key: "totalLiters30",
+          value: `${sum30.toFixed(2)} liters`,
+          bg: "bg-sky-500",
+        },
+        {
+          key: "totalLiters7",
+          value: `${sum7.toFixed(2)} liters`,
+          bg: "bg-emerald-600",
+        },
       ]);
       // Zone distribution from drivers table
       const { data: drivers } = await supabase.from("drivers").select("zone");
@@ -106,11 +134,22 @@ export default function Index() {
           counts[z] = (counts[z] || 0) + 1;
         }
         const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-        const palette = ["#8b5cf6", "#06b6d4", "#f59e0b", "#22c55e", "#ef4444", "#0ea5e9"];
+        const palette = [
+          "#8b5cf6",
+          "#06b6d4",
+          "#f59e0b",
+          "#22c55e",
+          "#ef4444",
+          "#0ea5e9",
+        ];
         const dyn = Object.entries(counts)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 5)
-          .map(([name, count], i) => ({ name, value: (count / total) * 100, color: palette[i % palette.length] }));
+          .map(([name, count], i) => ({
+            name,
+            value: (count / total) * 100,
+            color: palette[i % palette.length],
+          }));
         setZoneData(dyn.length ? dyn : defaultZoneData);
       }
 
