@@ -11,30 +11,52 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function NotificationsPage() {
   const [driver, setDriver] = useState("All");
+  const [drivers, setDrivers] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from("drivers").select("name").order("name");
+      setDrivers(["All", ...(data || []).map((d: any) => d.name).filter(Boolean)]);
+    })();
+  }, []);
+
   const onSubmit = async () => {
     if (!title.trim() || !message.trim()) {
-      toast({
-        title: "Missing fields",
-        description: "Title and Message are required.",
-      });
+      toast({ title: "Missing fields", description: "Title and Message are required." });
       return;
     }
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 600));
-    setSubmitting(false);
-    toast({ title: "Notification queued", description: `To: ${driver}` });
-    setTitle("");
-    setMessage("");
+    try {
+      const sentBy =
+        localStorage.getItem("auth.username") ||
+        localStorage.getItem("remember.username") ||
+        "Admin";
+      const payload = {
+        title: title.trim(),
+        message: message.trim(),
+        driver_name: driver === "All" ? null : driver,
+        sent_by: sentBy,
+      } as any;
+      const { error } = await supabase.from("driver_notifications").insert(payload);
+      if (error) throw error;
+      toast({ title: "Notification sent", description: `To: ${driver}` });
+      setTitle("");
+      setMessage("");
+    } catch (e: any) {
+      toast({ title: "Send failed", description: e?.message || "Unknown error" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -54,10 +76,11 @@ export default function NotificationsPage() {
                     <SelectValue placeholder="All" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="Irfan">Irfan</SelectItem>
-                    <SelectItem value="Zafar">Zafar</SelectItem>
-                    <SelectItem value="Reaza">Reaza</SelectItem>
+                    {drivers.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
