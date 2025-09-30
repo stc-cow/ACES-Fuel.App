@@ -366,6 +366,48 @@ export default function MissionsPage() {
   };
 
   const loadFromDb = async () => {
+    // try a simple RPC first to debug
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/driver_tasks?select=id,mission_id,site_name,status,admin_status,required_liters,notes,created_at`, {
+        headers: { apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY as string}` },
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        console.error('REST fetch failed', res.status, t);
+        toast({ title: 'Failed to load missions', description: `REST ${res.status}: ${t}` });
+      } else {
+        const json = await res.json();
+        if (!Array.isArray(json) || json.length === 0) {
+          toast({ title: 'No missions found', description: 'Try adding a mission or refreshing.' });
+          setRows([]);
+          return;
+        }
+        const mapped = json.map((d: any) => ({
+          id: Number(d.id),
+          missionId: String(d.mission_id || ""),
+          siteName: d.site_name || "",
+          generator: "",
+          project: "",
+          driverName: d.driver_name || "",
+          createdDate: (d.created_at || new Date().toISOString()).slice(0, 10),
+          filledLiters: 0,
+          virtualCalculated: 0,
+          actualInTank: 0,
+          quantityAddedLastTask: Number(d.required_liters || 0),
+          city: "",
+          notes: d.notes || "",
+          missionStatus: (d.admin_status as string) || "Creation",
+          assignedDriver: d.driver_name || "",
+          createdBy: "System",
+        }));
+        setRows(mapped);
+        return;
+      }
+    } catch (err) {
+      console.error('REST fetch exception', err);
+      toast({ title: 'Failed to load missions', description: String(err) });
+    }
+
     const { data, error } = await supabase
       .from("driver_tasks")
       .select(
@@ -373,7 +415,7 @@ export default function MissionsPage() {
       )
       .order("created_at", { ascending: false });
     if (error || !data) {
-      console.error("Missions load error", error);
+      console.error("Missions load error (client)", error);
       let desc = "Unknown error";
       try {
         desc = error?.message || JSON.stringify(error);
