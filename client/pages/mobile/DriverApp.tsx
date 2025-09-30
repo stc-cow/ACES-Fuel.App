@@ -48,6 +48,8 @@ export default function DriverApp() {
   const [editOpen, setEditOpen] = useState(false);
   const [showTasks, setShowTasks] = useState(false);
   const [activeTask, setActiveTask] = useState<any | null>(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [entry, setEntry] = useState({
     // required fields for this form
     site_id: "",
@@ -191,6 +193,17 @@ export default function DriverApp() {
     () => tasks.filter((t) => t.admin_status === "Task returned to the driver").length,
     [tasks],
   );
+
+  const loadNotifications = async () => {
+    if (!profile) return;
+    const { data } = await supabase
+      .from("driver_notifications")
+      .select("id, created_at, title, message, driver_name, sent_by")
+      .or(`driver_name.is.null,driver_name.eq.${profile.name}`)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setNotifications(data || []);
+  };
 
   const filtered = useMemo(() => {
     let base = tasks.filter((t) => t.status !== "completed");
@@ -397,12 +410,10 @@ export default function DriverApp() {
               variant="ghost"
               size="icon"
               aria-label="Notifications"
-              onClick={() =>
-                toast({
-                  title: "Driver updates",
-                  description: `${activeCount} active, ${returnedCount} returned`,
-                })
-              }
+              onClick={async () => {
+                await loadNotifications();
+                setNotifOpen(true);
+              }}
             >
               <Bell className="h-5 w-5" />
             </Button>
@@ -456,6 +467,37 @@ export default function DriverApp() {
           </Button>
         </div>
       </div>
+
+      <Dialog open={notifOpen} onOpenChange={setNotifOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Notifications</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[60vh] space-y-3 overflow-y-auto">
+            {notifications.length === 0 && (
+              <div className="text-sm text-muted-foreground">No notifications</div>
+            )}
+            {notifications.map((n) => (
+              <Card key={n.id}>
+                <CardContent className="p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="font-medium">{n.title}</div>
+                      <div className="whitespace-pre-line text-sm text-muted-foreground">{n.message}</div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(n.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNotifOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {showTasks ? (
         <div className="mt-2 space-y-3">
