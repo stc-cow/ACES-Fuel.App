@@ -372,7 +372,16 @@ export default function MissionsPage() {
         "id, mission_id, site_name, driver_name, scheduled_at, status, admin_status, required_liters, notes, created_at",
       )
       .order("created_at", { ascending: false });
-    if (error || !data) return;
+    if (error || !data) {
+      console.error("Missions load error", error);
+      toast({ title: "Failed to load missions", description: error?.message || "Unknown error" });
+      return;
+    }
+    if (data.length === 0) {
+      toast({ title: "No missions found", description: "Try adding a mission or refreshing." });
+      setRows([]);
+      return;
+    }
     const mapStatus = (s?: string): Mission["missionStatus"] => {
       switch ((s || "").toLowerCase()) {
         case "completed":
