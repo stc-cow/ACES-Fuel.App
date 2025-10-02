@@ -1103,17 +1103,6 @@ export default function DriverApp() {
                         >
                           {badge.label}
                         </span>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full rounded-xl border border-[#202B6D] bg-white px-4 py-2 text-sm font-semibold text-[#202B6D] shadow-sm transition hover:bg-[#E6E9F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                          disabled={!canNavigate}
-                          onClick={() => {
-                            if (canNavigate) openDirections(task);
-                          }}
-                        >
-                          Get Route
-                        </Button>
                       </div>
                     </div>
                     <div className="mt-4 grid gap-2 text-sm text-[#111827]">
