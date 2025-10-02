@@ -405,15 +405,15 @@ export default function DriverApp() {
       <div className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4 py-12">
         <div className="w-full max-w-sm space-y-8">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-slate-900">Driver App</h1>
-            <p className="text-sm text-slate-500">
+            <h1 className="text-3xl font-semibold text-[#2C2C2C]">Driver App</h1>
+            <p className="text-sm text-[#4A4A4A]">
               Sign in with your assigned credentials to access fueling tasks.
             </p>
           </div>
           <Card className="border border-slate-200 shadow-lg shadow-slate-200/40">
             <CardContent className="space-y-5 p-6">
               <div className="space-y-2 text-left">
-                <Label htmlFor="name" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="name" className="text-sm font-semibold text-[#2C2C2C]">
                   Username
                 </Label>
                 <Input
@@ -421,11 +421,11 @@ export default function DriverApp() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter username"
-                  className="h-12 rounded-xl border border-slate-200 bg-white text-base focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
+                  className="h-12 rounded-xl border border-gray-300 bg-white text-base text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
                 />
               </div>
               <div className="space-y-2 text-left">
-                <Label htmlFor="pw" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="pw" className="text-sm font-semibold text-[#2C2C2C]">
                   Password
                 </Label>
                 <Input
@@ -434,16 +434,16 @@ export default function DriverApp() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="h-12 rounded-xl border border-slate-200 bg-white text-base focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
+                  className="h-12 rounded-xl border border-gray-300 bg-white text-base text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
                 />
               </div>
               {errorMsg && (
-                <div className="rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-600" role="alert">
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-[#B4231A]" role="alert">
                   {errorMsg}
                 </div>
               )}
               <Button
-                className="h-12 w-full rounded-xl bg-slate-900 text-base font-semibold text-white shadow-sm hover:bg-slate-800"
+                className="h-12 w-full rounded-xl bg-[#0056A6] text-base font-semibold text-white shadow-sm hover:bg-[#004b90]"
                 onClick={verifyPassword}
                 disabled={verifying}
               >
@@ -451,7 +451,7 @@ export default function DriverApp() {
               </Button>
             </CardContent>
           </Card>
-          <p className="text-center text-xs text-slate-400">
+          <p className="text-center text-xs text-[#4A4A4A]">
             <strong>Powered by ACES MSD· .</strong>
           </p>
         </div>
@@ -473,14 +473,14 @@ export default function DriverApp() {
                 decoding="async"
               />
               <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">
+                <p className="text-xs uppercase tracking-wide text-[#4A4A4A]">
                   Signed in as
                 </p>
-                <p className="text-lg font-semibold text-slate-900">
+                <p className="text-lg font-semibold text-[#2C2C2C]">
                   {profile.name}
                 </p>
                 {profile.phone ? (
-                  <p className="text-xs text-slate-400">{profile.phone}</p>
+                  <p className="text-xs text-[#4A4A4A]">{profile.phone}</p>
                 ) : null}
               </div>
             </div>
@@ -490,7 +490,7 @@ export default function DriverApp() {
                   variant="ghost"
                   size="icon"
                   aria-label="Notifications"
-                  className="h-10 w-10 rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-100"
+                  className="h-10 w-10 rounded-full border border-gray-300 bg-white text-[#2C2C2C] shadow-sm hover:bg-gray-100"
                   onClick={async () => {
                     await loadNotifications();
                     const ids = (notifications || []).map((n) => n.id);
@@ -519,14 +519,14 @@ export default function DriverApp() {
               </div>
               <Button
                 variant="ghost"
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-100"
+                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-[#2C2C2C] shadow-sm hover:bg-gray-100"
                 onClick={loadTasks}
               >
                 Refresh
               </Button>
               <Button
                 variant="ghost"
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm hover:bg-red-50"
+                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-[#B4231A] shadow-sm hover:bg-red-50"
                 onClick={logout}
               >
                 Logout
@@ -538,7 +538,7 @@ export default function DriverApp() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search tasks"
-              className="h-11 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
+              className="h-11 rounded-xl border border-gray-300 bg-[#F5F5F5] text-sm text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
             />
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2">
@@ -558,14 +558,14 @@ export default function DriverApp() {
                     setFilterMode(option.key);
                     void loadTasks();
                   }}
-                  className={`rounded-xl px-3 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40 ${
+                  className={`rounded-xl px-3 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0056A6]/40 ${
                     isActive
-                      ? "border border-transparent bg-slate-900 text-white shadow"
-                      : "border border-slate-200 bg-white text-slate-600 hover:border-[#5B4BFF]/40"
+                      ? "border border-transparent bg-[#0056A6] text-white shadow"
+                      : "border border-gray-300 bg-white text-[#2C2C2C] hover:border-[#F26B38]"
                   }`}
                 >
                   <span>{option.label}</span>
-                  <span className="ml-1 text-xs font-semibold text-slate-500">
+                  <span className="ml-1 text-xs font-semibold text-[#4A4A4A]">
                     ({count})
                   </span>
                 </button>
@@ -576,7 +576,7 @@ export default function DriverApp() {
 
         <section className="space-y-4">
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center text-sm text-[#4A4A4A]">
               {filterMode === "returned"
                 ? "No returned tasks at the moment."
                 : "No tasks found for this filter."}
@@ -591,15 +591,15 @@ export default function DriverApp() {
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
-                      <p className="text-xs text-slate-400">
-                        {new Date(t.scheduled_at || Date.now()).toLocaleString()}
-                      </p>
-                      <h2 className="text-lg font-semibold text-slate-900">
-                        {t.site_name || "Unnamed Site"}
-                      </h2>
-                      <p className="text-sm text-slate-500">
-                        Driver: {t.driver_name || profile.name}
-                      </p>
+                    <p className="text-xs text-[#4A4A4A]">
+                      {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                    </p>
+                    <h2 className="text-lg font-semibold text-[#2C2C2C]">
+                      {t.site_name || "Unnamed Site"}
+                    </h2>
+                    <p className="text-sm text-[#4A4A4A]">
+                      Driver: {t.driver_name || profile.name}
+                    </p>
                     </div>
                     <span
                       className={`self-start rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
@@ -607,15 +607,15 @@ export default function DriverApp() {
                       {badge.label}
                     </span>
                   </div>
-                  <div className="mt-4 grid gap-2 text-sm text-slate-600">
+                  <div className="mt-4 grid gap-2 text-sm text-[#2C2C2C]">
                     <p>
-                      <span className="font-medium text-slate-500">
+                      <span className="font-semibold text-[#4A4A4A]">
                         Required Liters:
                       </span>{" "}
                       {t.required_liters ?? "-"}
                     </p>
                     <p>
-                      <span className="font-medium text-slate-500">
+                      <span className="font-semibold text-[#4A4A4A]">
                         Notes:
                       </span>{" "}
                       {t.notes && t.notes.trim() ? t.notes : "-"}
@@ -624,7 +624,7 @@ export default function DriverApp() {
                   <div className="mt-5 flex items-center justify-end gap-2">
                     {t.status === "pending" && (
                       <Button
-                        className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+                        className="rounded-xl bg-[#F26B38] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d85c2f]"
                         onClick={() => startTask(t)}
                       >
                         Start
@@ -633,7 +633,7 @@ export default function DriverApp() {
                     {t.status !== "completed" && (
                       <Button
                         variant="outline"
-                        className="rounded-xl border border-slate-900 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-900/5"
+                        className="rounded-xl border border-[#0056A6] px-4 py-2 text-sm font-semibold text-[#0056A6] hover:bg-[#0056A6]/10"
                         onClick={() => openComplete(t)}
                       >
                         Complete
