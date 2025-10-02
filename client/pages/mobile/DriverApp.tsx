@@ -173,37 +173,87 @@ export default function DriverApp() {
     tank_after: "tank_after_url",
   } as const;
 
-  const handleFile = async (tag: keyof typeof keyMap, file: File) => {
-    const k = keyMap[tag];
-    if (file.size > 10 * 1024 * 1024) {
-      alert("Max file size is 10MB");
-      return;
-    }
-    setUploading((u) => ({ ...u, [tag]: true }));
-    try {
-      const dir = `${(profile?.name || "driver").replace(/\s+/g, "_")}/${
-        activeTask?.id || "misc"
-      }`;
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const path = `${dir}/${tag}_${Date.now()}.${ext}`;
-      const { error } = await supabase.storage
-        .from(DRIVER_BUCKET)
-        .upload(path, file, {
-          upsert: true,
-          contentType: file.type || "image/jpeg",
-        });
-      if (error) {
-        alert(`Image upload failed: ${error.message}`);
+  const handleFile = useCallback(
+    async (tag: keyof typeof keyMap, file: File) => {
+      const k = keyMap[tag];
+      if (file.size > 10 * 1024 * 1024) {
+        alert("Max file size is 10MB");
         return;
       }
-      const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
-      const url = data.publicUrl;
-      setEntry((s: any) => ({ ...s, [k]: url }));
-      setPreviews((prev) => ({ ...prev, [tag]: url }));
-    } finally {
-      setUploading((u) => ({ ...u, [tag]: false }));
-    }
-  };
+      setUploading((u) => ({ ...u, [tag]: true }));
+      try {
+        const dir = `${(profile?.name || "driver").replace(/\s+/g, "_")}/${
+          activeTask?.id || "misc"
+        }`;
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `${dir}/${tag}_${Date.now()}.${ext}`;
+        const { error } = await supabase.storage
+          .from(DRIVER_BUCKET)
+          .upload(path, file, {
+            upsert: true,
+            contentType: file.type || "image/jpeg",
+          });
+        if (error) {
+          alert(`Image upload failed: ${error.message}`);
+          return;
+        }
+        const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
+        const url = data.publicUrl;
+        setEntry((s: any) => ({ ...s, [k]: url }));
+        setPreviews((prev) => ({ ...prev, [tag]: url }));
+      } finally {
+        setUploading((u) => ({ ...u, [tag]: false }));
+      }
+    },
+    [DRIVER_BUCKET, activeTask?.id, profile?.name],
+  );
+
+  const capturePhoto = useCallback(
+    async (tag: keyof typeof keyMap) => {
+      if (!isNative) return;
+      try {
+        const permissions = await Camera.checkPermissions();
+        if (permissions.camera !== "granted") {
+          const granted = await Camera.requestPermissions({
+            permissions: ["camera"],
+          });
+          if (granted.camera !== "granted") {
+            alert("Camera permission is required to capture photos.");
+            return;
+          }
+        }
+
+        const photo = await Camera.getPhoto({
+          source: CameraSource.Camera,
+          direction: CameraDirection.Rear,
+          resultType: CameraResultType.Uri,
+          quality: 75,
+          width: 1600,
+        });
+
+        if (!photo.webPath) {
+          alert("Unable to access captured image. Please try again.");
+          return;
+        }
+
+        const response = await fetch(photo.webPath);
+        const blob = await response.blob();
+        const extension =
+          photo.format?.toLowerCase() || blob.type.split("/")[1] || "jpg";
+        const fileName = `${tag}-${Date.now()}.${extension}`;
+        const file = new File([blob], fileName, {
+          type: blob.type || "image/jpeg",
+        });
+        const previewUrl = URL.createObjectURL(file);
+        setPreviews((prev) => ({ ...prev, [tag]: previewUrl }));
+        await handleFile(tag, file);
+      } catch (error) {
+        console.error("Camera capture failed", error);
+        alert("Unable to launch camera. Please try again or upload from gallery.");
+      }
+    },
+    [handleFile, isNative],
+  );
 
   const ensureTaskHasLocation = useCallback((task: any): any => {
     if (!task) return task;
