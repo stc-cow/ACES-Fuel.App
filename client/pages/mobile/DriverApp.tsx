@@ -1011,7 +1011,7 @@ export default function DriverApp() {
                       <span className="font-semibold text-[#6B7280]">
                         Task ID:
                       </span>{" "}
-                      {t.site_id || "-"}
+                      {t.id != null && t.id !== "" ? String(t.id) : t.site_id || "-"}
                     </p>
                     <p>
                       <span className="font-semibold text-[#6B7280]">
@@ -1120,7 +1120,7 @@ export default function DriverApp() {
                         <span className="font-semibold text-[#6B7280]">
                           Task ID:
                         </span>{" "}
-                        {task.site_id || "-"}
+                        {task.id != null && task.id !== "" ? String(task.id) : task.site_id || "-"}
                       </p>
                       <p>
                         <span className="font-semibold text-[#6B7280]">
