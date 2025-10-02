@@ -558,7 +558,7 @@ export default function DriverApp() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search tasks"
-              className="h-11 rounded-xl border border-gray-300 bg-[#F5F5F5] text-sm text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
+              className="h-11 rounded-xl border border-[#D1D5DB] bg-white text-sm text-[#111827] placeholder:text-[#6B7280] focus-visible:border-[#202B6D] focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
             />
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2">
