@@ -587,19 +587,19 @@ export default function DriverApp() {
               return (
                 <div
                   key={t.id}
-                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-gray-300 bg-white p-5 shadow-sm"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
-                    <p className="text-xs text-[#4A4A4A]">
-                      {new Date(t.scheduled_at || Date.now()).toLocaleString()}
-                    </p>
-                    <h2 className="text-lg font-semibold text-[#2C2C2C]">
-                      {t.site_name || "Unnamed Site"}
-                    </h2>
-                    <p className="text-sm text-[#4A4A4A]">
-                      Driver: {t.driver_name || profile.name}
-                    </p>
+                      <p className="text-xs text-[#4A4A4A]">
+                        {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                      </p>
+                      <h2 className="text-lg font-semibold text-[#2C2C2C]">
+                        {t.site_name || "Unnamed Site"}
+                      </h2>
+                      <p className="text-sm text-[#4A4A4A]">
+                        Driver: {t.driver_name || profile.name}
+                      </p>
                     </div>
                     <span
                       className={`self-start rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
