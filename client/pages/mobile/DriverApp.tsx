@@ -730,6 +730,7 @@ export default function DriverApp() {
     try {
       const { row, error } = await fetchDriver(n);
       if (error) {
+        console.error("Driver lookup failed", error);
         setErrorMsg("Login unavailable");
         return;
       }
@@ -765,7 +766,12 @@ export default function DriverApp() {
       setProfile(prof);
       try {
         localStorage.setItem("driver.profile", JSON.stringify(prof));
-      } catch {}
+      } catch (storageError) {
+        console.warn("Failed to persist driver profile", storageError);
+      }
+    } catch (err) {
+      console.error("Login failed", err);
+      setErrorMsg("Login failed. Check connection and try again.");
     } finally {
       setVerifying(false);
     }
