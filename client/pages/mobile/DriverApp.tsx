@@ -482,6 +482,10 @@ export default function DriverApp() {
     () => tasks.filter((t) => t.status !== "completed").length,
     [tasks],
   );
+  const completedCount = useMemo(
+    () => tasks.filter((t) => t.status === "completed").length,
+    [tasks],
+  );
   const activeTotal = useMemo(
     () =>
       tasks.filter(
