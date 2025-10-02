@@ -1389,18 +1389,30 @@ export default function DriverApp() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Image: Counter Before</Label>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={async (e) => {
-                    const f = e.target.files?.[0];
-                    if (!f) return;
-                    const url = URL.createObjectURL(f);
-                    setPreviews((p) => ({ ...p, counter_before: url }));
-                    await handleFile("counter_before", f);
-                  }}
-                />
+                {isNative ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-full rounded-xl border border-dashed border-[#202B6D]/50 text-sm font-semibold text-[#202B6D]"
+                    onClick={() => capturePhoto("counter_before")}
+                    disabled={uploading.counter_before}
+                  >
+                    {uploading.counter_before ? "Capturing..." : "Capture photo"}
+                  </Button>
+                ) : (
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={async (e) => {
+                      const f = e.target.files?.[0];
+                      if (!f) return;
+                      const url = URL.createObjectURL(f);
+                      setPreviews((p) => ({ ...p, counter_before: url }));
+                      await handleFile("counter_before", f);
+                    }}
+                  />
+                )}
                 {(previews.counter_before || entry.counter_before_url) && (
                   <img
                     src={previews.counter_before || entry.counter_before_url}
