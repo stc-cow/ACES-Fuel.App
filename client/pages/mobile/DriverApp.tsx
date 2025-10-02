@@ -227,7 +227,9 @@ export default function DriverApp() {
   const filtered = useMemo(() => {
     let base = tasks.filter((t) => t.status !== "completed");
     if (filterMode === "active")
-      base = base.filter((t) => t.status === "in_progress");
+      base = base.filter(
+        (t) => t.status === "in_progress" || t.status === "pending",
+      );
     if (filterMode === "returned")
       base = base.filter(
         (t) => t.admin_status === "Task returned to the driver",
