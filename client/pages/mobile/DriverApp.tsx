@@ -365,47 +365,59 @@ export default function DriverApp() {
 
   if (!profile) {
     return (
-      <div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 p-4">
-        <h1 className="mt-6 text-center text-2xl font-semibold">Driver App</h1>
-        <Card>
-          <CardContent className="space-y-4 p-6">
-            <div>
-              <Label htmlFor="name">Username</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter username"
-              />
-            </div>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="pw">Password</Label>
+      <div className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4 py-12">
+        <div className="w-full max-w-sm space-y-8">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold text-slate-900">Driver App</h1>
+            <p className="text-sm text-slate-500">
+              Sign in with your assigned credentials to access fueling tasks.
+            </p>
+          </div>
+          <Card className="border border-slate-200 shadow-lg shadow-slate-200/40">
+            <CardContent className="space-y-5 p-6">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="name" className="text-sm font-medium text-slate-700">
+                  Username
+                </Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter username"
+                  className="h-12 rounded-xl border border-slate-200 bg-white text-base focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
+                />
+              </div>
+              <div className="space-y-2 text-left">
+                <Label htmlFor="pw" className="text-sm font-medium text-slate-700">
+                  Password
+                </Label>
                 <Input
                   id="pw"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
+                  className="h-12 rounded-xl border border-slate-200 bg-white text-base focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
                 />
               </div>
-              <div className="flex gap-2">
-                <Button
-                  className="w-full"
-                  onClick={verifyPassword}
-                  disabled={verifying}
-                >
-                  {verifying ? "Checking..." : "Login"}
-                </Button>
-              </div>
               {errorMsg && (
-                <div className="text-sm text-red-600" role="alert">
+                <div className="rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-600" role="alert">
                   {errorMsg}
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
+              <Button
+                className="h-12 w-full rounded-xl bg-slate-900 text-base font-semibold text-white shadow-sm hover:bg-slate-800"
+                onClick={verifyPassword}
+                disabled={verifying}
+              >
+                {verifying ? "Checking..." : "Login"}
+              </Button>
+            </CardContent>
+          </Card>
+          <p className="text-center text-xs text-slate-400">
+            Powered by ACES Fuel · Contact dispatch if you cannot access your account.
+          </p>
+        </div>
       </div>
     );
   }
