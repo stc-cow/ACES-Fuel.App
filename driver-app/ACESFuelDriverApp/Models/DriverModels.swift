@@ -36,7 +36,7 @@ struct FuelTask: Identifiable, Codable, Equatable, Hashable {
     var lastUpdatedAt: Date
 }
 
-struct FuelLog: Identifiable, Codable, Equatable {
+struct FuelLog: Identifiable, Codable, Equatable, Hashable {
     let id: UUID
     var taskId: UUID
     var driverId: UUID
