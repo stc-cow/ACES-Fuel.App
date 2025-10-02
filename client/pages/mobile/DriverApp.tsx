@@ -611,7 +611,7 @@ export default function DriverApp() {
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
-                      <p className="text-xs text-[#4A4A4A]">
+                      <p className="text-xs text-[#6B7280]">
                         {new Date(t.scheduled_at || Date.now()).toLocaleString()}
                       </p>
                       <h2 className="text-lg font-semibold text-[#2C2C2C]">
