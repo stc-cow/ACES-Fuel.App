@@ -636,7 +636,7 @@ export default function DriverApp() {
   const openComplete = (t: any) => {
     setActiveTask(t);
     setEntry({
-      site_id: String(t.site_name || ""),
+      site_id: String(t.site_id ?? t.site_name ?? ""),
       mission_id: String(t.id || ""),
       actual_liters_in_tank: "",
       quantity_added: "",
