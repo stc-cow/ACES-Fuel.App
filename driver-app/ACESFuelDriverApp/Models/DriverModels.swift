@@ -1,6 +1,6 @@
 import Foundation
 
-struct DriverProfile: Identifiable, Codable, Equatable {
+struct DriverProfile: Identifiable, Codable, Equatable, Hashable {
     let id: UUID
     var supabaseUserId: String
     var firstName: String
