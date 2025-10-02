@@ -967,7 +967,6 @@ export default function DriverApp() {
           ) : (
             filtered.map((t) => {
               const badge = getStatusBadge(t);
-              const canNavigate = Boolean(getTaskCoordinatePair(t));
               return (
                 <div
                   key={t.id}
