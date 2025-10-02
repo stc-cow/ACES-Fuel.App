@@ -207,6 +207,15 @@ export default function DriverApp() {
     () => tasks.filter((t) => t.status !== "completed").length,
     [tasks],
   );
+  const activeTotal = useMemo(
+    () =>
+      tasks.filter(
+        (t) =>
+          t.status !== "completed" &&
+          t.admin_status !== "Task returned to the driver",
+      ).length,
+    [tasks],
+  );
 
   const loadNotifications = async () => {
     if (!profile) return;
