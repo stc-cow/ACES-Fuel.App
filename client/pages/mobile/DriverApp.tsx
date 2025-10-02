@@ -452,7 +452,7 @@ export default function DriverApp() {
             </CardContent>
           </Card>
           <p className="text-center text-xs text-slate-400">
-            Powered by ACES Fuel · Contact dispatch if you cannot access your account.
+            <strong>Powered by ACES MSD· .</strong>
           </p>
         </div>
       </div>
