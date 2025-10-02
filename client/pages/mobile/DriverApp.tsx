@@ -1039,7 +1039,7 @@ export default function DriverApp() {
                     <div className="flex items-center justify-end gap-2">
                       {t.status === "pending" && (
                         <Button
-                          className="rounded-xl bg-[#202B6D] px-4 py-2 text-sm font-semibold text-white.shadow-sm transition hover:bg-[#1A2358]"
+                          className="rounded-xl bg-[#202B6D] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1A2358]"
                           onClick={() => startTask(t)}
                         >
                           Start
