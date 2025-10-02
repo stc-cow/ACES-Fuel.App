@@ -627,7 +627,7 @@ export default function DriverApp() {
                       {badge.label}
                     </span>
                   </div>
-                  <div className="mt-4 grid gap-2 text-sm text-[#2C2C2C]">
+                  <div className="mt-4 grid gap-2 text-sm text-[#111827]">
                     <p>
                       <span className="font-semibold text-[#4A4A4A]">
                         Required Liters:
