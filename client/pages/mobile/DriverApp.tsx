@@ -1428,18 +1428,30 @@ export default function DriverApp() {
               </div>
               <div>
                 <Label>Image: Tank Before</Label>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={async (e) => {
-                    const f = e.target.files?.[0];
-                    if (!f) return;
-                    const url = URL.createObjectURL(f);
-                    setPreviews((p) => ({ ...p, tank_before: url }));
-                    await handleFile("tank_before", f);
-                  }}
-                />
+                {isNative ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-full rounded-xl border border-dashed border-[#202B6D]/50 text-sm font-semibold text-[#202B6D]"
+                    onClick={() => capturePhoto("tank_before")}
+                    disabled={uploading.tank_before}
+                  >
+                    {uploading.tank_before ? "Capturing..." : "Capture photo"}
+                  </Button>
+                ) : (
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={async (e) => {
+                      const f = e.target.files?.[0];
+                      if (!f) return;
+                      const url = URL.createObjectURL(f);
+                      setPreviews((p) => ({ ...p, tank_before: url }));
+                      await handleFile("tank_before", f);
+                    }}
+                  />
+                )}
                 {(previews.tank_before || entry.tank_before_url) && (
                   <img
                     src={previews.tank_before || entry.tank_before_url}
