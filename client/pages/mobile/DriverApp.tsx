@@ -199,7 +199,26 @@ export default function DriverApp() {
       .select("*")
       .or(ors.join(","))
       .order("scheduled_at", { ascending: true });
-    setTasks(data || []);
+    const incoming = data || [];
+    const now = Date.now();
+    const nextTasks: any[] = [];
+    for (const task of incoming) {
+      if (task?.status === "completed") {
+        const completionDate = getCompletionDate(task);
+        if (completionDate && now - completionDate.getTime() > COMPLETED_RETENTION_MS) {
+          continue;
+        }
+        if (!task.local_completed_at && completionDate) {
+          nextTasks.push({
+            ...task,
+            local_completed_at: completionDate.toISOString(),
+          });
+          continue;
+        }
+      }
+      nextTasks.push(task);
+    }
+    setTasks(nextTasks);
   };
 
   useEffect(() => {
