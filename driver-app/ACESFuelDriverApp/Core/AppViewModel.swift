@@ -78,6 +78,8 @@ final class AppViewModel: ObservableObject {
         fuelLogs = []
         realtimeDriverId = nil
         taskActionInFlight.removeAll()
+        logSubmissionError = nil
+        isSubmittingLog = false
     }
 
     func refreshAssignments() async {
