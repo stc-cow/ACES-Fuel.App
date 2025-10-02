@@ -607,7 +607,7 @@ export default function DriverApp() {
               return (
                 <div
                   key={t.id}
-                  className="rounded-2xl border border-gray-300 bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-[#D1D5DB] bg-white p-5 shadow-sm"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
