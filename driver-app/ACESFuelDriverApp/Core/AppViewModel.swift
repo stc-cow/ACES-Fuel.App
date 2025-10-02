@@ -161,8 +161,8 @@ final class AppViewModel: ObservableObject {
             async let logsResponse = supabaseService.fetchFuelLogs(driverId: profile.id)
             let (tasksResult, logsResult) = try await (tasksResponse, logsResponse)
 
-            tasks = tasksResult
-            fuelLogs = logsResult
+            tasks = tasksResult.sorted { $0.scheduledAt < $1.scheduledAt }
+            fuelLogs = logsResult.sorted { $0.createdAt > $1.createdAt }
         } catch {
             assignmentsErrorMessage = error.localizedDescription
         }
