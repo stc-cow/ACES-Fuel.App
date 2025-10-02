@@ -27,7 +27,7 @@ let lastSyncedSignature = "";
 const buildSignature = (token: string, profile: DriverProfile) => {
   const name = profile?.name?.trim() || "";
   const phone = profile?.phone?.trim() || "";
-  const platform = Capacitor.getPlatform();
+  const platform = (typeof window !== "undefined" ? (window as any).Capacitor : undefined)?.getPlatform?.() || "web";
   return `${token}|${name}|${phone}|${platform}`;
 };
 
@@ -46,7 +46,7 @@ const syncTokenWithServer = async () => {
           token: latestToken,
           driver_name: latestProfile?.name?.trim() || null,
           driver_phone: latestProfile?.phone?.trim() || null,
-          platform: Capacitor.getPlatform(),
+          platform: (typeof window !== "undefined" ? (window as any).Capacitor : undefined)?.getPlatform?.() || "web",
         },
         { onConflict: "token" },
       );
@@ -112,7 +112,7 @@ const attachListeners = () => {
 
 const ensureAndroidChannel = async () => {
   if (channelCreated) return;
-  if (Capacitor.getPlatform() !== "android") return;
+  if ((typeof window === "undefined" ? undefined : (window as any).Capacitor)?.getPlatform?.() !== "android") return;
   try {
     await PushNotifications.createChannel({
       id: "driver-updates",
@@ -134,7 +134,8 @@ export const initializePushNotifications = async (): Promise<boolean> => {
     console.info("Push notifications disabled via configuration");
     return false;
   }
-  if (!Capacitor.isNativePlatform()) return false;
+  const cap = typeof window !== "undefined" ? (window as any).Capacitor : undefined;
+  if (!cap || !cap.isNativePlatform?.()) return false;
   if (initialized) return true;
   initialized = true;
   try {
