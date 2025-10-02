@@ -546,7 +546,7 @@ export default function DriverApp() {
               </Button>
               <Button
                 variant="ghost"
-                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-[#B4231A] shadow-sm hover:bg-[#FDECEA]"
+                className="rounded-full border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-semibold text-[#E52329] shadow-sm transition hover:bg-[#FDE8EA]"
                 onClick={logout}
               >
                 Logout
