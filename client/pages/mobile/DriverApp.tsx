@@ -51,6 +51,50 @@ const getCompletionDate = (task: any): Date | null => {
   return null;
 };
 
+const normalizeSiteKey = (value: string) => value.trim().toLowerCase();
+
+const toNumberOrNull = (value: unknown): number | null => {
+  if (value === undefined || value === null) return null;
+  const num = typeof value === "number" ? value : parseFloat(String(value));
+  return Number.isFinite(num) ? num : null;
+};
+
+const getTaskCoordinatePair = (
+  task: any,
+): { latitude: number; longitude: number } | null => {
+  if (!task) return null;
+  const latitudeCandidates = [
+    task.site_latitude,
+    task.latitude,
+    task.lat,
+    task.siteLatitude,
+  ];
+  const longitudeCandidates = [
+    task.site_longitude,
+    task.longitude,
+    task.lng,
+    task.siteLongitude,
+  ];
+  let latitude: number | null = null;
+  for (const candidate of latitudeCandidates) {
+    const numeric = toNumberOrNull(candidate);
+    if (numeric !== null) {
+      latitude = numeric;
+      break;
+    }
+  }
+  let longitude: number | null = null;
+  for (const candidate of longitudeCandidates) {
+    const numeric = toNumberOrNull(candidate);
+    if (numeric !== null) {
+      longitude = numeric;
+      break;
+    }
+  }
+  if (latitude === null || longitude === null) return null;
+  return { latitude, longitude };
+};
+
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
     name: string;
