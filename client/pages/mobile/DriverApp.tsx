@@ -749,7 +749,7 @@ export default function DriverApp() {
       <div className="flex min-h-screen items-center justify-center bg-[#F4F5F7] px-5 py-12">
         <div className="w-full max-w-sm space-y-9">
           <div className="space-y-4 text-center">
-            <div className="flex justify-center">
+            <div className="flex items-center justify-center gap-2">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F814626a817d74d5ca3f778646a798206?format=png&width=256"
                 alt="ACES logo"
@@ -757,6 +757,7 @@ export default function DriverApp() {
                 loading="lazy"
                 decoding="async"
               />
+              <span className="text-3xl font-bold tracking-wide text-[#202B6D]">MSD</span>
             </div>
             <h1 className="text-3xl font-bold text-[#202B6D]">
               Fuel Driver App
