@@ -6,10 +6,13 @@ export default function DriverDesignPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight">ACES Fuel Experience Overview</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            ACES Fuel Experience Overview
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Compare the administrator web portal alongside the redesigned driver mobile journey. Updates here do not
-            affect production until exported to their respective platforms.
+            Compare the administrator web portal alongside the redesigned driver
+            mobile journey. Updates here do not affect production until exported
+            to their respective platforms.
           </p>
         </header>
         <div className="grid gap-6 lg:grid-cols-2">

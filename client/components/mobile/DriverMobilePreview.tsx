@@ -115,11 +115,18 @@ export function DriverMobilePreview() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="driver-password">Password</Label>
-                <Input id="driver-password" type="password" placeholder="Enter password" />
+                <Input
+                  id="driver-password"
+                  type="password"
+                  placeholder="Enter password"
+                />
               </div>
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded border border-border" />
+                  <input
+                    type="checkbox"
+                    className="rounded border border-border"
+                  />
                   <span>Remember me</span>
                 </label>
                 <button className="text-primary">Reset password</button>
@@ -154,7 +161,9 @@ export function DriverMobilePreview() {
                 <div>
                   <p className="text-sm text-muted-foreground">Driver</p>
                   <p className="font-semibold">Kareem Al Yassi</p>
-                  <p className="text-xs text-muted-foreground">ID 784-2019-9910</p>
+                  <p className="text-xs text-muted-foreground">
+                    ID 784-2019-9910
+                  </p>
                 </div>
               </div>
             </div>
@@ -163,11 +172,18 @@ export function DriverMobilePreview() {
                 <Card key={task.id} className="border border-border/70">
                   <CardHeader className="space-y-3 pb-3">
                     <div className="flex items-center justify-between">
-                      <Badge className={cn("bg-primary/10 text-primary", task.status === "In Progress" && "bg-amber-500/15 text-amber-600")}
+                      <Badge
+                        className={cn(
+                          "bg-primary/10 text-primary",
+                          task.status === "In Progress" &&
+                            "bg-amber-500/15 text-amber-600",
+                        )}
                       >
                         {task.status}
                       </Badge>
-                      <span className="text-xs text-muted-foreground">{task.scheduledAt}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {task.scheduledAt}
+                      </span>
                     </div>
                     <CardTitle className="text-lg">{task.site}</CardTitle>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -201,21 +217,46 @@ export function DriverMobilePreview() {
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Now</p>
                 <h2 className="text-xl font-semibold">Storage Yard Gate A</h2>
-                <p className="text-sm text-muted-foreground">Fleet Truck 24 · Diesel</p>
+                <p className="text-sm text-muted-foreground">
+                  Fleet Truck 24 · Diesel
+                </p>
               </div>
-              <Badge className="bg-amber-500/20 text-amber-600">In Progress</Badge>
+              <Badge className="bg-amber-500/20 text-amber-600">
+                In Progress
+              </Badge>
             </div>
             <div className="grid gap-3 rounded-xl border bg-muted/40 p-4 text-sm">
               <InfoRow icon={Clock} label="Scheduled" value="08:30 AM" />
-              <InfoRow icon={Phone} label="Contact" value="Dispatch · +971 55 000 0000" />
-              <InfoRow icon={MessageCircle} label="Special Notes" value="Capture counter photos before and after fueling." />
+              <InfoRow
+                icon={Phone}
+                label="Contact"
+                value="Dispatch · +971 55 000 0000"
+              />
+              <InfoRow
+                icon={MessageCircle}
+                label="Special Notes"
+                value="Capture counter photos before and after fueling."
+              />
             </div>
             <div className="grid gap-3 rounded-xl border bg-muted/20 p-4">
-              <h3 className="text-sm font-semibold uppercase text-muted-foreground">Checklist</h3>
-              <ChecklistItem icon={CheckSquare} label="Arrived onsite" complete />
-              <ChecklistItem icon={CheckSquare} label="Verified vehicle shutdown" complete />
+              <h3 className="text-sm font-semibold uppercase text-muted-foreground">
+                Checklist
+              </h3>
+              <ChecklistItem
+                icon={CheckSquare}
+                label="Arrived onsite"
+                complete
+              />
+              <ChecklistItem
+                icon={CheckSquare}
+                label="Verified vehicle shutdown"
+                complete
+              />
               <ChecklistItem icon={CheckSquare} label="Started fueling" />
-              <ChecklistItem icon={CheckSquare} label="Captured counter photos" />
+              <ChecklistItem
+                icon={CheckSquare}
+                label="Captured counter photos"
+              />
             </div>
             <div className="flex gap-3">
               <Button className="flex-1" variant="secondary">
@@ -238,7 +279,11 @@ export function DriverMobilePreview() {
             <div className="space-y-3 text-sm">
               <div className="grid gap-2">
                 <Label htmlFor="gallons">Gallons Dispensed</Label>
-                <Input id="gallons" placeholder="0" defaultValue={activeTask.requiredGallons} />
+                <Input
+                  id="gallons"
+                  placeholder="0"
+                  defaultValue={activeTask.requiredGallons}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="odometer">Odometer</Label>
@@ -246,11 +291,16 @@ export function DriverMobilePreview() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="notes">Notes</Label>
-                <Textarea id="notes" placeholder="Add fueling notes or exceptions" rows={3} />
+                <Textarea
+                  id="notes"
+                  placeholder="Add fueling notes or exceptions"
+                  rows={3}
+                />
               </div>
             </div>
             <div className="rounded-xl border bg-muted/30 p-4 text-xs text-muted-foreground">
-              Upload counter and tank photos to complete submission. Photos sync to dispatch immediately.
+              Upload counter and tank photos to complete submission. Photos sync
+              to dispatch immediately.
             </div>
             <Button className="w-full">Submit &amp; Complete</Button>
           </div>
@@ -262,7 +312,9 @@ export function DriverMobilePreview() {
             <header className="flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-semibold">Fuel Logs</h2>
-                <p className="text-sm text-muted-foreground">Last 7 submissions</p>
+                <p className="text-sm text-muted-foreground">
+                  Last 7 submissions
+                </p>
               </div>
               <Badge variant="secondary" className="flex items-center gap-1">
                 <History className="h-3.5 w-3.5" />
@@ -274,7 +326,9 @@ export function DriverMobilePreview() {
                 <Card key={log.id} className="border border-border/70">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <div>
-                      <p className="text-xs text-muted-foreground">{log.date}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {log.date}
+                      </p>
                       <CardTitle className="text-base">{log.site}</CardTitle>
                     </div>
                     <Badge className="bg-primary/10 text-primary">
@@ -327,8 +381,20 @@ function ChecklistItem({
 }) {
   return (
     <div className="flex items-center gap-3 rounded-lg border border-dashed border-border/60 bg-background/80 p-3 text-sm">
-      <Icon className={cn("h-4 w-4", complete ? "text-primary" : "text-muted-foreground")} />
-      <p className={cn("flex-1", complete ? "text-foreground" : "text-muted-foreground")}>{label}</p>
+      <Icon
+        className={cn(
+          "h-4 w-4",
+          complete ? "text-primary" : "text-muted-foreground",
+        )}
+      />
+      <p
+        className={cn(
+          "flex-1",
+          complete ? "text-foreground" : "text-muted-foreground",
+        )}
+      >
+        {label}
+      </p>
       {complete ? <CheckCircle2 className="h-4 w-4 text-primary" /> : null}
     </div>
   );

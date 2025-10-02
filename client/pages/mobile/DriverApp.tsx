@@ -205,7 +205,10 @@ export default function DriverApp() {
     for (const task of incoming) {
       if (task?.status === "completed") {
         const completionDate = getCompletionDate(task);
-        if (completionDate && now - completionDate.getTime() > COMPLETED_RETENTION_MS) {
+        if (
+          completionDate &&
+          now - completionDate.getTime() > COMPLETED_RETENTION_MS
+        ) {
           continue;
         }
         if (!task.local_completed_at && completionDate) {
@@ -309,9 +312,7 @@ export default function DriverApp() {
       .map((task) => {
         const completionDate =
           getCompletionDate(task) ||
-          (task.local_completed_at
-            ? new Date(task.local_completed_at)
-            : null);
+          (task.local_completed_at ? new Date(task.local_completed_at) : null);
         if (!completionDate || Number.isNaN(completionDate.getTime())) {
           return null;
         }
@@ -328,10 +329,7 @@ export default function DriverApp() {
           return now - entry.completionDate.getTime() <= COMPLETED_RETENTION_MS;
         },
       )
-      .sort(
-        (a, b) =>
-          b.completionDate.getTime() - a.completionDate.getTime(),
-      );
+      .sort((a, b) => b.completionDate.getTime() - a.completionDate.getTime());
   }, [tasks]);
 
   const sha256 = async (text: string) => {
@@ -522,11 +520,12 @@ export default function DriverApp() {
     }
   };
 
-  const filterOptions: { key: "active" | "returned" | "all"; label: string }[] = [
-    { key: "active", label: "Active task" },
-    { key: "returned", label: "Returned tasks" },
-    { key: "all", label: "All tasks" },
-  ];
+  const filterOptions: { key: "active" | "returned" | "all"; label: string }[] =
+    [
+      { key: "active", label: "Active task" },
+      { key: "returned", label: "Returned tasks" },
+      { key: "all", label: "All tasks" },
+    ];
 
   if (!profile) {
     return (
@@ -550,7 +549,10 @@ export default function DriverApp() {
           <Card className="rounded-2xl border border-[#D1D5DB] bg-white shadow-[0_20px_45px_rgba(32,43,109,0.12)]">
             <CardContent className="space-y-6 p-7">
               <div className="space-y-2 text-left">
-                <Label htmlFor="name" className="flex items-center gap-1 text-sm font-semibold text-[#111827]">
+                <Label
+                  htmlFor="name"
+                  className="flex items-center gap-1 text-sm font-semibold text-[#111827]"
+                >
                   Username
                   <span className="text-[#E52329]">*</span>
                 </Label>
@@ -563,7 +565,10 @@ export default function DriverApp() {
                 />
               </div>
               <div className="space-y-2 text-left">
-                <Label htmlFor="pw" className="flex items-center gap-1 text-sm font-semibold text-[#111827]">
+                <Label
+                  htmlFor="pw"
+                  className="flex items-center gap-1 text-sm font-semibold text-[#111827]"
+                >
                   Password
                   <span className="text-[#E52329]">*</span>
                 </Label>
@@ -594,7 +599,8 @@ export default function DriverApp() {
             </CardContent>
           </Card>
           <p className="text-center text-xs text-[#6B7280]">
-            Powered by <span className="font-semibold text-[#202B6D]">ACES MSD</span>
+            Powered by{" "}
+            <span className="font-semibold text-[#202B6D]">ACES MSD</span>
           </p>
         </div>
       </div>
@@ -690,8 +696,8 @@ export default function DriverApp() {
                 option.key === "active"
                   ? activeTotal
                   : option.key === "returned"
-                  ? returnedCount
-                  : openCount;
+                    ? returnedCount
+                    : openCount;
               return (
                 <button
                   key={option.key}
@@ -734,7 +740,9 @@ export default function DriverApp() {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
                       <p className="text-xs text-[#6B7280]">
-                        {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                        {new Date(
+                          t.scheduled_at || Date.now(),
+                        ).toLocaleString()}
                       </p>
                       <h2 className="text-lg font-semibold text-[#111827]">
                         {t.site_name || "Unnamed Site"}
@@ -840,7 +848,8 @@ export default function DriverApp() {
                       </p>
                     </div>
                     <p className="mt-4 text-xs text-[#6B7280]">
-                      This record cannot be edited and will be removed automatically after seven days.
+                      This record cannot be edited and will be removed
+                      automatically after seven days.
                     </p>
                   </div>
                 );
