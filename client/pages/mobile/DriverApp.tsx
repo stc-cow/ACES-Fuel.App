@@ -408,7 +408,7 @@ export default function DriverApp() {
 
   if (!profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5] px-4 py-12">
         <div className="w-full max-w-sm space-y-8">
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-semibold text-[#2C2C2C]">Driver App</h1>
