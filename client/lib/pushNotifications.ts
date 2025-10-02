@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { Capacitor } from "@capacitor/core";
 import {
   ActionPerformed,
   PushNotificationSchema,
@@ -7,6 +8,10 @@ import {
 } from "@capacitor/push-notifications";
 
 import { supabase } from "./supabase";
+
+const pushNotificationsEnabled =
+  String(import.meta.env.VITE_PUSH_NOTIFICATIONS_ENABLED ?? "").toLowerCase() ===
+  "true";
 
 type DriverProfile = {
   name?: string | null;
@@ -28,6 +33,7 @@ const buildSignature = (token: string, profile: DriverProfile) => {
 };
 
 const syncTokenWithServer = async () => {
+  if (!pushNotificationsEnabled) return;
   if (!latestToken) return;
   const signature = buildSignature(latestToken, latestProfile);
   if (signature === lastSyncedSignature) return;
@@ -124,6 +130,11 @@ const ensureAndroidChannel = async () => {
 };
 
 export const initializePushNotifications = async (): Promise<boolean> => {
+  if (!pushNotificationsEnabled) {
+    initialized = false;
+    console.info("Push notifications disabled via configuration");
+    return false;
+  }
   if (!Capacitor.isNativePlatform()) return false;
   if (initialized) return true;
   initialized = true;
@@ -154,11 +165,13 @@ export const initializePushNotifications = async (): Promise<boolean> => {
 export const bindDriverToPushNotifications = async (
   profile: DriverProfile,
 ): Promise<void> => {
+  if (!pushNotificationsEnabled) return;
   latestProfile = profile;
   await syncTokenWithServer();
 };
 
 export const unregisterPushProfile = async () => {
+  if (!pushNotificationsEnabled) return;
   latestProfile = null;
   await syncTokenWithServer();
 };
