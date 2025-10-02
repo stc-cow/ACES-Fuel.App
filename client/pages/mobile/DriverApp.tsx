@@ -416,7 +416,7 @@ export default function DriverApp() {
               Sign in with your assigned credentials to access fueling tasks.
             </p>
           </div>
-          <Card className="border border-slate-200 shadow-lg shadow-slate-200/40">
+          <Card className="border border-gray-200 shadow-lg shadow-gray-200/40">
             <CardContent className="space-y-5 p-6">
               <div className="space-y-2 text-left">
                 <Label htmlFor="name" className="text-sm font-semibold text-[#2C2C2C]">
