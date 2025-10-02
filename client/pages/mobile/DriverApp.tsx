@@ -466,8 +466,8 @@ export default function DriverApp() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-center gap-3">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fdab107460bc24c05b37400810c2b1332?format=webp&width=800"
-                alt="ACES"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F814626a817d74d5ca3f778646a798206?format=png&width=256"
+                alt="ACES logo"
                 className="h-8 w-auto"
                 loading="eager"
                 decoding="async"
