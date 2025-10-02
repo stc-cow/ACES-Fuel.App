@@ -419,9 +419,18 @@ export default function DriverApp() {
 
   const openDirections = useCallback((task: any) => {
     const coords = getTaskCoordinatePair(task);
-    if (!coords) return;
+    if (!coords) {
+      alert("Site location data is not available yet for this task.");
+      return;
+    }
     const destination = `${coords.latitude},${coords.longitude}`;
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+    const label =
+      (typeof task?.site_name === "string" && task.site_name.trim()) ||
+      (task?.site_id !== undefined && task?.site_id !== null
+        ? String(task.site_id)
+        : "Site");
+    const destinationLabel = `${label} ${destination}`.trim();
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationLabel)}`;
     if (typeof window !== "undefined") {
       window.open(url, "_blank", "noopener,noreferrer");
     }
