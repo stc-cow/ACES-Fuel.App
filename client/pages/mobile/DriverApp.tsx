@@ -446,7 +446,13 @@ export default function DriverApp() {
       }
       nextTasks.push(task);
     }
-    setTasks(nextTasks);
+    let enrichedTasks = nextTasks;
+    try {
+      enrichedTasks = await enrichTasksWithCoordinates(nextTasks);
+    } catch (error) {
+      console.error("Failed to enrich tasks with site coordinates", error);
+    }
+    setTasks(enrichedTasks);
   };
 
   useEffect(() => {
