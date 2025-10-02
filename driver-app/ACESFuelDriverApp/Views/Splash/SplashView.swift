@@ -5,7 +5,7 @@ struct SplashView: View {
         VStack(spacing: 16) {
             ProgressView()
                 .progressViewStyle(.circular)
-            Text("Syncing ACES Fuel data…")
+            Text("Syncing ACES MSD Fuel Driver data…")
                 .font(.headline)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
