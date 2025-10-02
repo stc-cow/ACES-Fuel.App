@@ -367,6 +367,14 @@ export default function DriverApp() {
   }, []);
 
   useEffect(() => {
+    void initializePushNotifications();
+  }, []);
+
+  useEffect(() => {
+    void bindDriverToPushNotifications(profile);
+  }, [profile]);
+
+  useEffect(() => {
     try {
       const getParams = () => {
         const search = window.location.search;
