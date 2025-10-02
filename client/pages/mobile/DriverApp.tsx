@@ -1125,10 +1125,6 @@ export default function DriverApp() {
                         {task.notes && task.notes.trim() ? task.notes : "-"}
                       </p>
                     </div>
-                    <p className="mt-4 text-xs text-[#6B7280]">
-                      This record cannot be edited and will be removed
-                      automatically after seven days.
-                    </p>
                   </div>
                 );
               })}
