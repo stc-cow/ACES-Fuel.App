@@ -193,10 +193,18 @@ export default function DriverApp() {
     () => tasks.filter((t) => t.status === "in_progress").length,
     [tasks],
   );
+  const pendingCount = useMemo(
+    () => tasks.filter((t) => t.status === "pending").length,
+    [tasks],
+  );
   const returnedCount = useMemo(
     () =>
       tasks.filter((t) => t.admin_status === "Task returned to the driver")
         .length,
+    [tasks],
+  );
+  const openCount = useMemo(
+    () => tasks.filter((t) => t.status !== "completed").length,
     [tasks],
   );
 
