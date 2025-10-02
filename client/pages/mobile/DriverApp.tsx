@@ -403,6 +403,7 @@ export default function DriverApp() {
     const qty = parseFloat(entry.quantity_added || entry.liters || "0");
     const rate = entry.rate ? parseFloat(entry.rate) : null;
     const odometer = entry.odometer ? parseInt(entry.odometer) : null;
+    const completedAtIso = new Date().toISOString();
     await supabase.from("driver_task_entries").insert({
       task_id: activeTask.id,
       liters: qty,
@@ -413,11 +414,44 @@ export default function DriverApp() {
       odometer: odometer as any,
       submitted_by: profile?.name || null,
     });
-    await supabase
+    const { error } = await supabase
       .from("driver_tasks")
-      .update({ status: "completed", notes: entry.notes || null })
+      .update({
+        status: "completed",
+        notes: entry.notes || null,
+        completed_at: completedAtIso,
+      })
       .eq("id", activeTask.id);
-    setTasks((arr) => arr.filter((x) => x.id !== activeTask.id));
+    if (error) {
+      await supabase
+        .from("driver_tasks")
+        .update({ status: "completed", notes: entry.notes || null })
+        .eq("id", activeTask.id);
+    }
+    setTasks((arr) => {
+      const now = Date.now();
+      return arr
+        .map((task) =>
+          task.id === activeTask.id
+            ? {
+                ...task,
+                status: "completed",
+                notes: entry.notes || null,
+                local_completed_at: completedAtIso,
+              }
+            : task,
+        )
+        .filter((task) => {
+          if (task.status !== "completed") return true;
+          const completionDate =
+            getCompletionDate(task) ||
+            (task.local_completed_at
+              ? new Date(task.local_completed_at)
+              : null);
+          if (!completionDate) return true;
+          return now - completionDate.getTime() <= COMPLETED_RETENTION_MS;
+        });
+    });
     setEditOpen(false);
     setActiveTask(null);
   };
