@@ -16,7 +16,7 @@ struct LoginView: View {
             ScrollView {
                 VStack(spacing: 32) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("ACES Fuel Driver")
+                        Text("ACES MSD Fuel Driver")
                             .font(.largeTitle.weight(.bold))
                         Text("Sign in with your driver credentials to access fueling assignments in real-time.")
                             .font(.body)
