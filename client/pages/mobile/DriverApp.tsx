@@ -370,7 +370,7 @@ export default function DriverApp() {
     if (task.admin_status === "Task returned to the driver") {
       return {
         label: "Returned",
-        className: "bg-[#F26B38]/15 text-[#F26B38]",
+        className: "bg-[#F26B38] text-white",
       };
     }
 
@@ -378,24 +378,24 @@ export default function DriverApp() {
       case "in_progress":
         return {
           label: "In Progress",
-          className: "bg-[#F26B38]/15 text-[#F26B38]",
+          className: "bg-[#0056A6] text-white",
         };
       case "completed":
         return {
           label: "Completed",
-          className: "bg-[#27AE60]/15 text-[#27AE60]",
+          className: "bg-[#27AE60] text-white",
         };
       case "failed":
       case "issue":
         return {
           label: "Issue",
-          className: "bg-[#E53935]/15 text-[#E53935]",
+          className: "bg-[#E53935] text-white",
         };
       case "pending":
       default:
         return {
           label: "Pending",
-          className: "bg-[#F26B38]/15 text-[#F26B38]",
+          className: "bg-[#F26B38] text-white",
         };
     }
   };
