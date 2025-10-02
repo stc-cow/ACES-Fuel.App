@@ -652,7 +652,7 @@ export default function DriverApp() {
                     )}
                     {t.status !== "completed" && (
                       <Button
-                        className="rounded-xl bg-[#F26B38] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d85c2f]"
+                        className="rounded-xl bg-[#E52329] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#C41D25]"
                         onClick={() => openComplete(t)}
                       >
                         Complete
