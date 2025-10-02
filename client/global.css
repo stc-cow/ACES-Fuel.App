@@ -12,83 +12,83 @@
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
-    --background: 0 0% 96%;
-    --foreground: 210 13% 17%;
+    --background: 220 16% 96%;
+    --foreground: 222 39% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 13% 17%;
+    --card-foreground: 222 39% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 13% 17%;
+    --popover-foreground: 222 39% 12%;
 
-    --primary: 207 100% 33%;
+    --primary: 231 55% 27%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 19 89% 59%;
+    --secondary: 220 9% 46%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 90%;
-    --muted-foreground: 214 10% 45%;
+    --muted: 220 12% 90%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 19 89% 59%;
+    --accent: 358 79% 52%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 358 79% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 207 100% 33%;
+    --border: 220 14% 82%;
+    --input: 220 14% 82%;
+    --ring: 231 55% 27%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
     /* Sidebar tokens kept for legacy layouts */
-    --sidebar-background: 210 33% 12%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 207 100% 33%;
+    --sidebar-background: 231 55% 27%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 231 55% 27%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 19 89% 59%;
+    --sidebar-accent: 358 79% 52%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 210 20% 20%;
-    --sidebar-ring: 207 100% 33%;
+    --sidebar-border: 231 40% 24%;
+    --sidebar-ring: 231 55% 27%;
   }
 
   .dark {
-    --background: 215 30% 12%;
+    --background: 222 33% 10%;
     --foreground: 0 0% 98%;
 
-    --card: 215 30% 15%;
+    --card: 222 33% 14%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 215 30% 15%;
+    --popover: 222 33% 14%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 207 100% 45%;
+    --primary: 231 55% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 19 89% 59%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 9% 62%;
+    --secondary-foreground: 222 39% 12%;
 
-    --muted: 215 25% 20%;
-    --muted-foreground: 214 20% 75%;
+    --muted: 222 20% 20%;
+    --muted-foreground: 220 9% 70%;
 
-    --accent: 19 89% 59%;
+    --accent: 358 79% 52%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 358 79% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 26%;
-    --input: 215 25% 26%;
-    --ring: 207 100% 45%;
-    --sidebar-background: 215 30% 12%;
+    --border: 222 20% 26%;
+    --input: 222 20% 26%;
+    --ring: 231 55% 45%;
+    --sidebar-background: 231 55% 18%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 207 100% 45%;
+    --sidebar-primary: 231 55% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 19 89% 59%;
+    --sidebar-accent: 358 79% 52%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 215 25% 26%;
-    --sidebar-ring: 207 100% 45%;
+    --sidebar-border: 231 40% 24%;
+    --sidebar-ring: 231 55% 45%;
   }
 }
 
