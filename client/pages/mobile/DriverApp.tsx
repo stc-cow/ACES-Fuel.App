@@ -1072,7 +1072,7 @@ export default function DriverApp() {
                   Submitted this week
                 </h2>
                 <p className="text-xs text-[#6B7280]">
-                  Completed tasks stay visible for 7 days and are read-only.
+                  Completed tasks can be reviewed here.
                 </p>
               </div>
             </div>
