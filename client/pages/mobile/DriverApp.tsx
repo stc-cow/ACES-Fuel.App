@@ -302,6 +302,38 @@ export default function DriverApp() {
     );
   }, [tasks, query, filterMode]);
 
+  const recentCompletedTasks = useMemo(() => {
+    const now = Date.now();
+    return tasks
+      .filter((task) => task.status === "completed")
+      .map((task) => {
+        const completionDate =
+          getCompletionDate(task) ||
+          (task.local_completed_at
+            ? new Date(task.local_completed_at)
+            : null);
+        if (!completionDate || Number.isNaN(completionDate.getTime())) {
+          return null;
+        }
+        return { task, completionDate };
+      })
+      .filter(
+        (
+          entry,
+        ): entry is {
+          task: any;
+          completionDate: Date;
+        } => {
+          if (!entry) return false;
+          return now - entry.completionDate.getTime() <= COMPLETED_RETENTION_MS;
+        },
+      )
+      .sort(
+        (a, b) =>
+          b.completionDate.getTime() - a.completionDate.getTime(),
+      );
+  }, [tasks]);
+
   const sha256 = async (text: string) => {
     const enc = new TextEncoder().encode(text);
     const buf = await crypto.subtle.digest("SHA-256", enc);
