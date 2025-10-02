@@ -580,7 +580,7 @@ export default function DriverApp() {
                   }}
                   className={`rounded-xl px-3 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 ${
                     isActive
-                      ? "border border-transparent bg-[#0056A6] text-white shadow"
+                      ? "border border-transparent bg-[#202B6D] text-white shadow"
                       : "border border-gray-300 bg-white text-[#2C2C2C] hover:border-[#F26B38] hover:text-[#0056A6]"
                   }`}
                 >
