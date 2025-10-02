@@ -17,6 +17,12 @@ import {
   initializePushNotifications,
 } from "@/lib/pushNotifications";
 import { Bell, Eye, EyeOff } from "lucide-react";
+import {
+  Camera,
+  CameraDirection,
+  CameraResultType,
+  CameraSource,
+} from "@capacitor/camera";
 
 const COMPLETED_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const COMPLETION_DATE_KEYS = [
