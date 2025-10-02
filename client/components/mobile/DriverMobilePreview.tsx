@@ -102,7 +102,7 @@ export function DriverMobilePreview() {
                 <Lock className="h-8 w-8" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold">Sign in to ACES Fuel</h2>
+                <h2 className="text-2xl font-semibold">Sign in to ACES MSD Fuel Driver</h2>
                 <p className="text-sm text-muted-foreground">
                   Drivers use company credentials to access their fueling queue.
                 </p>
