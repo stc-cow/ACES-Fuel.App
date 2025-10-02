@@ -116,13 +116,15 @@ final class AppViewModel: ObservableObject {
         taskActionInFlight.insert(task.id)
 
         let now = Date()
+        let sanitizedNotes = submission.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+
         let log = FuelLog(
             id: UUID(),
             taskId: task.id,
             driverId: profile.id,
             gallonsDispensed: submission.gallonsDispensed,
             odometerReading: submission.odometerReading,
-            notes: submission.notes,
+            notes: sanitizedNotes,
             createdAt: now
         )
 
