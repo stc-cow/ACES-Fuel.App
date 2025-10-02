@@ -585,7 +585,7 @@ export default function DriverApp() {
                   }`}
                 >
                   <span>{option.label}</span>
-                  <span className="ml-1 text-xs font-semibold text-[#4A4A4A]">
+                  <span className="ml-1 text-xs font-semibold text-[#6B7280]">
                     ({count})
                   </span>
                 </button>
