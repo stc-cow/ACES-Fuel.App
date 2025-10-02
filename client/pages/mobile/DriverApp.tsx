@@ -573,14 +573,28 @@ export default function DriverApp() {
                   Password
                   <span className="text-[#E52329]">*</span>
                 </Label>
-                <Input
-                  id="pw"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  className="h-12 rounded-xl border border-[#D1D5DB] bg-white text-base text-[#111827] placeholder:text-[#6B7280] focus-visible:border-[#202B6D] focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
-                />
+                <div className="relative">
+                  <Input
+                    id="pw"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    className="h-12 rounded-xl border border-[#D1D5DB] bg-white pr-12 text-base text-[#111827] placeholder:text-[#6B7280] focus-visible:border-[#202B6D] focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-3 flex items-center text-[#6B7280] transition hover:text-[#202B6D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
               </div>
               {errorMsg && (
                 <div
