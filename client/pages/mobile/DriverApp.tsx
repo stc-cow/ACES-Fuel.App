@@ -43,10 +43,9 @@ export default function DriverApp() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [filterMode, setFilterMode] = useState<"all" | "active" | "returned">(
-    "all",
+    "active",
   );
   const [editOpen, setEditOpen] = useState(false);
-  const [showTasks, setShowTasks] = useState(false);
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
