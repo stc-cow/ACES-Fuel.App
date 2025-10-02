@@ -190,52 +190,46 @@ export default function DriverApp() {
     }
   };
 
-  const ensureTaskHasLocation = useCallback(
-    (task: any): any => {
-      if (!task) return task;
-      const coords = getTaskCoordinatePair(task);
-      if (coords) {
-        const latMatches =
-          toNumberOrNull(task.site_latitude) === coords.latitude;
-        const lonMatches =
-          toNumberOrNull(task.site_longitude) === coords.longitude;
-        if (latMatches && lonMatches) {
-          return task;
-        }
-        return {
-          ...task,
-          site_latitude: coords.latitude,
-          site_longitude: coords.longitude,
-        };
-      }
-      const idValue =
-        task?.site_id !== undefined && task?.site_id !== null
-          ? String(task.site_id)
-          : "";
-      const nameValue =
-        task?.site_name !== undefined && task?.site_name !== null
-          ? String(task.site_name)
-          : "";
-      const idKey = idValue ? normalizeSiteKey(idValue) : "";
-      const nameKey = nameValue ? normalizeSiteKey(nameValue) : "";
-      const cached =
-        (idKey && siteCacheRef.current[idKey]) ||
-        (nameKey && siteCacheRef.current[nameKey]) ||
-        null;
-      if (!cached) return task;
-      const latMatches =
-        toNumberOrNull(task.site_latitude) === cached.latitude;
+  const ensureTaskHasLocation = useCallback((task: any): any => {
+    if (!task) return task;
+    const coords = getTaskCoordinatePair(task);
+    if (coords) {
+      const latMatches = toNumberOrNull(task.site_latitude) === coords.latitude;
       const lonMatches =
-        toNumberOrNull(task.site_longitude) === cached.longitude;
-      if (latMatches && lonMatches) return task;
+        toNumberOrNull(task.site_longitude) === coords.longitude;
+      if (latMatches && lonMatches) {
+        return task;
+      }
       return {
         ...task,
-        site_latitude: cached.latitude,
-        site_longitude: cached.longitude,
+        site_latitude: coords.latitude,
+        site_longitude: coords.longitude,
       };
-    },
-    [],
-  );
+    }
+    const idValue =
+      task?.site_id !== undefined && task?.site_id !== null
+        ? String(task.site_id)
+        : "";
+    const nameValue =
+      task?.site_name !== undefined && task?.site_name !== null
+        ? String(task.site_name)
+        : "";
+    const idKey = idValue ? normalizeSiteKey(idValue) : "";
+    const nameKey = nameValue ? normalizeSiteKey(nameValue) : "";
+    const cached =
+      (idKey && siteCacheRef.current[idKey]) ||
+      (nameKey && siteCacheRef.current[nameKey]) ||
+      null;
+    if (!cached) return task;
+    const latMatches = toNumberOrNull(task.site_latitude) === cached.latitude;
+    const lonMatches = toNumberOrNull(task.site_longitude) === cached.longitude;
+    if (latMatches && lonMatches) return task;
+    return {
+      ...task,
+      site_latitude: cached.latitude,
+      site_longitude: cached.longitude,
+    };
+  }, []);
 
   const enrichTasksWithCoordinates = useCallback(
     async (taskList: any[]) => {
@@ -294,11 +288,13 @@ export default function DriverApp() {
                   siteName: String(site.site_name ?? ""),
                 };
                 if (site.id !== undefined && site.id !== null) {
-                  siteCacheRef.current[normalizeSiteKey(String(site.id))] = entry;
+                  siteCacheRef.current[normalizeSiteKey(String(site.id))] =
+                    entry;
                 }
                 if (site.site_name) {
-                  siteCacheRef.current[normalizeSiteKey(String(site.site_name))] =
-                    entry;
+                  siteCacheRef.current[
+                    normalizeSiteKey(String(site.site_name))
+                  ] = entry;
                 }
               });
             }),
@@ -330,11 +326,13 @@ export default function DriverApp() {
                   siteName: String(site.site_name ?? ""),
                 };
                 if (site.id !== undefined && site.id !== null) {
-                  siteCacheRef.current[normalizeSiteKey(String(site.id))] = entry;
+                  siteCacheRef.current[normalizeSiteKey(String(site.id))] =
+                    entry;
                 }
                 if (site.site_name) {
-                  siteCacheRef.current[normalizeSiteKey(String(site.site_name))] =
-                    entry;
+                  siteCacheRef.current[
+                    normalizeSiteKey(String(site.site_name))
+                  ] = entry;
                 }
               });
             }),
@@ -553,13 +551,16 @@ export default function DriverApp() {
     const trimmed = identifier.trim();
     if (!trimmed) return { row: null, error: null };
 
-    const searchColumns = ["name", "email", "phone"].filter((col) => Boolean(col));
+    const searchColumns = ["name", "email", "phone"].filter((col) =>
+      Boolean(col),
+    );
     let lastError: any = null;
 
     const numericCandidate = Number.parseInt(trimmed, 10);
-    const numericId = Number.isFinite(numericCandidate) && /^\d+$/.test(trimmed)
-      ? numericCandidate
-      : null;
+    const numericId =
+      Number.isFinite(numericCandidate) && /^\d+$/.test(trimmed)
+        ? numericCandidate
+        : null;
 
     if (numericId !== null) {
       const { data, error } = await supabase
@@ -660,12 +661,10 @@ export default function DriverApp() {
       let h = h7;
 
       for (let t = 0; t < 64; t += 1) {
-        const S1 =
-          rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25);
+        const S1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25);
         const ch = (e & f) ^ (~e & g);
         const temp1 = (h + S1 + ch + K[t] + w[t]) >>> 0;
-        const S0 =
-          rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22);
+        const S0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22);
         const maj = (a & b) ^ (a & c) ^ (b & c);
         const temp2 = (S0 + maj) >>> 0;
 
@@ -703,7 +702,8 @@ export default function DriverApp() {
   };
 
   const sha256 = async (text: string) => {
-    const cryptoObj = typeof globalThis !== "undefined" ? globalThis.crypto : undefined;
+    const cryptoObj =
+      typeof globalThis !== "undefined" ? globalThis.crypto : undefined;
     if (cryptoObj?.subtle) {
       try {
         const enc = new TextEncoder().encode(text);
@@ -738,9 +738,10 @@ export default function DriverApp() {
         return;
       }
 
-      const storedHash = typeof row.password_sha256 === "string"
-        ? row.password_sha256.toLowerCase()
-        : null;
+      const storedHash =
+        typeof row.password_sha256 === "string"
+          ? row.password_sha256.toLowerCase()
+          : null;
       if (storedHash) {
         const hash = (await sha256(pw)).toLowerCase();
         if (hash !== storedHash) {
@@ -929,7 +930,9 @@ export default function DriverApp() {
                 loading="lazy"
                 decoding="async"
               />
-              <span className="text-3xl font-bold tracking-wide text-[#202B6D]">MSD</span>
+              <span className="text-3xl font-bold tracking-wide text-[#202B6D]">
+                MSD
+              </span>
             </div>
             <h1 className="text-3xl font-bold text-[#202B6D]">
               Fuel Driver App
@@ -977,7 +980,9 @@ export default function DriverApp() {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute inset-y-0 right-3 flex items-center text-[#6B7280] transition hover:text-[#202B6D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" aria-hidden="true" />
@@ -1170,7 +1175,9 @@ export default function DriverApp() {
                       <span className="font-semibold text-[#6B7280]">
                         Task ID:
                       </span>{" "}
-                      {t.id != null && t.id !== "" ? String(t.id) : t.site_id || "-"}
+                      {t.id != null && t.id !== ""
+                        ? String(t.id)
+                        : t.site_id || "-"}
                     </p>
                     <p>
                       <span className="font-semibold text-[#6B7280]">
@@ -1208,7 +1215,6 @@ export default function DriverApp() {
             })
           )}
         </section>
-
       </div>
 
       <Dialog open={notifOpen} onOpenChange={setNotifOpen}>
