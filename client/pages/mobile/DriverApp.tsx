@@ -752,12 +752,15 @@ export default function DriverApp() {
     }
   };
 
-  const filterOptions: { key: "active" | "returned" | "all"; label: string }[] =
-    [
-      { key: "active", label: "Active task" },
-      { key: "returned", label: "Returned tasks" },
-      { key: "all", label: "All tasks" },
-    ];
+  const filterOptions: {
+    key: "active" | "returned" | "all" | "completed";
+    label: string;
+  }[] = [
+    { key: "active", label: "Active task" },
+    { key: "returned", label: "Returned tasks" },
+    { key: "completed", label: "Completed" },
+    { key: "all", label: "All tasks" },
+  ];
 
   if (!profile) {
     return (
