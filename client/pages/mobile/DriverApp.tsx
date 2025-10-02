@@ -139,6 +139,12 @@ export default function DriverApp() {
     photo_url: "",
     odometer: "",
   });
+  const siteCacheRef = useRef<
+    Record<
+      string,
+      { latitude: number; longitude: number; siteId: string; siteName: string }
+    >
+  >({});
 
   // upload state
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
