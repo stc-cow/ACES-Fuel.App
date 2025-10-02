@@ -476,103 +476,191 @@ export default function DriverApp() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-md p-3">
-      <div className="sticky top-0 z-10 bg-background pb-3 pt-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fdab107460bc24c05b37400810c2b1332?format=webp&width=800"
-              alt="ACES"
-              className="h-8 w-auto"
-              loading="eager"
-              decoding="async"
-            />
-            <div>
-              <div className="text-xs text-muted-foreground">Signed in as</div>
-              <div className="text-base font-semibold">{profile.name}</div>
+    <div className="min-h-screen bg-[#f5f7fb] px-4 py-6">
+      <div className="mx-auto w-full max-w-2xl space-y-6 pb-12">
+        <header className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2Fdab107460bc24c05b37400810c2b1332?format=webp&width=800"
+                alt="ACES"
+                className="h-8 w-auto"
+                loading="eager"
+                decoding="async"
+              />
+              <div>
+                <p className="text-xs uppercase tracking-wide text-slate-500">
+                  Signed in as
+                </p>
+                <p className="text-lg font-semibold text-slate-900">
+                  {profile.name}
+                </p>
+                {profile.phone ? (
+                  <p className="text-xs text-slate-400">{profile.phone}</p>
+                ) : null}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="relative">
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Notifications"
+                  className="h-10 w-10 rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-100"
+                  onClick={async () => {
+                    await loadNotifications();
+                    const ids = (notifications || []).map((n) => n.id);
+                    if (ids.length > 0) {
+                      const rows = ids.map((id) => ({
+                        notification_id: id,
+                        driver_name: profile.name,
+                      }));
+                      await supabase
+                        .from("driver_notification_reads")
+                        .upsert(rows, {
+                          onConflict: "notification_id,driver_name",
+                        } as any);
+                      setUnreadCount(0);
+                    }
+                    setNotifOpen(true);
+                  }}
+                >
+                  <Bell className="h-5 w-5" />
+                </Button>
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-600 px-1 text-center text-[11px] font-semibold leading-4 text-white">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </div>
               <Button
                 variant="ghost"
-                size="icon"
-                aria-label="Notifications"
-                onClick={async () => {
-                  await loadNotifications();
-                  const ids = (notifications || []).map((n) => n.id);
-                  if (ids.length > 0) {
-                    const rows = ids.map((id) => ({
-                      notification_id: id,
-                      driver_name: profile.name,
-                    }));
-                    await supabase
-                      .from("driver_notification_reads")
-                      .upsert(rows, {
-                        onConflict: "notification_id,driver_name",
-                      } as any);
-                    setUnreadCount(0);
-                  }
-                  setNotifOpen(true);
-                }}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-100"
+                onClick={loadTasks}
               >
-                <Bell className="h-5 w-5" />
+                Refresh
               </Button>
-              {unreadCount > 0 && (
-                <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-600 px-1 text-center text-[11px] font-semibold leading-4 text-white">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              )}
+              <Button
+                variant="ghost"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm hover:bg-red-50"
+                onClick={logout}
+              >
+                Logout
+              </Button>
             </div>
-            <Button variant="outline" size="sm" onClick={loadTasks}>
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={logout}>
-              Logout
-            </Button>
           </div>
-        </div>
-        <div className="mt-3 flex items-center gap-2">
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search tasks"
-          />
-        </div>
-        <div className="mt-3 flex items-center gap-2">
-          <Button
-            className="flex-1"
-            onClick={async () => {
-              setFilterMode("active");
-              setShowTasks(true);
-              await loadTasks();
-            }}
-          >
-            Active task
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={async () => {
-              setFilterMode("returned");
-              setShowTasks(true);
-              await loadTasks();
-            }}
-          >
-            Returned tasks
-          </Button>
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={async () => {
-              setFilterMode("all");
-              setShowTasks(true);
-              await loadTasks();
-            }}
-          >
-            All tasks
-          </Button>
-        </div>
+          <div className="mt-4">
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search tasks"
+              className="h-11 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus-visible:border-[#5B4BFF] focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40"
+            />
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {filterOptions.map((option) => {
+              const isActive = filterMode === option.key;
+              const count =
+                option.key === "active"
+                  ? activeTotal
+                  : option.key === "returned"
+                  ? returnedCount
+                  : openCount;
+              return (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => {
+                    setFilterMode(option.key);
+                    void loadTasks();
+                  }}
+                  className={`rounded-xl px-3 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5B4BFF]/40 ${
+                    isActive
+                      ? "border border-transparent bg-slate-900 text-white shadow"
+                      : "border border-slate-200 bg-white text-slate-600 hover:border-[#5B4BFF]/40"
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  <span className="ml-1 text-xs font-semibold text-slate-500">
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </header>
+
+        <section className="space-y-4">
+          {filtered.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+              {filterMode === "returned"
+                ? "No returned tasks at the moment."
+                : "No tasks found for this filter."}
+            </div>
+          ) : (
+            filtered.map((t) => {
+              const badge = getStatusBadge(t);
+              return (
+                <div
+                  key={t.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="space-y-1">
+                      <p className="text-xs text-slate-400">
+                        {new Date(t.scheduled_at || Date.now()).toLocaleString()}
+                      </p>
+                      <h2 className="text-lg font-semibold text-slate-900">
+                        {t.site_name || "Unnamed Site"}
+                      </h2>
+                      <p className="text-sm text-slate-500">
+                        Driver: {t.driver_name || profile.name}
+                      </p>
+                    </div>
+                    <span
+                      className={`self-start rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
+                    >
+                      {badge.label}
+                    </span>
+                  </div>
+                  <div className="mt-4 grid gap-2 text-sm text-slate-600">
+                    <p>
+                      <span className="font-medium text-slate-500">
+                        Required Liters:
+                      </span>{" "}
+                      {t.required_liters ?? "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium text-slate-500">
+                        Notes:
+                      </span>{" "}
+                      {t.notes && t.notes.trim() ? t.notes : "-"}
+                    </p>
+                  </div>
+                  <div className="mt-5 flex items-center justify-end gap-2">
+                    {t.status === "pending" && (
+                      <Button
+                        className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+                        onClick={() => startTask(t)}
+                      >
+                        Start
+                      </Button>
+                    )}
+                    {t.status !== "completed" && (
+                      <Button
+                        variant="outline"
+                        className="rounded-xl border border-slate-900 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-900/5"
+                        onClick={() => openComplete(t)}
+                      >
+                        Complete
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </section>
       </div>
 
       <Dialog open={notifOpen} onOpenChange={setNotifOpen}>
@@ -611,75 +699,6 @@ export default function DriverApp() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {showTasks ? (
-        <div className="mt-2 space-y-3">
-          {filtered.length === 0 && (
-            <div className="text-center text-sm text-muted-foreground">
-              No tasks
-            </div>
-          )}
-          {filtered.map((t) => (
-            <Card key={t.id} className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="flex items-center justify-between p-4">
-                  <div>
-                    <div className="text-sm text-muted-foreground">
-                      {new Date(t.scheduled_at || Date.now()).toLocaleString()}
-                    </div>
-                    <div className="text-lg font-semibold">{t.site_name}</div>
-                  </div>
-                  <div className="text-xs">
-                    <span
-                      className={`rounded px-2 py-1 ${t.admin_status === "Task returned to the driver" ? "bg-indigo-500/10 text-indigo-600" : t.status === "completed" ? "bg-emerald-500/10 text-emerald-600" : t.status === "in_progress" ? "bg-amber-500/10 text-amber-600" : "bg-sky-500/10 text-sky-600"}`}
-                    >
-                      {t.admin_status === "Task returned to the driver"
-                        ? "Returned"
-                        : t.status}
-                    </span>
-                  </div>
-                </div>
-                <div className="grid gap-3 p-4 text-sm text-muted-foreground">
-                  <div>
-                    <span className="font-medium text-foreground">Driver:</span>{" "}
-                    {t.driver_name}
-                  </div>
-                  <div>
-                    <span className="font-medium text-foreground">
-                      Required Liters:
-                    </span>{" "}
-                    {t.required_liters ?? "-"}
-                  </div>
-                  <div>
-                    <span className="font-medium text-foreground">Notes:</span>{" "}
-                    {t.notes ?? "-"}
-                  </div>
-                </div>
-                <div className="flex items-center justify-end gap-2 border-t p-3">
-                  {t.status === "pending" && (
-                    <Button size="sm" onClick={() => startTask(t)}>
-                      Start
-                    </Button>
-                  )}
-                  {t.status !== "completed" && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => openComplete(t)}
-                    >
-                      Complete
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-          Tap a button above to view tasks
-        </div>
-      )}
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
