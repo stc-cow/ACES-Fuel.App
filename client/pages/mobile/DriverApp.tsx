@@ -184,6 +184,7 @@ export default function DriverApp() {
       const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
       const url = data.publicUrl;
       setEntry((s: any) => ({ ...s, [k]: url }));
+      setPreviews((prev) => ({ ...prev, [tag]: url }));
     } finally {
       setUploading((u) => ({ ...u, [tag]: false }));
     }
