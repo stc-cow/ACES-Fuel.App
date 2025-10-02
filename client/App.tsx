@@ -201,14 +201,7 @@ const App = () => (
               }
             />
             <Route path="/driver" element={<DriverApp />} />
-            <Route
-              path="/design/driver"
-              element={
-                <RequireAuth>
-                  <DriverDesignPage />
-                </RequireAuth>
-              }
-            />
+            <Route path="/design/driver" element={<DriverDesignPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route
               path="*"
