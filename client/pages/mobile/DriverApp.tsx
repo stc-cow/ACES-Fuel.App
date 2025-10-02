@@ -468,7 +468,7 @@ export default function DriverApp() {
   return (
     <div className="min-h-screen bg-[#f5f7fb] px-4 py-6">
       <div className="mx-auto w-full max-w-2xl space-y-6 pb-12">
-        <header className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+        <header className="rounded-3xl border border-gray-300 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-center gap-3">
               <img
