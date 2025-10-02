@@ -596,7 +596,7 @@ export default function DriverApp() {
 
         <section className="space-y-4">
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[#0056A6]/30 bg-white p-10 text-center text-sm text-[#4A4A4A]">
+            <div className="rounded-2xl border border-dashed border-[#202B6D]/30 bg-white p-10 text-center text-sm text-[#6B7280]">
               {filterMode === "returned"
                 ? "No returned tasks at the moment."
                 : "No tasks found for this filter."}
