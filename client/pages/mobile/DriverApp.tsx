@@ -539,7 +539,7 @@ export default function DriverApp() {
               </div>
               <Button
                 variant="ghost"
-                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-[#2C2C2C] shadow-sm hover:bg-[#F5F5F5]"
+                className="rounded-full border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-semibold text-[#202B6D] shadow-sm transition hover:bg-[#F4F5F7]"
                 onClick={loadTasks}
               >
                 Refresh
