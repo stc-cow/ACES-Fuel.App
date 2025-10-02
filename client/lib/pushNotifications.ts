@@ -135,6 +135,7 @@ export const initializePushNotifications = async (): Promise<boolean> => {
       granted = request.receive === "granted";
     }
     if (!granted) {
+      initialized = false;
       console.warn("Push notifications permission not granted");
       return false;
     }
