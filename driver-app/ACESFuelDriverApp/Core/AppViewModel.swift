@@ -38,6 +38,7 @@ final class AppViewModel: ObservableObject {
 
     func bootstrapSession() async {
         sessionState = .loading
+        authErrorMessage = nil
         do {
             let profile = try await supabaseService.restoreSession()
             await handleAuthenticationSuccess(with: profile)
