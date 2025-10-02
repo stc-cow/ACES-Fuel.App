@@ -365,6 +365,40 @@ export default function DriverApp() {
     setActiveTask(null);
   };
 
+  const getStatusBadge = (task: any) => {
+    if (task.admin_status === "Task returned to the driver") {
+      return {
+        label: "Returned",
+        className: "bg-[#ede9fe] text-[#5b21b6]",
+      };
+    }
+
+    switch (task.status) {
+      case "in_progress":
+        return {
+          label: "In progress",
+          className: "bg-[#fef3c7] text-[#92400e]",
+        };
+      case "completed":
+        return {
+          label: "Completed",
+          className: "bg-[#dcfce7] text-[#166534]",
+        };
+      case "pending":
+      default:
+        return {
+          label: "Pending",
+          className: "bg-[#e0f2fe] text-[#1d4ed8]",
+        };
+    }
+  };
+
+  const filterOptions: { key: "active" | "returned" | "all"; label: string }[] = [
+    { key: "active", label: "Active task" },
+    { key: "returned", label: "Returned tasks" },
+    { key: "all", label: "All tasks" },
+  ];
+
   if (!profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4 py-12">
