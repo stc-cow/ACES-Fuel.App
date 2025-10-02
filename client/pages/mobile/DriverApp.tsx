@@ -549,6 +549,31 @@ export default function DriverApp() {
   const rotateRight = (value: number, amount: number) =>
     (value >>> amount) | (value << (32 - amount));
 
+  const fetchDriver = async (identifier: string) => {
+    const trimmed = identifier.trim();
+    if (!trimmed) return { row: null, error: null };
+    const searchColumns = ["name", "email", "username", "employee_code"].filter(
+      (col) => Boolean(col),
+    );
+    let lastError: any = null;
+    for (const column of searchColumns) {
+      const { data, error } = await supabase
+        .from("drivers")
+        .select("*")
+        .ilike(column, trimmed)
+        .order("id", { ascending: false })
+        .limit(1);
+      if (error) {
+        lastError = error;
+        continue;
+      }
+      if (data && data.length > 0) {
+        return { row: data[0] as any, error: null };
+      }
+    }
+    return { row: null, error: lastError };
+  };
+
   const sha256Fallback = (message: string) => {
     const encoder = new TextEncoder();
     const input = encoder.encode(message);
@@ -674,38 +699,46 @@ export default function DriverApp() {
   const verifyPassword = async () => {
     setErrorMsg("");
     const n = name.trim();
-    const pw = password;
+    const pw = password.trim();
     if (!n || !pw) {
       setErrorMsg("Enter username and password");
       return;
     }
     setVerifying(true);
     try {
-      const { data, error } = await supabase
-        .from("drivers")
-        .select("*")
-        .ilike("name", n)
-        .order("id", { ascending: false })
-        .limit(1);
+      const { row, error } = await fetchDriver(n);
       if (error) {
         setErrorMsg("Login unavailable");
         return;
       }
-      const row: any = data && data[0];
-      if (!row || row.active === false) {
+      if (!row || ("active" in row && row.active === false)) {
         setErrorMsg("Account not found or inactive");
         return;
       }
-      if (!row.password_sha256) {
-        setErrorMsg("Password not set");
+
+      const storedHash = typeof row.password_sha256 === "string"
+        ? row.password_sha256.toLowerCase()
+        : null;
+      if (storedHash) {
+        const hash = (await sha256(pw)).toLowerCase();
+        if (hash !== storedHash) {
+          setErrorMsg("Invalid password");
+          return;
+        }
+      } else if (typeof row.password === "string") {
+        if (row.password.trim() !== pw) {
+          setErrorMsg("Invalid password");
+          return;
+        }
+      } else {
+        setErrorMsg("Password not configured");
         return;
       }
-      const hash = await sha256(pw);
-      if (hash !== row.password_sha256) {
-        setErrorMsg("Invalid password");
-        return;
-      }
-      const prof = { name: row.name || n, phone: (row.phone as string) || "" };
+
+      const prof = {
+        name: (row.name as string) || n,
+        phone: (row.phone as string) || "",
+      };
       setProfile(prof);
       try {
         localStorage.setItem("driver.profile", JSON.stringify(prof));
