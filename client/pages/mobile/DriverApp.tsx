@@ -791,6 +791,7 @@ export default function DriverApp() {
 
   const logout = () => {
     setProfile(null);
+    void bindDriverToPushNotifications(null);
     try {
       localStorage.removeItem("driver.profile");
     } catch {}
