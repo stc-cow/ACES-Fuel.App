@@ -262,6 +262,7 @@ export default function DriverApp() {
           if (idValue) {
             const numericId = Number(idValue);
             if (!Number.isNaN(numericId)) numericSiteIds.add(numericId);
+            siteNames.add(idValue);
           }
           if (nameValue) siteNames.add(nameValue);
         }
