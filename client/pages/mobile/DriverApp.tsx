@@ -617,7 +617,7 @@ export default function DriverApp() {
                       <h2 className="text-lg font-semibold text-[#111827]">
                         {t.site_name || "Unnamed Site"}
                       </h2>
-                      <p className="text-sm text-[#4A4A4A]">
+                      <p className="text-sm text-[#6B7280]">
                         Driver: {t.driver_name || profile.name}
                       </p>
                     </div>
