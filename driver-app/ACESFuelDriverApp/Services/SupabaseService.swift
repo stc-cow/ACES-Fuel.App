@@ -5,12 +5,15 @@ actor SupabaseService {
     static let shared = SupabaseService()
 
     private let client: SupabaseClient
+    private let iso8601Formatter: ISO8601DateFormatter
     private var taskChannel: RealtimeChannel?
     private var logChannel: RealtimeChannel?
 
     private init() {
         let configuration = SupabaseConfiguration.shared
         client = SupabaseClient(supabaseURL: configuration.url, supabaseKey: configuration.anonKey)
+        iso8601Formatter = ISO8601DateFormatter()
+        iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
     }
 
     func signIn(email: String, password: String) async throws -> DriverProfile {
@@ -91,7 +94,7 @@ actor SupabaseService {
             "gallons_dispensed": log.gallonsDispensed,
             "odometer_reading": log.odometerReading as Any,
             "notes": log.notes,
-            "created_at": ISO8601DateFormatter().string(from: log.createdAt)
+            "created_at": iso8601Formatter.string(from: log.createdAt)
         ]
 
         try await client.database
@@ -103,15 +106,15 @@ actor SupabaseService {
     func updateTaskStatus(taskId: UUID, status: FuelTask.Status, timestamps: TaskStatusTimestamps) async throws {
         var updatePayload: [String: Any] = [
             "status": status.rawValue,
-            "updated_at": ISO8601DateFormatter().string(from: Date())
+            "updated_at": iso8601Formatter.string(from: Date())
         ]
 
         if let startedAt = timestamps.startedAt {
-            updatePayload["started_at"] = ISO8601DateFormatter().string(from: startedAt)
+            updatePayload["started_at"] = iso8601Formatter.string(from: startedAt)
         }
 
         if let completedAt = timestamps.completedAt {
-            updatePayload["completed_at"] = ISO8601DateFormatter().string(from: completedAt)
+            updatePayload["completed_at"] = iso8601Formatter.string(from: completedAt)
         }
 
         try await client.database
@@ -123,18 +126,14 @@ actor SupabaseService {
     }
 
     private func fetchDriverProfile(authUserId: UUID) async throws -> DriverProfile {
-        let response: [DriverRecord] = try await client.database
+        let record: DriverRecord = try await client.database
             .from(SupabaseTable.drivers.rawValue)
             .select()
             .eq("auth_user_id", value: authUserId.uuidString)
-            .limit(1)
             .single()
             .execute()
             .value
 
-        guard let record = response.first else {
-            throw SupabaseError.missingDriverProfile
-        }
         return record.toDomain()
     }
 
