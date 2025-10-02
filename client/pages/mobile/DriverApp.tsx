@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase";
-import { Bell } from "lucide-react";
+import { Bell, Eye, EyeOff } from "lucide-react";
 
 const COMPLETED_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const COMPLETION_DATE_KEYS = [
