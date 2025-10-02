@@ -581,7 +581,7 @@ export default function DriverApp() {
                   className={`rounded-xl px-3 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 ${
                     isActive
                       ? "border border-transparent bg-[#202B6D] text-white shadow"
-                      : "border border-gray-300 bg-white text-[#2C2C2C] hover:border-[#F26B38] hover:text-[#0056A6]"
+                      : "border border-[#D1D5DB] bg-white text-[#111827] hover:border-[#202B6D] hover:text-[#202B6D]"
                   }`}
                 >
                   <span>{option.label}</span>
