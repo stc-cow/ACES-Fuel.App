@@ -948,7 +948,9 @@ export default function DriverApp() {
                   ? activeTotal
                   : option.key === "returned"
                     ? returnedCount
-                    : openCount;
+                    : option.key === "completed"
+                      ? completedCount
+                      : openCount;
               return (
                 <button
                   key={option.key}
