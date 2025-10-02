@@ -630,7 +630,7 @@ export default function DriverApp() {
                   <div className="mt-5 flex items-center justify-end gap-2">
                     {t.status === "pending" && (
                       <Button
-                        className="rounded-xl bg-[#F26B38] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d85c2f]"
+                        className="rounded-xl bg-[#0056A6] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#004b90]"
                         onClick={() => startTask(t)}
                       >
                         Start
@@ -638,8 +638,7 @@ export default function DriverApp() {
                     )}
                     {t.status !== "completed" && (
                       <Button
-                        variant="outline"
-                        className="rounded-xl border border-[#0056A6] px-4 py-2 text-sm font-semibold text-[#0056A6] hover:bg-[#0056A6]/10"
+                        className="rounded-xl bg-[#F26B38] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#d85c2f]"
                         onClick={() => openComplete(t)}
                       >
                         Complete
