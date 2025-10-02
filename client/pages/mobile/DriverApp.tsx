@@ -1075,8 +1075,7 @@ export default function DriverApp() {
             <div className="space-y-3">
               {recentCompletedTasks.map(({ task, completionDate }) => {
                 const badge = getStatusBadge(task);
-                const routeCoords = getTaskCoordinatePair(task);
-                const canNavigate = Boolean(routeCoords);
+                const canNavigate = Boolean(getTaskCoordinatePair(task));
                 return (
                   <div
                     key={`submitted-${task.id}`}
