@@ -72,6 +72,9 @@ struct TaskDetailView: View {
             ) {
                 Task {
                     await appViewModel.completeTask(currentTask, submission: submission)
+                    if appViewModel.logSubmissionError == nil {
+                        submission = FuelLogSubmission()
+                    }
                 }
             }
 
