@@ -12,6 +12,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase";
+import {
+  bindDriverToPushNotifications,
+  initializePushNotifications,
+} from "@/lib/pushNotifications";
 import { Bell, Eye, EyeOff } from "lucide-react";
 
 const COMPLETED_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
