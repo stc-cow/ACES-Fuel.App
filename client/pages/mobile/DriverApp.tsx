@@ -1040,36 +1040,23 @@ export default function DriverApp() {
                       {t.notes && t.notes.trim() ? t.notes : "-"}
                     </p>
                   </div>
-                  <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full rounded-xl border border-[#202B6D] bg-white px-4 py-2 text-sm font-semibold text-[#202B6D] shadow-sm transition hover:bg-[#E6E9F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                      disabled={!canNavigate}
-                      onClick={() => {
-                        if (canNavigate) openDirections(t);
-                      }}
-                    >
-                      Get Route
-                    </Button>
-                    <div className="flex items-center justify-end gap-2">
-                      {t.status === "pending" && (
-                        <Button
-                          className="rounded-xl bg-[#202B6D] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1A2358]"
-                          onClick={() => startTask(t)}
-                        >
-                          Start
-                        </Button>
-                      )}
-                      {t.status !== "completed" && (
-                        <Button
-                          className="rounded-xl bg-[#E52329] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#C41D25]"
-                          onClick={() => openComplete(t)}
-                        >
-                          Complete
-                        </Button>
-                      )}
-                    </div>
+                  <div className="mt-5 flex items-center justify-end gap-2">
+                    {t.status === "pending" && (
+                      <Button
+                        className="rounded-xl bg-[#202B6D] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1A2358]"
+                        onClick={() => startTask(t)}
+                      >
+                        Start
+                      </Button>
+                    )}
+                    {t.status !== "completed" && (
+                      <Button
+                        className="rounded-xl bg-[#E52329] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#C41D25]"
+                        onClick={() => openComplete(t)}
+                      >
+                        Complete
+                      </Button>
+                    )}
                   </div>
                 </div>
               );
