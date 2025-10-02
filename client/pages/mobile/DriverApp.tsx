@@ -14,6 +14,43 @@ import {
 import { supabase } from "@/lib/supabase";
 import { Bell } from "lucide-react";
 
+const COMPLETED_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
+const COMPLETION_DATE_KEYS = [
+  "local_completed_at",
+  "completed_at",
+  "driver_completed_at",
+  "completedAt",
+  "completed_at_local",
+  "driver_completed_at_local",
+  "submitted_at",
+  "finished_at",
+  "updated_at",
+  "created_at",
+] as const;
+
+const getCompletionDate = (task: any): Date | null => {
+  if (!task) return null;
+  for (const key of COMPLETION_DATE_KEYS) {
+    const rawValue = (task as Record<string, unknown>)[key];
+    if (!rawValue) continue;
+    if (rawValue instanceof Date) {
+      const time = rawValue.getTime();
+      if (!Number.isNaN(time)) return rawValue;
+      continue;
+    }
+    if (typeof rawValue === "number") {
+      const fromNumber = new Date(rawValue);
+      if (!Number.isNaN(fromNumber.getTime())) return fromNumber;
+      continue;
+    }
+    if (typeof rawValue === "string") {
+      const parsed = new Date(rawValue);
+      if (!Number.isNaN(parsed.getTime())) return parsed;
+    }
+  }
+  return null;
+};
+
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
     name: string;
