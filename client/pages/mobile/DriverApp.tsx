@@ -532,7 +532,7 @@ export default function DriverApp() {
                   <Bell className="h-5 w-5" />
                 </Button>
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-red-600 px-1 text-center text-[11px] font-semibold leading-4 text-white">
+                  <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#E52329] px-1 text-center text-[11px] font-semibold leading-4 text-white">
                     {unreadCount > 99 ? "99+" : unreadCount}
                   </span>
                 )}
