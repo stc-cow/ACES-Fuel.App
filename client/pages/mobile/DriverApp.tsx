@@ -59,6 +59,7 @@ export default function DriverApp() {
   const [name, setName] = useState("");
   const [demoMode, setDemoMode] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [tasks, setTasks] = useState<any[]>([]);
