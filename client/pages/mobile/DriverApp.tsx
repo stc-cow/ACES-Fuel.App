@@ -408,31 +408,42 @@ export default function DriverApp() {
 
   if (!profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5] px-4 py-12">
-        <div className="w-full max-w-sm space-y-8">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-[#2C2C2C]">Driver App</h1>
-            <p className="text-sm text-[#4A4A4A]">
+      <div className="flex min-h-screen items-center justify-center bg-[#F4F5F7] px-5 py-12">
+        <div className="w-full max-w-sm space-y-9">
+          <div className="space-y-4 text-center">
+            <div className="flex justify-center">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbd65b3cd7a86452e803a3d7dc7a3d048%2F814626a817d74d5ca3f778646a798206?format=png&width=256"
+                alt="ACES logo"
+                className="h-12 w-auto"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <h1 className="text-3xl font-bold text-[#202B6D]">Driver App</h1>
+            <p className="text-sm text-[#6B7280]">
               Sign in with your assigned credentials to access fueling tasks.
             </p>
           </div>
-          <Card className="border border-gray-200 shadow-lg shadow-gray-200/40">
-            <CardContent className="space-y-5 p-6">
+          <Card className="rounded-2xl border border-[#D1D5DB] bg-white shadow-[0_20px_45px_rgba(32,43,109,0.12)]">
+            <CardContent className="space-y-6 p-7">
               <div className="space-y-2 text-left">
-                <Label htmlFor="name" className="text-sm font-semibold text-[#2C2C2C]">
+                <Label htmlFor="name" className="flex items-center gap-1 text-sm font-semibold text-[#111827]">
                   Username
+                  <span className="text-[#E52329]">*</span>
                 </Label>
                 <Input
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter username"
-                  className="h-12 rounded-xl border border-gray-300 bg-white text-base text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
+                  className="h-12 rounded-xl border border-[#D1D5DB] bg-white text-base text-[#111827] placeholder:text-[#6B7280] focus-visible:border-[#202B6D] focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
                 />
               </div>
               <div className="space-y-2 text-left">
-                <Label htmlFor="pw" className="text-sm font-semibold text-[#2C2C2C]">
+                <Label htmlFor="pw" className="flex items-center gap-1 text-sm font-semibold text-[#111827]">
                   Password
+                  <span className="text-[#E52329]">*</span>
                 </Label>
                 <Input
                   id="pw"
@@ -440,16 +451,19 @@ export default function DriverApp() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="h-12 rounded-xl border border-gray-300 bg-white text-base text-[#2C2C2C] focus-visible:border-[#0056A6] focus-visible:ring-2 focus-visible:ring-[#0056A6]/40"
+                  className="h-12 rounded-xl border border-[#D1D5DB] bg-white text-base text-[#111827] placeholder:text-[#6B7280] focus-visible:border-[#202B6D] focus-visible:ring-2 focus-visible:ring-[#202B6D]/30 focus-visible:ring-offset-0"
                 />
               </div>
               {errorMsg && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-[#B4231A]" role="alert">
+                <div
+                  className="rounded-xl border border-[#F4A5A8] bg-[#FDE8EA] px-3 py-2 text-sm font-semibold text-[#E52329]"
+                  role="alert"
+                >
                   {errorMsg}
                 </div>
               )}
               <Button
-                className="h-12 w-full rounded-xl bg-[#0056A6] text-base font-semibold text-white shadow-sm hover:bg-[#004b90]"
+                className="h-12 w-full rounded-xl bg-[#202B6D] text-base font-bold uppercase tracking-wide text-white shadow-md shadow-[#202B6D]/20 transition hover:bg-[#1A2358] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202B6D]/35 focus-visible:ring-offset-0 disabled:bg-[#202B6D]/60"
                 onClick={verifyPassword}
                 disabled={verifying}
               >
@@ -457,8 +471,8 @@ export default function DriverApp() {
               </Button>
             </CardContent>
           </Card>
-          <p className="text-center text-xs text-[#4A4A4A]">
-            <strong>Powered by ACES MSD· .</strong>
+          <p className="text-center text-xs text-[#6B7280]">
+            Powered by <span className="font-semibold text-[#202B6D]">ACES MSD</span>
           </p>
         </div>
       </div>
