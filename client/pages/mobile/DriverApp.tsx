@@ -553,9 +553,7 @@ export default function DriverApp() {
     const trimmed = identifier.trim();
     if (!trimmed) return { row: null, error: null };
 
-    const searchColumns = ["name", "email", "phone", "employee_code"].filter(
-      (col) => Boolean(col),
-    );
+    const searchColumns = ["name", "email", "phone"].filter((col) => Boolean(col));
     let lastError: any = null;
 
     const numericCandidate = Number.parseInt(trimmed, 10);
