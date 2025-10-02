@@ -13,7 +13,7 @@ struct DriverProfile: Identifiable, Codable, Equatable, Hashable {
     }
 }
 
-struct FuelTask: Identifiable, Codable, Equatable {
+struct FuelTask: Identifiable, Codable, Equatable, Hashable {
     enum Status: String, Codable, CaseIterable, Equatable {
         case pending
         case inProgress = "in_progress"
