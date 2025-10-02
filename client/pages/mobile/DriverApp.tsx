@@ -629,13 +629,13 @@ export default function DriverApp() {
                   </div>
                   <div className="mt-4 grid gap-2 text-sm text-[#111827]">
                     <p>
-                      <span className="font-semibold text-[#4A4A4A]">
+                      <span className="font-semibold text-[#6B7280]">
                         Required Liters:
                       </span>{" "}
                       {t.required_liters ?? "-"}
                     </p>
                     <p>
-                      <span className="font-semibold text-[#4A4A4A]">
+                      <span className="font-semibold text-[#6B7280]">
                         Notes:
                       </span>{" "}
                       {t.notes && t.notes.trim() ? t.notes : "-"}
