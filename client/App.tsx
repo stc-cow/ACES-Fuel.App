@@ -27,6 +27,7 @@ import GeneralSettingsPage from "./pages/settings/General";
 import AdminLogPage from "./pages/settings/AdminLog";
 import NotFound from "./pages/NotFound";
 import DriverApp from "./pages/mobile/DriverApp";
+import DriverDesignPage from "./pages/mobile/DriverDesign";
 import { Capacitor } from "@capacitor/core";
 
 const queryClient = new QueryClient();
@@ -200,6 +201,14 @@ const App = () => (
               }
             />
             <Route path="/driver" element={<DriverApp />} />
+            <Route
+              path="/design/driver"
+              element={
+                <RequireAuth>
+                  <DriverDesignPage />
+                </RequireAuth>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route
               path="*"
