@@ -11,24 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { supabase } from "@/lib/supabase";
 import { Bell } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 
 export default function DriverApp() {
   const [profile, setProfile] = useState<{
