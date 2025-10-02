@@ -1234,6 +1234,8 @@ export default function DriverApp() {
           ) : (
             filtered.map((t) => {
               const badge = getStatusBadge(t);
+              const coords = getTaskCoordinatePair(t);
+              const hasRoute = Boolean(coords);
               return (
                 <div
                   key={t.id}
@@ -1281,7 +1283,19 @@ export default function DriverApp() {
                       {t.notes && t.notes.trim() ? t.notes : "-"}
                     </p>
                   </div>
-                  <div className="mt-5 flex items-center justify-end gap-2">
+                  <div className="mt-5 flex flex-wrap items-center justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${
+                        hasRoute
+                          ? "border-[#202B6D] text-[#202B6D] hover:bg-[#202B6D] hover:text-white"
+                          : "border-[#D1D5DB] text-[#9CA3AF]"
+                      }`}
+                      onClick={() => openDirections(t)}
+                      disabled={!hasRoute}
+                    >
+                      Get Route
+                    </Button>
                     {t.status === "pending" && (
                       <Button
                         className="rounded-xl bg-[#202B6D] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1A2358]"
