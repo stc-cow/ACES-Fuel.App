@@ -126,6 +126,11 @@ export default function DriverApp() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const isNative = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    const cap = (window as any).Capacitor;
+    return Boolean(cap?.isNativePlatform?.());
+  }, []);
   const [entry, setEntry] = useState({
     // required fields for this form
     site_id: "",
