@@ -574,11 +574,15 @@ export default function DriverApp() {
       }
     }
 
+    const normalizedPattern = trimmed
+      .replace(/[%_]/g, (match) => `\\${match}`)
+      .replace(/\s+/g, "%");
+
     for (const column of searchColumns) {
       const { data, error } = await supabase
         .from("drivers")
         .select("*")
-        .ilike(column, trimmed)
+        .ilike(column, `%${normalizedPattern}%`)
         .order("id", { ascending: false })
         .limit(1);
       if (error) {
