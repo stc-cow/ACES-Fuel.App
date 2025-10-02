@@ -953,9 +953,9 @@ export default function DriverApp() {
                 MSD
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-[#202B6D]">
-              ACES MSD Fuel Driver
-            </h1>
+            <p className="text-3xl font-bold text-[#202B6D]">
+              Fuel Driver
+            </p>
             <p className="text-sm text-[#6B7280]">
               Sign in with your assigned credentials to access fueling tasks.
             </p>
