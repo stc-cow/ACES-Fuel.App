@@ -480,9 +480,9 @@ export default function DriverApp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f7fb] px-4 py-6">
+    <div className="min-h-screen bg-[#F4F5F7] px-4 py-6">
       <div className="mx-auto w-full max-w-2xl space-y-6 pb-12">
-        <header className="rounded-3xl border border-gray-300 bg-white p-5 shadow-sm">
+        <header className="rounded-3xl border border-[#D1D5DB] bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-center gap-3">
               <img
@@ -493,14 +493,14 @@ export default function DriverApp() {
                 decoding="async"
               />
               <div>
-                <p className="text-xs uppercase tracking-wide text-[#4A4A4A]">
+                <p className="text-xs uppercase tracking-wide text-[#6B7280]">
                   Signed in as
                 </p>
-                <p className="text-lg font-semibold text-[#2C2C2C]">
+                <p className="text-lg font-semibold text-[#111827]">
                   {profile.name}
                 </p>
                 {profile.phone ? (
-                  <p className="text-xs text-[#4A4A4A]">{profile.phone}</p>
+                  <p className="text-xs text-[#6B7280]">{profile.phone}</p>
                 ) : null}
               </div>
             </div>
@@ -510,7 +510,7 @@ export default function DriverApp() {
                   variant="ghost"
                   size="icon"
                   aria-label="Notifications"
-                  className="h-10 w-10 rounded-full border border-gray-300 bg-white text-[#2C2C2C] shadow-sm hover:bg-gray-100"
+                  className="h-10 w-10 rounded-full border border-[#D1D5DБ?"
                   onClick={async () => {
                     await loadNotifications();
                     const ids = (notifications || []).map((n) => n.id);
