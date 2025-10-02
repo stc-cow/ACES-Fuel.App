@@ -190,6 +190,179 @@ export default function DriverApp() {
     }
   };
 
+  const ensureTaskHasLocation = useCallback(
+    (task: any): any => {
+      if (!task) return task;
+      const coords = getTaskCoordinatePair(task);
+      if (coords) {
+        const latMatches =
+          toNumberOrNull(task.site_latitude) === coords.latitude;
+        const lonMatches =
+          toNumberOrNull(task.site_longitude) === coords.longitude;
+        if (latMatches && lonMatches) {
+          return task;
+        }
+        return {
+          ...task,
+          site_latitude: coords.latitude,
+          site_longitude: coords.longitude,
+        };
+      }
+      const idValue =
+        task?.site_id !== undefined && task?.site_id !== null
+          ? String(task.site_id)
+          : "";
+      const nameValue =
+        task?.site_name !== undefined && task?.site_name !== null
+          ? String(task.site_name)
+          : "";
+      const idKey = idValue ? normalizeSiteKey(idValue) : "";
+      const nameKey = nameValue ? normalizeSiteKey(nameValue) : "";
+      const cached =
+        (idKey && siteCacheRef.current[idKey]) ||
+        (nameKey && siteCacheRef.current[nameKey]) ||
+        null;
+      if (!cached) return task;
+      const latMatches =
+        toNumberOrNull(task.site_latitude) === cached.latitude;
+      const lonMatches =
+        toNumberOrNull(task.site_longitude) === cached.longitude;
+      if (latMatches && lonMatches) return task;
+      return {
+        ...task,
+        site_latitude: cached.latitude,
+        site_longitude: cached.longitude,
+      };
+    },
+    [],
+  );
+
+  const enrichTasksWithCoordinates = useCallback(
+    async (taskList: any[]) => {
+      if (!taskList || taskList.length === 0) return taskList;
+      const numericSiteIds = new Set<number>();
+      const siteNames = new Set<string>();
+
+      const initialTasks = taskList.map((task) => {
+        const idValue =
+          task?.site_id !== undefined && task?.site_id !== null
+            ? String(task.site_id)
+            : "";
+        const nameValue =
+          task?.site_name !== undefined && task?.site_name !== null
+            ? String(task.site_name)
+            : "";
+        const idKey = idValue ? normalizeSiteKey(idValue) : "";
+        const nameKey = nameValue ? normalizeSiteKey(nameValue) : "";
+        const hasCache =
+          (idKey && siteCacheRef.current[idKey]) ||
+          (nameKey && siteCacheRef.current[nameKey]);
+
+        if (!hasCache) {
+          if (idValue) {
+            const numericId = Number(idValue);
+            if (!Number.isNaN(numericId)) numericSiteIds.add(numericId);
+          }
+          if (nameValue) siteNames.add(nameValue);
+        }
+
+        return ensureTaskHasLocation(task);
+      });
+
+      const queries: Promise<void>[] = [];
+
+      if (numericSiteIds.size > 0) {
+        queries.push(
+          supabase
+            .from("sites")
+            .select("id, site_name, latitude, longitude")
+            .in("id", Array.from(numericSiteIds))
+            .then(({ data, error }) => {
+              if (error) {
+                console.error("Failed to load site coordinates by id", error);
+                return;
+              }
+              data?.forEach((site: any) => {
+                const latitude = toNumberOrNull(site?.latitude);
+                const longitude = toNumberOrNull(site?.longitude);
+                if (latitude === null || longitude === null) return;
+                const entry = {
+                  latitude,
+                  longitude,
+                  siteId: String(site.id ?? ""),
+                  siteName: String(site.site_name ?? ""),
+                };
+                if (site.id !== undefined && site.id !== null) {
+                  siteCacheRef.current[normalizeSiteKey(String(site.id))] = entry;
+                }
+                if (site.site_name) {
+                  siteCacheRef.current[normalizeSiteKey(String(site.site_name))] =
+                    entry;
+                }
+              });
+            }),
+        );
+      }
+
+      const siteNameList = Array.from(siteNames).filter(
+        (name) => name.trim().length > 0,
+      );
+      if (siteNameList.length > 0) {
+        queries.push(
+          supabase
+            .from("sites")
+            .select("id, site_name, latitude, longitude")
+            .in("site_name", siteNameList)
+            .then(({ data, error }) => {
+              if (error) {
+                console.error("Failed to load site coordinates by name", error);
+                return;
+              }
+              data?.forEach((site: any) => {
+                const latitude = toNumberOrNull(site?.latitude);
+                const longitude = toNumberOrNull(site?.longitude);
+                if (latitude === null || longitude === null) return;
+                const entry = {
+                  latitude,
+                  longitude,
+                  siteId: String(site.id ?? ""),
+                  siteName: String(site.site_name ?? ""),
+                };
+                if (site.id !== undefined && site.id !== null) {
+                  siteCacheRef.current[normalizeSiteKey(String(site.id))] = entry;
+                }
+                if (site.site_name) {
+                  siteCacheRef.current[normalizeSiteKey(String(site.site_name))] =
+                    entry;
+                }
+              });
+            }),
+        );
+      }
+
+      if (queries.length > 0) {
+        try {
+          await Promise.all(queries);
+        } catch (error) {
+          console.error("Failed to resolve site coordinates", error);
+        }
+      }
+
+      return initialTasks.map((task) => ensureTaskHasLocation(task));
+    },
+    [ensureTaskHasLocation],
+  );
+
+  const openDirections = useCallback((task: any) => {
+    const coords = getTaskCoordinatePair(task);
+    if (!coords) return;
+    const destination = `${coords.latitude},${coords.longitude}`;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }, []);
+
   useEffect(() => {
     try {
       const getParams = () => {
