@@ -552,10 +552,30 @@ export default function DriverApp() {
   const fetchDriver = async (identifier: string) => {
     const trimmed = identifier.trim();
     if (!trimmed) return { row: null, error: null };
-    const searchColumns = ["name", "email", "username", "employee_code"].filter(
+
+    const searchColumns = ["name", "email", "phone", "employee_code"].filter(
       (col) => Boolean(col),
     );
     let lastError: any = null;
+
+    const numericCandidate = Number.parseInt(trimmed, 10);
+    const numericId = Number.isFinite(numericCandidate) && /^\d+$/.test(trimmed)
+      ? numericCandidate
+      : null;
+
+    if (numericId !== null) {
+      const { data, error } = await supabase
+        .from("drivers")
+        .select("*")
+        .eq("id", numericId)
+        .limit(1);
+      if (error) {
+        lastError = error;
+      } else if (data && data.length > 0) {
+        return { row: data[0] as any, error: null };
+      }
+    }
+
     for (const column of searchColumns) {
       const { data, error } = await supabase
         .from("drivers")
