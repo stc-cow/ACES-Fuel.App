@@ -424,13 +424,7 @@ export default function DriverApp() {
       return;
     }
     const destination = `${coords.latitude},${coords.longitude}`;
-    const label =
-      (typeof task?.site_name === "string" && task.site_name.trim()) ||
-      (task?.site_id !== undefined && task?.site_id !== null
-        ? String(task.site_id)
-        : "Site");
-    const destinationLabel = `${label} ${destination}`.trim();
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationLabel)}`;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
     if (typeof window !== "undefined") {
       window.open(url, "_blank", "noopener,noreferrer");
     }
