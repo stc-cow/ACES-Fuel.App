@@ -197,7 +197,9 @@ export default function DriverApp() {
           alert(`Image upload failed: ${error.message}`);
           return;
         }
-        const { data } = supabase.storage.from(DRIVER_BUCKET).getPublicUrl(path);
+        const { data } = supabase.storage
+          .from(DRIVER_BUCKET)
+          .getPublicUrl(path);
         const url = data.publicUrl;
         setEntry((s: any) => ({ ...s, [k]: url }));
         setPreviews((prev) => ({ ...prev, [tag]: url }));
@@ -249,7 +251,9 @@ export default function DriverApp() {
         await handleFile(tag, file);
       } catch (error) {
         console.error("Camera capture failed", error);
-        alert("Unable to launch camera. Please try again or upload from gallery.");
+        alert(
+          "Unable to launch camera. Please try again or upload from gallery.",
+        );
       }
     },
     [handleFile, isNative],
@@ -1017,9 +1021,7 @@ export default function DriverApp() {
                 MSD
               </span>
             </div>
-            <p className="text-3xl font-bold text-[#202B6D]">
-              Fuel Driver
-            </p>
+            <p className="text-3xl font-bold text-[#202B6D]">Fuel Driver</p>
             <p className="text-sm text-[#6B7280]">
               Sign in with your assigned credentials to access fueling tasks.
             </p>
@@ -1414,7 +1416,9 @@ export default function DriverApp() {
                     onClick={() => capturePhoto("counter_before")}
                     disabled={uploading.counter_before}
                   >
-                    {uploading.counter_before ? "Capturing..." : "Capture photo"}
+                    {uploading.counter_before
+                      ? "Capturing..."
+                      : "Capture photo"}
                   </Button>
                 ) : (
                   <Input
